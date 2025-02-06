@@ -20,11 +20,17 @@ namespace RecruitmentManagement.Model
         public int CandidateId { get; set; }
         public  Candidate Candidate { get; set; }
 
-        [Column("comments")]
+        [Column("isShortlisted")]
         public bool IsShortlisted { get; set; }
 
         [Column("application_date")]
-        public DateTime ApplicationDate;
+        public DateTime ApplicationDate {get; set;}
+
+        [Column("isReviewed")]
+        public bool IsReviewed{get; set;}
+
+        [Column("comments")]
+        public String Comments{get; set;}
 
               
 

@@ -34,7 +34,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Name = positionRequest.Name,
         NoOfInterviews = positionRequest.NoOfInterviews,
         Description = positionRequest.Description,
-        StatusId = positionRequest.StatusId,
+        PositionStatusTypeId = positionRequest.StatusId,
         MinExp = positionRequest.MinExp,
         MaxExp = positionRequest.MaxExp
     };
@@ -86,5 +86,55 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return true;
         }
 
+    
+
+    public async Task<Position> DefineInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions){
+        var Position= _context.Positions.Find(positionId);
+
+        foreach (var interviewForPosition in interviewForPositions)
+        {
+            var InterviewType=_context.InterviewTypes.Find(interviewForPosition.TypeId);
+            var newPositionInterview=new PositionInterview{
+                PositionId=positionId,
+                NoOfInterviews=interviewForPosition.NoOfInterviews,
+                InterviewTypeId=interviewForPosition.TypeId
+            };
+            _context.PositionInterviews.Add(newPositionInterview);
+
+        }
+        await _context.SaveChangesAsync();
+
+        return Position;
     }
+
+    public async Task<Position> AssignReviewer(int positionId, int reviewerId){
+        var reviewer= _context.Users.Find(reviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
+        var position =_context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
+        if(position.ReviewerId!=null){
+            throw new ArgumentException("Reviewer for this position has already been assigned");
+        }
+        position.ReviewerId=reviewerId;
+        position.Reviewer=reviewer;
+
+        _context.Positions.Update(position);
+        await _context.SaveChangesAsync();
+
+        return position;
+       
+    }
+
+    public async Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange){
+          var position =_context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
+
+          position.PositionStatusTypeId=positionStatusChange.StatusId;
+          if(positionStatusChange.ReasonForClosure!=null){
+            position.ReasonForClosure=positionStatusChange.ReasonForClosure;
+          }
+
+        _context.Positions.Update(position);
+        await _context.SaveChangesAsync();
+
+          return position;
+    }
+}
 }

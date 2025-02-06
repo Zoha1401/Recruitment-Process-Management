@@ -49,9 +49,13 @@ builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<CandidateService>();
 builder.Services.AddScoped<PositionService>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IInterviewRepository,InterviewRepository>();
 builder.Services.AddScoped<ApplicationService>();
-builder.Services.AddScoped<CandidateSkillService>();
+// builder.Services.AddScoped<CandidateSkillService>();
+builder.Services.AddScoped<PositionCandidateService>();
 // builder.Services.AddScoped<JobRequirementService>();
+builder.Services.AddScoped<InterviewService>();
+builder.Services.AddScoped<IPositionCandidateRepository, PositionCandidateRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
@@ -67,7 +71,7 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("HR"));
      options.AddPolicy("ReviewerPolicy", policy => 
         policy.RequireRole("Reviewer"));
-    options.AddPolicy("InterviewePolicy", policy => 
+    options.AddPolicy("InterviewerPolicy", policy => 
         policy.RequireRole("Interviewer"));
     // Add other role policies similarly
 });

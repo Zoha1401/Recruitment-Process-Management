@@ -40,13 +40,13 @@ namespace RecruitmentProcessManagementSystem.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var addedCandidate = await _service.AddCandidate(Candidate);
-            return CreatedAtAction(nameof(GetById), new { id = addedCandidate.Id }, addedCandidate);
+            return CreatedAtAction(nameof(GetById), new { id = addedCandidate.CandidateId }, addedCandidate);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Candidate Candidate)
         {
-            if (id != Candidate.Id)
+            if (id != Candidate.CandidateId)
                 return BadRequest("ID mismatch.");
             var updatedCandidate = await _service.UpdateCandidate(Candidate);
             if (updatedCandidate == null)
@@ -62,5 +62,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return NotFound("Candidate not found.");
             return Ok("Candidate deleted successfully.");
         }
+
+        // public async Task<IActionResult> ReviewCandidate(int candidateId, bool isShortlisted, [FromBody] ICollection<MarkCandidateSkill> markCandidateSkills){
+
+        // }
     }
 }

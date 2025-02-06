@@ -6,7 +6,8 @@ using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    // [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize(Policy = "InterviewerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class InterviewController : ControllerBase
@@ -35,7 +36,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Interview Interview)
+        public async Task<IActionResult> Add([FromBody] InterviewRequest Interview)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
@@ -62,5 +63,23 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return NotFound("Interview not found.");
             return Ok("Interview deleted successfully.");
         }
+        //Assign Interviewer to an Interview
+
+        [HttpPost("assignInterviewer/{interviewId}/{interviewerId}")]
+        public async Task<IActionResult> AssignInterviewer(int interviewId, int interviewerId){
+            var InterviewerInterview=await _service.AssignInterviewer(interviewId, interviewerId);
+            if(InterviewerInterview==null){
+                return NotFound("There was problem in assigning interviewer.Please try again");
+            }
+            return Ok(InterviewerInterview);
+        }
+
+        [HttpPost("addInterviewFeedback/{interviewerInterviewId}")]
+        public async Task<IActionResult> AddInterviewFeedback(int interviewerInterviewId, [FromBody] ICollection<FeedbackRequest> feedbackRequests){
+           IEnumerable<InterviewFeedback> feedbacks=await _service.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
+           return Ok(feedbacks);
+        }
+
+    
     }
 }

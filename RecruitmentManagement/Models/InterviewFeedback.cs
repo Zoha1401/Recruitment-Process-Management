@@ -9,14 +9,16 @@ namespace RecruitmentManagement.Model
         [Required]
         [Key]
         public int Id { get; set; }
+        [Required]
         public int InterviewInterviewerId { get; set; }
-        public InterviewerInterview Interview { get; set; }
+        public InterviewerInterview InterviewerInterview { get; set; }
         public int SkillId { get; set; }
+        public Skill Skill { get; set; }
         public float Rating { get; set; }
         public string Feedback { get; set; }
 
        
-        public virtual Skill Skill { get; set; }
+      
 
     }
 }

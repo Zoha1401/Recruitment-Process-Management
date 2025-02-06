@@ -30,5 +30,18 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<bool> DeletePosition(int id) {
             return await _repository.DeletePosition(id);
         } 
+
+        public async Task<Position> DefineInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions){
+            return await _repository.DefineInterviewRounds(positionId, interviewForPositions);
+        }
+
+        public async Task<Position> AssignReviewer(int positionId, int reviewerId)
+        {
+            return await _repository.AssignReviewer(positionId, reviewerId);
+        }
+
+        public async Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange){
+            return await _repository.ChangeStatus(positionId, positionStatusChange);
+        }
     }
 }

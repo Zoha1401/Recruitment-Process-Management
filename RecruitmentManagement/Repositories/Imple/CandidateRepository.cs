@@ -49,6 +49,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-
+      
     }
 }

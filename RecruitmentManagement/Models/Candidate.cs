@@ -10,7 +10,7 @@ namespace RecruitmentManagement.Model
 
         [Required]
         [Key]
-        public int Id { get; set; }
+        public int CandidateId { get; set; }
         [Required]
         [Column("name")]
         public String Name { get; set; }

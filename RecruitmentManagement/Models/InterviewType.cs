@@ -16,10 +16,7 @@ namespace RecruitmentManagement.Model
         public required String Type { get; set; }
        
         public ICollection<PositionInterview> positionInterviews{get; set;}
-
-       
-
-
+        public ICollection<Interview>? Interviews{get; set;}
 
     }
 }

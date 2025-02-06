@@ -12,7 +12,7 @@ namespace RecruitmentManagement.Model
         [Key]
         public int Id { get; set; }
         [Required]
-        public int TypeId{ get; set; }
+        public int InterviewTypeId{ get; set; }
         public InterviewType InterviewType{get; set;}
         [Required]
         public DateTime Date { get; set; }
@@ -24,10 +24,13 @@ namespace RecruitmentManagement.Model
 
         public int PositionCandidateId { get; set; }
 
-        public virtual required PositionCandidate PositionCandidate { get; set; }
+        public PositionCandidate PositionCandidate { get; set; }
+
+        public int RoundNumber{get; set;}
+
 
         public ICollection<InterviewerInterview>? InterviewerInterviews { get; set; }
-        public virtual ICollection<InterviewFeedback>? InterviewFeedbacks { get; set; }
+        public ICollection<InterviewFeedback>? InterviewFeedbacks { get; set; }
 
 
 

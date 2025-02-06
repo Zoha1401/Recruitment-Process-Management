@@ -62,5 +62,39 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return NotFound("Position not found.");
             return Ok("Position deleted successfully.");
         }
+
+        [HttpPost("/defineInterviewRounds/{positionId}")]
+        
+        public async Task<IActionResult> DefineInterviewRounds(int positionId, [FromBody] ICollection<InterviewForPosition> interviewForPositions){
+            var position=await _service.DefineInterviewRounds(positionId, interviewForPositions);
+            if(position==null){
+                return NotFound("Position Not found");
+            }
+            if(interviewForPositions==null){
+                return NotFound("Interviews not specified");
+            }
+            return Ok("Interview rounds were defined");
+        }
+    
+
+    [HttpPost("{positionId}/{reviewerId}")]
+    public async Task<IActionResult> AssignReviewer(int positionId, int reviewerId){
+        var position=await _service.AssignReviewer(positionId, reviewerId);
+        if(position==null){
+             return NotFound("Position Not found");
+        }
+        return Ok("Reviewer has been assigned");
     }
+
+    [HttpPost("changeStatus/{positionId}")]
+    public async Task<IActionResult> ChangeStatus(int positionId, [FromBody] PositionStatusChange positionStatusChange){
+        var position=await _service.ChangeStatus(positionId, positionStatusChange);
+        if(position==null){
+            return NotFound("Position Not found");
+        }
+         return Ok("The status of the position has been changed");
+    }
+   
+
+}
 }

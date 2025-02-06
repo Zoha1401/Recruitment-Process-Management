@@ -25,11 +25,19 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Interviews.FindAsync(id);
         }
 
-        public async Task<Interview> AddInterview(Interview Interview)
+        public async Task<Interview> AddInterview(InterviewRequest Interview)
         {
-            _context.Interviews.Add(Interview);
+            var newInterview = new Interview
+            {
+                Date = Interview.Date,
+                RecruiterId = Interview.RecruiterId,
+                PositionCandidateId = Interview.PositionCandidateId,
+                InterviewTypeId = Interview.InterviewTypeId,
+                RoundNumber = Interview.RoundNumber
+            };
+            _context.Interviews.Add(newInterview);
             await _context.SaveChangesAsync();
-            return Interview;
+            return newInterview;
         }
 
         public async Task<Interview> UpdateInterview(Interview Interview)
@@ -48,5 +56,56 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+        public async Task<InterviewerInterview> AssignInterviewer(int interviewId, int interviewerId)
+        {
+            var interviewer = _context.Users.Find(interviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
+            var interview = _context.Interviews.Find(interviewId) ?? throw new ArgumentException("Position not found with this ID");
+            if (interviewer == null)
+            {
+                throw new ArgumentException("The interviewer with this ID is not found");
+            }
+            if (interview == null)
+            {
+                throw new ArgumentException("The interview with this ID is not found");
+            }
+
+            var InterviewerInterview = new InterviewerInterview
+            {
+                InterviewerId = interviewerId,
+                InterviewId = interviewId
+            };
+
+            _context.InterviewerInterviews.Add(InterviewerInterview);
+            await _context.SaveChangesAsync();
+
+            return InterviewerInterview;
+
+        }
+
+        public async Task<IEnumerable<InterviewFeedback>> AddInterviewFeedback(int interviewerInterviewId, ICollection<FeedbackRequest> feedbackRequests){
+            var interviewerInterview= await _context.InterviewerInterviews.FindAsync(interviewerInterviewId);
+            if(interviewerInterview==null){
+                throw new ArgumentException("Interviewer for the this interview is not found");
+            }
+
+            if(feedbackRequests!=null){
+                foreach(FeedbackRequest feedbackRequest in feedbackRequests){
+                    var interviewFeedback=new InterviewFeedback{
+                        InterviewInterviewerId=interviewerInterviewId,
+                        SkillId=feedbackRequest.SkillId,
+                        Rating=feedbackRequest.Rating,
+                        Feedback=feedbackRequest.Feedback
+                    };
+
+                    await _context.InterviewFeedbacks.AddAsync(interviewFeedback);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return _context.InterviewFeedbacks;
+        }
     }
+
+
 }

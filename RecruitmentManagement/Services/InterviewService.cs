@@ -20,7 +20,7 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<Interview> GetInterviewById(int id) {
             return await _repository.GetInterviewById(id);
         }
-        public async Task<Interview> AddInterview(Interview Interview){
+        public async Task<Interview> AddInterview(InterviewRequest Interview){
            return await _repository.AddInterview(Interview);
         } 
         public async Task<Interview> UpdateInterview(Interview Interview) {
@@ -30,5 +30,13 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<bool> DeleteInterview(int id) {
             return await _repository.DeleteInterview(id);
         } 
+
+        public async Task<InterviewerInterview> AssignInterviewer(int interviewId, int interviewerId){
+            return await _repository.AssignInterviewer(interviewId, interviewerId);
+        }
+
+        public async Task<IEnumerable<InterviewFeedback>> AddInterviewFeedback(int interviewerInterviewId, ICollection<FeedbackRequest> feedbackRequests){
+            return await _repository.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
+        }
     }
 }

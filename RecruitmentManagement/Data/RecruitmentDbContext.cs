@@ -16,19 +16,27 @@ namespace RecruitmentProcessManagementSystem.Data
         public DbSet<Skill> Skills { get; set; }
 
         public DbSet<Candidate> Candidates { get; set; }
-       // public DbSet<JobRequirement> JobRequirements { get; set; }
+        // public DbSet<JobRequirement> JobRequirements { get; set; }
 
         public DbSet<PositionStatusType> PositionStatusTypes { get; set; }
 
         public DbSet<Position> Positions { get; set; }
         public DbSet<PositionSkill> PositionSkills { get; set; }
 
-        public DbSet<PositionCandidate> PositionCandidates{get; set;}
+        public DbSet<PositionCandidate> PositionCandidates { get; set; }
 
-        public DbSet<CandidateSkill> CandidateSkills{get; set;}
+        public DbSet<CandidateSkill> CandidateSkills { get; set; }
 
-        public DbSet<Interview> Interviews{get; set;}
-       // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
+        public DbSet<Interview> Interviews { get; set; }
+        public DbSet<InterviewType> InterviewTypes { get; set; }
+
+        public DbSet<PositionInterview> PositionInterviews { get; set; }
+
+        public DbSet<InterviewerInterview> InterviewerInterviews {get; set;}
+
+        public DbSet<InterviewFeedback> InterviewFeedbacks{get; set;}
+
+        // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
 
         // public DbSet<JobPositions> JobPositions{get; set;}
 
@@ -63,6 +71,25 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasOne(sc => sc.Skill)
                 .WithMany(c => c.PositionSkills) // Navigation Property in Course
                 .HasForeignKey(sc => sc.SkillId);
+
+
+            modelBuilder.Entity<CandidateSkill>()
+                .HasKey(sc => new { sc.CandidateId, sc.SkillId }); // Composite Key for Join Table
+            modelBuilder.Entity<CandidateSkill>()
+                .HasOne(sc => sc.Candidate)
+                .WithMany(s => s.CandidateSkills) // Navigation Property in Student
+                .HasForeignKey(sc => sc.CandidateId); //Foreign Key
+            modelBuilder.Entity<CandidateSkill>()
+                .HasOne(sc => sc.Skill)
+                .WithMany(c => c.CandidateSkills) // Navigation Property in Course
+                .HasForeignKey(sc => sc.SkillId);
+
+            modelBuilder.Entity<Interview>()
+                .HasOne(i => i.InterviewType)
+                .WithMany()
+                .HasForeignKey(i => i.InterviewTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             base.OnModelCreating(modelBuilder);
         }

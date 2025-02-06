@@ -24,11 +24,11 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.Candidate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CandidateId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CandidateId"));
 
                     b.Property<string>("CollegeName")
                         .IsRequired()
@@ -64,31 +64,25 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnType("real")
                         .HasColumnName("work_experience");
 
-                    b.HasKey("Id");
+                    b.HasKey("CandidateId");
 
                     b.ToTable("Candidates");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.CandidateSkill", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("CandidateId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("candidate_id");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int")
+                        .HasColumnName("skill_id");
 
                     b.Property<float>("Experience")
                         .HasColumnType("real");
 
-                    b.Property<int>("SkillId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
+                    b.HasKey("CandidateId", "SkillId");
 
                     b.HasIndex("SkillId");
 
@@ -153,16 +147,30 @@ namespace RecruitmentManagement.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("InterviewTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InterviewTypeId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("PositionCandidateId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RecruiterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoundNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InterviewTypeId");
+
+                    b.HasIndex("InterviewTypeId1");
+
                     b.HasIndex("PositionCandidateId");
+
+                    b.HasIndex("RecruiterId");
 
                     b.ToTable("Interviews");
                 });
@@ -179,7 +187,13 @@ namespace RecruitmentManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("InterviewId")
+                    b.Property<int?>("InterviewId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InterviewInterviewerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InterviewerInterviewId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PositionCandidateId")
@@ -195,11 +209,31 @@ namespace RecruitmentManagement.Migrations
 
                     b.HasIndex("InterviewId");
 
+                    b.HasIndex("InterviewerInterviewId");
+
                     b.HasIndex("PositionCandidateId");
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("InterviewFeedback");
+                    b.ToTable("InterviewFeedbacks");
+                });
+
+            modelBuilder.Entity("RecruitmentManagement.Model.InterviewType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("interview_type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterviewTypes");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.InterviewerInterview", b =>
@@ -222,7 +256,7 @@ namespace RecruitmentManagement.Migrations
 
                     b.HasIndex("InterviewerId");
 
-                    b.ToTable("InterviewerInterview");
+                    b.ToTable("InterviewerInterviews");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.Notification", b =>
@@ -281,8 +315,9 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnType("int")
                         .HasColumnName("noOfInterviews");
 
-                    b.Property<int?>("PositionStatusTypeId")
-                        .HasColumnType("int");
+                    b.Property<int>("PositionStatusTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("status_id");
 
                     b.Property<string>("ReasonForClosure")
                         .HasColumnType("nvarchar(max)")
@@ -291,10 +326,6 @@ namespace RecruitmentManagement.Migrations
                     b.Property<int?>("ReviewerId")
                         .HasColumnType("int")
                         .HasColumnName("reviewer_id");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int")
-                        .HasColumnName("status_id");
 
                     b.HasKey("Id");
 
@@ -314,13 +345,26 @@ namespace RecruitmentManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("ApplicationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("application_date");
+
                     b.Property<int>("CandidateId")
                         .HasColumnType("int")
                         .HasColumnName("candidate_id");
 
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("comments");
+
+                    b.Property<bool>("IsReviewed")
+                        .HasColumnType("bit")
+                        .HasColumnName("isReviewed");
+
                     b.Property<bool>("IsShortlisted")
                         .HasColumnType("bit")
-                        .HasColumnName("comments");
+                        .HasColumnName("isShortlisted");
 
                     b.Property<int>("PositionId")
                         .HasColumnType("int")
@@ -333,6 +377,34 @@ namespace RecruitmentManagement.Migrations
                     b.HasIndex("PositionId");
 
                     b.ToTable("PositionCandidates");
+                });
+
+            modelBuilder.Entity("RecruitmentManagement.Model.PositionInterview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("InterviewTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("interview_type_id");
+
+                    b.Property<int>("NoOfInterviews")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int")
+                        .HasColumnName("position_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InterviewTypeId");
+
+                    b.HasIndex("PositionId");
+
+                    b.ToTable("PositionInterviews");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.PositionSkill", b =>
@@ -522,20 +594,44 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.Interview", b =>
                 {
+                    b.HasOne("RecruitmentManagement.Model.InterviewType", "InterviewType")
+                        .WithMany()
+                        .HasForeignKey("InterviewTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RecruitmentManagement.Model.InterviewType", null)
+                        .WithMany("Interviews")
+                        .HasForeignKey("InterviewTypeId1");
+
                     b.HasOne("RecruitmentManagement.Model.PositionCandidate", "PositionCandidate")
                         .WithMany("Interviews")
                         .HasForeignKey("PositionCandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RecruitmentProcessManagementSystem.Models.User", "Recruiter")
+                        .WithMany()
+                        .HasForeignKey("RecruiterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InterviewType");
+
                     b.Navigation("PositionCandidate");
+
+                    b.Navigation("Recruiter");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.InterviewFeedback", b =>
                 {
-                    b.HasOne("RecruitmentManagement.Model.Interview", "Interview")
+                    b.HasOne("RecruitmentManagement.Model.Interview", null)
                         .WithMany("InterviewFeedbacks")
-                        .HasForeignKey("InterviewId")
+                        .HasForeignKey("InterviewId");
+
+                    b.HasOne("RecruitmentManagement.Model.InterviewerInterview", "InterviewerInterview")
+                        .WithMany()
+                        .HasForeignKey("InterviewerInterviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -549,7 +645,7 @@ namespace RecruitmentManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Interview");
+                    b.Navigation("InterviewerInterview");
 
                     b.Navigation("Skill");
                 });
@@ -582,13 +678,17 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.Position", b =>
                 {
-                    b.HasOne("RecruitmentManagement.Model.PositionStatusType", null)
+                    b.HasOne("RecruitmentManagement.Model.PositionStatusType", "PositionStatusType")
                         .WithMany("Positions")
-                        .HasForeignKey("PositionStatusTypeId");
+                        .HasForeignKey("PositionStatusTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RecruitmentProcessManagementSystem.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId");
+
+                    b.Navigation("PositionStatusType");
 
                     b.Navigation("Reviewer");
                 });
@@ -610,6 +710,23 @@ namespace RecruitmentManagement.Migrations
                     b.Navigation("Candidate");
 
                     b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("RecruitmentManagement.Model.PositionInterview", b =>
+                {
+                    b.HasOne("RecruitmentManagement.Model.InterviewType", null)
+                        .WithMany("positionInterviews")
+                        .HasForeignKey("InterviewTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RecruitmentManagement.Model.Position", "position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("position");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.PositionSkill", b =>
@@ -674,6 +791,13 @@ namespace RecruitmentManagement.Migrations
                     b.Navigation("InterviewFeedbacks");
 
                     b.Navigation("InterviewerInterviews");
+                });
+
+            modelBuilder.Entity("RecruitmentManagement.Model.InterviewType", b =>
+                {
+                    b.Navigation("Interviews");
+
+                    b.Navigation("positionInterviews");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.Position", b =>

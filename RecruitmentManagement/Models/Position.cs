@@ -33,11 +33,12 @@ namespace RecruitmentManagement.Model
         [Column("closure_reason")]
         public string? ReasonForClosure { get; set; }
         [Column("status_id")]
-        public int StatusId {get; set;}
+        public int PositionStatusTypeId {get; set;}
+        public PositionStatusType PositionStatusType {get; set;}
         [Column("reviewer_id")]
         public int? ReviewerId {get; set;}
         public User Reviewer {get; set;}
-        public PositionStatusType positionStatusType;
+       
 
         public  ICollection<PositionCandidate>? PositionCandidates { get; set; }
         public  ICollection<PositionSkill>? PositionSkills { get; set; }

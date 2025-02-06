@@ -9,9 +9,13 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<Interview>> GetAllInterviews();
         Task<Interview> GetInterviewById(int id);
-        Task<Interview> AddInterview(Interview Interview);
+        Task<Interview> AddInterview(InterviewRequest Interview);
         Task<Interview> UpdateInterview(Interview Interview);
         Task<bool> DeleteInterview(int id);
+
+        Task<InterviewerInterview> AssignInterviewer(int interviewId, int interviewerId);
+
+        Task<IEnumerable<InterviewFeedback>> AddInterviewFeedback(int interviewId, ICollection<FeedbackRequest> feedbackRequests);
         
     }
 }
