@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using RecruitmentManagement.Migrations;
+using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Models
 {
@@ -32,6 +34,9 @@ namespace RecruitmentProcessManagementSystem.Models
         [Column("role_id")]
         public int RoleId { get; set; }
         public Role Role { get; set; }
+
+        public ICollection<RecruitmentManagement.Model.InterviewerInterview>? InterviewerInterviews{get; set;}
+        public ICollection<CandidateStatus>? CandidateStatuses{get; set;}
         
     }
 }
