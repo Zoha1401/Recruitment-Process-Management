@@ -10,10 +10,11 @@ namespace RecruitmentManagement.Model
 
         [Required]
         [Key]
-        public int Id { get; set; }
+        [Column("interview_type_id")]
+        public int InterviewTypeId { get; set; }
         [Required]
         [Column("interview_type")]
-        public required String Type { get; set; }
+        public String Type { get; set; }
        
         public ICollection<PositionInterview> positionInterviews{get; set;}
         public ICollection<Interview>? Interviews{get; set;}

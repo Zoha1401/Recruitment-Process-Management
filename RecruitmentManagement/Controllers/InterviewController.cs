@@ -44,13 +44,13 @@ namespace RecruitmentProcessManagementSystem.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
             var addedInterview = await _service.AddInterview(Interview);
-            return CreatedAtAction(nameof(GetById), new { id = addedInterview.Id }, addedInterview);
+            return CreatedAtAction(nameof(GetById), new { id = addedInterview.InterviewId }, addedInterview);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Interview Interview)
         {
-            if (id != Interview.Id) 
+            if (id != Interview.InterviewId) 
                 return BadRequest("ID mismatch.");
             var updatedInterview = await _service.UpdateInterview(Interview);
             if (updatedInterview == null) 

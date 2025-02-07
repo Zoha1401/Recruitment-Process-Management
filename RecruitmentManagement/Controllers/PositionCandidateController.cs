@@ -49,7 +49,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PositionCandidate PositionCandidate)
         {
-            if (id != PositionCandidate.Id)
+            if (id != PositionCandidate.PositionCandidateId)
                 return BadRequest("ID mismatch.");
             var updatedPositionCandidate = await _service.UpdatePositionCandidate(PositionCandidate);
             if (updatedPositionCandidate == null)

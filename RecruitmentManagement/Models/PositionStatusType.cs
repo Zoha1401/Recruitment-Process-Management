@@ -8,7 +8,8 @@ namespace RecruitmentManagement.Model
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        [Column("position_status_type_id")]
+        public int PositionStatusTypeId { get; set; }
         [Column("status_name")]
         public string StatusName { get; set; }
 

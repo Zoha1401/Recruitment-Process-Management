@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace RecruitmentManagement.Model
@@ -8,6 +9,7 @@ namespace RecruitmentManagement.Model
         [Key]
         [Required]
         public int Id { get; set; }
+        [Column("document_url")]
         public string DocumentUrl { get; set; }
         public int ShortlistId { get; set; }
 

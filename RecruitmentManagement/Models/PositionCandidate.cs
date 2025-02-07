@@ -11,7 +11,7 @@ namespace RecruitmentManagement.Model
         [Required]
         [Key]
         [Column("position_candidate_id")]
-        public int Id { get; set; }
+        public int PositionCandidateId { get; set; }
         [Column("position_id")]
         public int PositionId { get; set; }
         public  Position Position { get; set; }

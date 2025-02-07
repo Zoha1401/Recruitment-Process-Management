@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.Model;
 
@@ -8,10 +9,12 @@ namespace RecruitmentManagement.Model
     {
         [Required]
         [Key]
-        public int Id { get; set; }
-        public required string Name { get; set; }
+        [Column("candiate_status_type_id")]
+        public int CandidateStatusTypeId { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
 
-        public virtual ICollection<CandidateStatus>? CandidateStatuses { get; set; }
+        public ICollection<CandidateStatus>? CandidateStatuses { get; set; }
     }
 
 }

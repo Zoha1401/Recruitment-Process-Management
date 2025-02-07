@@ -10,14 +10,15 @@ namespace RecruitmentManagement.Model
 
         [Required]
         [Key]
-        public int Id { get; set; }
+        [Column("position_interview_id")]
+        public int PositionInterviewId { get; set; }
         
         [Required]
         [Column("position_id")]
         public int PositionId {get; set;}
 
         public Position position {get; set;}
-
+        [Column("no_of_inteviews")]
         public int NoOfInterviews {get; set;}
         
         [Required]

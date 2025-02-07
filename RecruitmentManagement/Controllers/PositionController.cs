@@ -43,13 +43,13 @@ namespace RecruitmentProcessManagementSystem.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
             var addedPosition = await _service.AddPosition(Position);
-            return CreatedAtAction(nameof(GetById), new { id = addedPosition.Id }, addedPosition);
+            return CreatedAtAction(nameof(GetById), new { id = addedPosition.PositionId }, addedPosition);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Position Position)
         {
-            if (id != Position.Id) 
+            if (id != Position.PositionId) 
                 return BadRequest("ID mismatch.");
             var updatedPosition = await _service.UpdatePosition(Position);
             if (updatedPosition == null) 

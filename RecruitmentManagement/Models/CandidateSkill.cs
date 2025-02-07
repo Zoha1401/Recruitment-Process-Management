@@ -14,6 +14,7 @@ namespace RecruitmentManagement.Model
         [Column("candidate_id")]
         public int CandidateId { get; set; }
         public Candidate Candidate { get; set; }
+        [Column("experience")]
         public float Experience { get; set; }
         [Required]
         [Column("skill_id")]
