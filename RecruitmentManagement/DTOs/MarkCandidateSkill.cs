@@ -1,6 +1,6 @@
 public class MarkCandidateSkill
 {
-      public int SkillId;
-      public int Experience;
+      public int SkillId {get; set;}
+      public int Experience {get; set;}
 }
         
