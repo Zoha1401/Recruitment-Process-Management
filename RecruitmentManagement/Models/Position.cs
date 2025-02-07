@@ -12,7 +12,7 @@ namespace RecruitmentManagement.Model
         [Required]
         [Key]
         [Column("position_id")]
-        public int Id { get; set; }
+        public int PositionId { get; set; }
         [Required]
         [Column("position_name")]
         public String Name { get; set; }

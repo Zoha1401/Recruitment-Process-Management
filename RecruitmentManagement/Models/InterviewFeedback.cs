@@ -21,7 +21,7 @@ namespace RecruitmentManagement.Model
         [Column("rating")]
         public float Rating { get; set; }
         [Column("feedback")]
-        public string Feedback { get; set; }
+        public string? Feedback { get; set; }
 
        
       

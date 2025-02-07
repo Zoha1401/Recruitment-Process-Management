@@ -27,6 +27,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<Interview> AddInterview(InterviewRequest Interview)
         {
+            
             var newInterview = new Interview
             {
                 Date = Interview.Date,
@@ -60,7 +61,12 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<InterviewerInterview> AssignInterviewer(int interviewId, int interviewerId)
         {
-            var interviewer = _context.Users.Find(interviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
+            var interviewer = _context.Users.Find(interviewerId) ?? throw new ArgumentException("Interviewer is not found by this ID");
+            // if(interviewer.Role.RoleName!= _context.Roles.FirstOrDefaultAsync(r=> r.RoleName))
+            // var role=_context.Users.FirstOrDefault(u => u.Role.RoleName=="Interviewer");
+            if(interviewer.Role.RoleName!="Interviewer"){
+                throw new ArgumentException("The given user is not an interviewer");
+            }
             var interview = _context.Interviews.Find(interviewId) ?? throw new ArgumentException("Position not found with this ID");
             if (interviewer == null)
             {
