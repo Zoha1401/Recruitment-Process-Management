@@ -21,6 +21,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var roles = await _service.GetAllRoles();
+            if(roles==null){
+                return NotFound("Roles are not found");
+            }
             return Ok(roles);
         }
 

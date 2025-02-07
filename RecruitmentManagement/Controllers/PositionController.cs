@@ -22,6 +22,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Positions = await _service.GetAllPositions();
+            if(Positions==null){
+                return NotFound("No positions are found");
+            }
             return Ok(Positions);
         }
 
@@ -66,13 +69,14 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPost("/defineInterviewRounds/{positionId}")]
         
         public async Task<IActionResult> DefineInterviewRounds(int positionId, [FromBody] ICollection<InterviewForPosition> interviewForPositions){
+            if(interviewForPositions==null){
+                return BadRequest("Interviews not specified");
+            }
             var position=await _service.DefineInterviewRounds(positionId, interviewForPositions);
             if(position==null){
                 return NotFound("Position Not found");
             }
-            if(interviewForPositions==null){
-                return NotFound("Interviews not specified");
-            }
+         
             return Ok("Interview rounds were defined");
         }
     
@@ -88,6 +92,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
     [HttpPost("changeStatus/{positionId}")]
     public async Task<IActionResult> ChangeStatus(int positionId, [FromBody] PositionStatusChange positionStatusChange){
+        if(positionStatusChange==null){
+            return BadRequest("No proper status change for position is specified");
+        }
         var position=await _service.ChangeStatus(positionId, positionStatusChange);
         if(position==null){
             return NotFound("Position Not found");

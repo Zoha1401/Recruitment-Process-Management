@@ -23,6 +23,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Skills = await _service.GetAllSkills();
+            if(Skills==null){
+                return NotFound("There are no relevant skills found");
+            }
             return Ok(Skills);
         }
 

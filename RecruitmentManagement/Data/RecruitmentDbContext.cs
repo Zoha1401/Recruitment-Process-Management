@@ -105,6 +105,17 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasForeignKey(pc => pc.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<InterviewerInterview>()
+                .HasOne(ii => ii.Interview)
+                .WithMany(i => i.InterviewerInterviews)
+                .HasForeignKey(ii => ii.InterviewId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<InterviewerInterview>()
+                .HasOne(ii => ii.Interviewer)
+                .WithMany(i => i.InterviewerInterviews)
+                .HasForeignKey(ii => ii.InterviewerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -22,6 +22,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Candidates = await _service.GetAllCandidates();
+            if(Candidates==null){
+                return NotFound("There are no candidates");
+            }
             return Ok(Candidates);
         }
 

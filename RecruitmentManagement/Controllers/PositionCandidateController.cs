@@ -22,6 +22,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var PositionCandidates = await _service.GetAllPositionCandidates();
+            if(PositionCandidates==null){
+                return NotFound("No candidates has applied for any position");
+            }
             return Ok(PositionCandidates);
         }
 
@@ -74,6 +77,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPost("applyToPosition/{candidateId}/{positionId}")]
         public async Task<IActionResult> ApplyToPosition(int candidateId, int positionId){
             var PositionCandidate=await _service.ApplyToPosition(candidateId, positionId);
+            if(PositionCandidate==null){
+                return NotFound("The position candidate was not found");
+            }
             return Ok(PositionCandidate);
         }
     }

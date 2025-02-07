@@ -23,6 +23,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Interviews = await _service.GetAllInterviews();
+            if(Interviews==null){
+                return NotFound("There are no interviews scheduled");
+            }
             return Ok(Interviews);
         }
 
@@ -77,6 +80,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPost("addInterviewFeedback/{interviewerInterviewId}")]
         public async Task<IActionResult> AddInterviewFeedback(int interviewerInterviewId, [FromBody] ICollection<FeedbackRequest> feedbackRequests){
            IEnumerable<InterviewFeedback> feedbacks=await _service.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
            return Ok(feedbacks);
         }
 
