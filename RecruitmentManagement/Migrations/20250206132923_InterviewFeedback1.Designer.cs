@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentProcessManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RecruitmentProcessManagementSystem.Data;
 namespace RecruitmentManagement.Migrations
 {
     [DbContext(typeof(RecruitmentDbContext))]
-    partial class RecruitmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250206132923_InterviewFeedback1")]
+    partial class InterviewFeedback1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,6 +193,9 @@ namespace RecruitmentManagement.Migrations
                     b.Property<int?>("InterviewId")
                         .HasColumnType("int");
 
+                    b.Property<int>("InterviewInterviewerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("InterviewerInterviewId")
                         .HasColumnType("int");
 
@@ -235,11 +241,11 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.InterviewerInterview", b =>
                 {
-                    b.Property<int>("InterviewerInterviewId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InterviewerInterviewId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("InterviewId")
                         .HasColumnType("int");
@@ -247,7 +253,7 @@ namespace RecruitmentManagement.Migrations
                     b.Property<int?>("InterviewerId")
                         .HasColumnType("int");
 
-                    b.HasKey("InterviewerInterviewId");
+                    b.HasKey("Id");
 
                     b.HasIndex("InterviewId");
 
@@ -556,13 +562,13 @@ namespace RecruitmentManagement.Migrations
                     b.HasOne("RecruitmentManagement.Model.Candidate", "Candidate")
                         .WithMany("CandidateSkills")
                         .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RecruitmentManagement.Model.Skill", "Skill")
                         .WithMany("CandidateSkills")
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Candidate");

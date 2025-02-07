@@ -10,7 +10,7 @@ namespace RecruitmentManagement.Model
         [Key]
         public int Id { get; set; }
         [Required]
-        public int InterviewInterviewerId { get; set; }
+        public int InterviewerInterviewId { get; set; }
         public InterviewerInterview InterviewerInterview { get; set; }
         public int SkillId { get; set; }
         public Skill Skill { get; set; }

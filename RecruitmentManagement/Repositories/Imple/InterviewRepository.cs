@@ -93,7 +93,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
             if(feedbackRequests!=null){
                 foreach(FeedbackRequest feedbackRequest in feedbackRequests){
                     var interviewFeedback=new InterviewFeedback{
-                        InterviewInterviewerId=interviewerInterviewId,
+                        InterviewerInterviewId=interviewerInterviewId,
                         SkillId=feedbackRequest.SkillId,
                         Rating=feedbackRequest.Rating,
                         Feedback=feedbackRequest.Feedback

@@ -1,5 +1,5 @@
 public class FeedbackRequest{
-    public int SkillId;
-    public float Rating;
-    public required string Feedback;
+    public int SkillId {get; set;}
+    public float Rating {get; set;}
+    public required string Feedback {get; set;}
 }

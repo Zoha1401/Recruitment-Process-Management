@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentProcessManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RecruitmentProcessManagementSystem.Data;
 namespace RecruitmentManagement.Migrations
 {
     [DbContext(typeof(RecruitmentDbContext))]
-    partial class RecruitmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250207023847_FixForeignKeyIssue")]
+    partial class FixForeignKeyIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -556,13 +559,13 @@ namespace RecruitmentManagement.Migrations
                     b.HasOne("RecruitmentManagement.Model.Candidate", "Candidate")
                         .WithMany("CandidateSkills")
                         .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RecruitmentManagement.Model.Skill", "Skill")
                         .WithMany("CandidateSkills")
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Candidate");
