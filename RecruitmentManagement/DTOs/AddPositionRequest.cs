@@ -10,6 +10,10 @@ public class AddPositionRequest
 
         public int MinExp { get; set; }
         public int MaxExp { get; set; }
+
+        public DateTime CreatedAt {get; set;}
+
+        public DateTime? UpdatedAt{get; set;}
       
         public string? ReasonForClosure { get; set; }
       

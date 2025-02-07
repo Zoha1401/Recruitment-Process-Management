@@ -3,6 +3,7 @@ using RecruitmentProcessManagementSystem.Service;
 using RecruitmentProcessManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
@@ -66,7 +67,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return Ok("Position deleted successfully.");
         }
 
-        [HttpPost("/defineInterviewRounds/{positionId}")]
+        [HttpPost("defineInterviewRounds/{positionId}")]
         
         public async Task<IActionResult> DefineInterviewRounds(int positionId, [FromBody] ICollection<InterviewForPosition> interviewForPositions){
             if(interviewForPositions==null){
@@ -92,6 +93,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
     [HttpPost("changeStatus/{positionId}")]
     public async Task<IActionResult> ChangeStatus(int positionId, [FromBody] PositionStatusChange positionStatusChange){
+        if (!ModelState.IsValid)
+                return BadRequest(ModelState);
         if(positionStatusChange==null){
             return BadRequest("No proper status change for position is specified");
         }
@@ -100,6 +103,29 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return NotFound("Position Not found");
         }
          return Ok("The status of the position has been changed");
+    }
+
+    [HttpPatch("{positionId}")]
+    public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
+    {
+        var fromDb = await _service.GetPositionById(positionId);
+        if(fromDb==null){
+            throw new ArgumentException("Position is not found");
+        }
+        var original = fromDb;
+        patch.ApplyTo(fromDb, ModelState);
+
+        var isValid = TryValidateModel(fromDb);
+        if (!isValid)
+        {
+            return BadRequest(ModelState);
+        }
+        await _service.UpdatePosition(fromDb);
+        var model = new
+        {
+            original,
+        };
+        return Ok(model);
     }
    
 

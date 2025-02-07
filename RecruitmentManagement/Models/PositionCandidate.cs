@@ -30,7 +30,7 @@ namespace RecruitmentManagement.Model
         public bool IsReviewed{get; set;}
 
         [Column("comments")]
-        public String Comments{get; set;}
+        public String? Comments{get; set;}
 
               
 

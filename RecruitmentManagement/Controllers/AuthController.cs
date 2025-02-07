@@ -91,5 +91,16 @@ namespace RecruitmentProcessManagementSystem.Controllers
             var users = await _context.Users.ToListAsync();
             return Ok(users);
         }
+
+        [HttpDelete("{userId}")]
+
+        public async Task<bool> DeleteUser(int userId){
+            var User = await _context.Users.FindAsync(userId);
+            if (User == null) return false;
+
+            _context.Users.Remove(User);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

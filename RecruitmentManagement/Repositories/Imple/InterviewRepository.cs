@@ -27,7 +27,13 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<Interview> AddInterview(InterviewRequest Interview)
         {
-            
+            var positionCandidate=_context.PositionCandidates.Find(Interview.PositionCandidateId);
+            if(positionCandidate==null){
+                throw new Exception("Candidate for this position is not found");
+            }
+            if(positionCandidate.IsShortlisted!=true){
+                throw new Exception("The candidate is not shortlisted to be assigned an interview");
+            }
             var newInterview = new Interview
             {
                 Date = Interview.Date,
@@ -64,14 +70,17 @@ namespace RecruitmentProcessManagementSystem.Repositories
             var interviewer = _context.Users.Find(interviewerId) ?? throw new ArgumentException("Interviewer is not found by this ID");
             // if(interviewer.Role.RoleName!= _context.Roles.FirstOrDefaultAsync(r=> r.RoleName))
             // var role=_context.Users.FirstOrDefault(u => u.Role.RoleName=="Interviewer");
-            if(interviewer.Role.RoleName!="Interviewer"){
-                throw new ArgumentException("The given user is not an interviewer");
-            }
-            var interview = _context.Interviews.Find(interviewId) ?? throw new ArgumentException("Position not found with this ID");
-            if (interviewer == null)
+             if (interviewer == null)
             {
                 throw new ArgumentException("The interviewer with this ID is not found");
             }
+            var Role=_context.Roles.Find(interviewer.RoleId) ?? throw new ArgumentException("Role is not assigned to this ID");
+            var roleName=Role.RoleName;
+            if(roleName!="Interviewer"){
+                throw new ArgumentException("The given user is not an interviewer");
+            }
+            var interview = _context.Interviews.Find(interviewId) ?? throw new ArgumentException("Position not found with this ID");
+           
             if (interview == null)
             {
                 throw new ArgumentException("The interview with this ID is not found");

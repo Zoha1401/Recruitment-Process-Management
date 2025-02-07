@@ -635,3 +635,7 @@ C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\obj\Debug\net9.0\refint\
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\obj\Debug\net9.0\RecruitmentManagement.pdb
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\obj\Debug\net9.0\RecruitmentManagement.genruntimeconfig.cache
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\obj\Debug\net9.0\ref\RecruitmentManagement.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Newtonsoft.Json.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll

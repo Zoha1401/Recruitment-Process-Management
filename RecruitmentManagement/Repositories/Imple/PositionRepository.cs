@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.Migrations;
@@ -36,7 +37,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Description = positionRequest.Description,
         PositionStatusTypeId = positionRequest.StatusId,
         MinExp = positionRequest.MinExp,
-        MaxExp = positionRequest.MaxExp
+        MaxExp = positionRequest.MaxExp,
+        CreatedAt=positionRequest.CreatedAt,
     };
 
     // Iterate over the incoming SkillRequests and add PositionSkill objects
@@ -116,8 +118,13 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
     public async Task<Position> AssignReviewer(int positionId, int reviewerId){
         var reviewer= _context.Users.Find(reviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
-           if(reviewer.Role.RoleName!="Reviewer"){
-                throw new ArgumentException("The given user is not an interviewer");
+        var Role=_context.Roles.Find(reviewer.RoleId);
+        if(Role==null){
+            throw new ArgumentException("No role is assigned to user");
+        }
+        var roleName=Role.RoleName;
+           if(roleName!="Reviewer"){
+                throw new ArgumentException("The given user is not an reviewer");
             }
         var position =_context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
         if(position.ReviewerId!=null){
@@ -146,5 +153,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
           return position;
     }
+
+   
 }
 }

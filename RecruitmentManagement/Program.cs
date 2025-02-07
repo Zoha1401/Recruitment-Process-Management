@@ -14,7 +14,8 @@ builder.Services.AddControllers()
 .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-    });
+    })
+     .AddNewtonsoftJson();
 
 // Configure EF Core to use SQL Server Express
 builder.Services.AddDbContext<RecruitmentDbContext>(options =>
