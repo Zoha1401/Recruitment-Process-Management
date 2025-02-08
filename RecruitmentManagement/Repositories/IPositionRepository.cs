@@ -17,6 +17,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<Position> AssignReviewer(int positionId, int reviewerId);
 
         Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange);
-        Task<PositionReport> FetchPositionReport(int positionId);
+        Task<List<PositionReport>> FetchPositionReport(int positionId);
     }
 }

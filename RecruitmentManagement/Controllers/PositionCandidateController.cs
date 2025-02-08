@@ -78,6 +78,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
         [HttpPost("applyToPosition/{candidateId}/{positionId}/{statusId}/{userId}")]
         public async Task<IActionResult> ApplyToPosition(int userId, int candidateId, int positionId,int statusId){
+          
             // var httpContext = _httpContextAccessor?.HttpContext;
             // if (httpContext == null)
             // {

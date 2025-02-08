@@ -31,9 +31,17 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<PositionCandidate> ApplyToPosition(int userId, int candidateId, int positionId, int statusId)
         {
+            bool alreadyApplied = await _context.PositionCandidates
+     .AnyAsync(pc => pc.CandidateId == candidateId && pc.PositionId == positionId);
+
+            if (alreadyApplied)
+            {
+                throw new InvalidOperationException("Candidate has already applied for the position");
+            }
+
             var candidate = _context.Candidates.Find(candidateId);
             var position = _context.Positions.Find(positionId);
-            
+
             if (candidate == null || position == null)
             {
                 throw new ArgumentException("Invalid candidate or position ID.");

@@ -131,7 +131,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
     [HttpGet("fetchPositionReport/{positionId}")]
 
     public async Task<IActionResult> FetchPositionReport(int positionId){
-        var positionReport=_service.FetchPositionReport(positionId);
+        var positionReport=await _service.FetchPositionReport(positionId);
         if(positionReport==null){
             return NotFound("Position Report not found");
         }

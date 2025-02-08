@@ -44,7 +44,7 @@ namespace RecruitmentProcessManagementSystem.Service
             return await _repository.ChangeStatus(positionId, positionStatusChange);
         }
 
-        public async Task<PositionReport> FetchPositionReport(int positionId)
+        public async Task<List<PositionReport>> FetchPositionReport(int positionId)
         {
             return await _repository.FetchPositionReport(positionId);
         }
