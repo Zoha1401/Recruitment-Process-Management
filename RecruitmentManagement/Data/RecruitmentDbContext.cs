@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Models;
@@ -35,6 +36,8 @@ namespace RecruitmentProcessManagementSystem.Data
         public DbSet<InterviewerInterview> InterviewerInterviews { get; set; }
 
         public DbSet<InterviewFeedback> InterviewFeedbacks { get; set; }
+
+        public DbSet<CandidateStatus> CandidateStatuses{get; set;}
 
         // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
 
@@ -116,6 +119,19 @@ namespace RecruitmentProcessManagementSystem.Data
                 .WithMany(i => i.InterviewerInterviews)
                 .HasForeignKey(ii => ii.InterviewerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+              modelBuilder.Entity<CandidateStatus>()
+                .HasOne(c => c.Candidate)
+                .WithMany(cs => cs.CandidateStatuses)
+                .HasForeignKey(c => c.CandidateId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CandidateStatus>()
+                .HasOne(cs => cs.Position)
+                .WithMany(c => c.CandidateStatuses)
+                .HasForeignKey(cs => cs.PositionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             base.OnModelCreating(modelBuilder);
         }

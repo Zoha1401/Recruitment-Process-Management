@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentProcessManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RecruitmentProcessManagementSystem.Data;
 namespace RecruitmentManagement.Migrations
 {
     [DbContext(typeof(RecruitmentDbContext))]
-    partial class RecruitmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250207090418_ModelChangeCandidateStatus")]
+    partial class ModelChangeCandidateStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,6 +110,9 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("comments");
 
+                    b.Property<int?>("PositionCandidateId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
@@ -118,16 +124,18 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("updated_at");
 
-                    b.Property<int?>("UpdatedBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int")
                         .HasColumnName("updated_by");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("CandidateStatusId");
 
                     b.HasIndex("CandidateId");
+
+                    b.HasIndex("PositionCandidateId");
 
                     b.HasIndex("PositionId");
 
@@ -135,7 +143,7 @@ namespace RecruitmentManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CandidateStatuses");
+                    b.ToTable("CandidateStatus");
                 });
 
             modelBuilder.Entity("RecruitmentManagement.Model.CandidateStatusType", b =>
@@ -618,15 +626,19 @@ namespace RecruitmentManagement.Migrations
             modelBuilder.Entity("RecruitmentManagement.Model.CandidateStatus", b =>
                 {
                     b.HasOne("RecruitmentManagement.Model.Candidate", "Candidate")
-                        .WithMany("CandidateStatuses")
+                        .WithMany()
                         .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RecruitmentManagement.Model.PositionCandidate", null)
+                        .WithMany("CandidateStatuses")
+                        .HasForeignKey("PositionCandidateId");
 
                     b.HasOne("RecruitmentManagement.Model.Position", "Position")
                         .WithMany("CandidateStatuses")
                         .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RecruitmentManagement.Model.CandidateStatusType", "Status")
@@ -637,7 +649,9 @@ namespace RecruitmentManagement.Migrations
 
                     b.HasOne("RecruitmentProcessManagementSystem.Models.User", "User")
                         .WithMany("CandidateStatuses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Candidate");
 
@@ -832,8 +846,6 @@ namespace RecruitmentManagement.Migrations
                 {
                     b.Navigation("CandidateSkills");
 
-                    b.Navigation("CandidateStatuses");
-
                     b.Navigation("Notifications");
 
                     b.Navigation("PositionCandidates");
@@ -876,6 +888,8 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.PositionCandidate", b =>
                 {
+                    b.Navigation("CandidateStatuses");
+
                     b.Navigation("InterviewFeedbacks");
 
                     b.Navigation("Interviews");

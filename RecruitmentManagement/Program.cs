@@ -2,12 +2,14 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Helpers;
 using RecruitmentProcessManagementSystem.Repositories;
 using RecruitmentProcessManagementSystem.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllers()
@@ -15,7 +17,10 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
     })
-     .AddNewtonsoftJson();
+     .AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 // Configure EF Core to use SQL Server Express
 builder.Services.AddDbContext<RecruitmentDbContext>(options =>
@@ -52,6 +57,8 @@ builder.Services.AddScoped<PositionService>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IInterviewRepository,InterviewRepository>();
 builder.Services.AddScoped<ApplicationService>();
+builder.Services.AddScoped<ICandidateStatusRepository, CandidateStatusRepository>();
+builder.Services.AddScoped<CandidateStatusService> ();
 // builder.Services.AddScoped<CandidateSkillService>();
 builder.Services.AddScoped<PositionCandidateService>();
 // builder.Services.AddScoped<JobRequirementService>();

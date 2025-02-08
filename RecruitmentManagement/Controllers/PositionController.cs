@@ -127,6 +127,16 @@ namespace RecruitmentProcessManagementSystem.Controllers
         };
         return Ok(model);
     }
+
+    [HttpGet("fetchPositionReport/{positionId}")]
+
+    public async Task<IActionResult> FetchPositionReport(int positionId){
+        var positionReport=_service.FetchPositionReport(positionId);
+        if(positionReport==null){
+            return NotFound("Position Report not found");
+        }
+        return Ok(positionReport);
+    }
    
 
 }

@@ -3,6 +3,8 @@ using RecruitmentProcessManagementSystem.Service;
 using RecruitmentProcessManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
+using RecruitmentManagement.DTOs;
+using System.Security.Claims;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
@@ -12,6 +14,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
     public class PositionCandidateController : ControllerBase
     {
         private readonly PositionCandidateService _service;
+        
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PositionCandidateController(PositionCandidateService service)
         {
@@ -46,14 +50,12 @@ namespace RecruitmentProcessManagementSystem.Controllers
         //     return CreatedAtAction(nameof(GetById), new { id = addedPositionCandidate.Id }, addedPositionCandidate);
         // }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] PositionCandidate PositionCandidate)
+        [HttpPut("{positionCandidateId}")]
+        public async Task<IActionResult> Update(int positionCandidateId, [FromBody] PositionCandidateDTO PositionCandidate)
         {
-            if (id != PositionCandidate.PositionCandidateId)
-                return BadRequest("ID mismatch.");
-            var updatedPositionCandidate = await _service.UpdatePositionCandidate(PositionCandidate);
+            var updatedPositionCandidate = await _service.UpdatePositionCandidate(positionCandidateId, PositionCandidate);
             if (updatedPositionCandidate == null)
-                return NotFound("Student not found.");
+                return NotFound("PositionCandidate not found.");
             return Ok(updatedPositionCandidate);
         }
 
@@ -74,9 +76,28 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
             return Ok(PositionCandidate);
         }
-        [HttpPost("applyToPosition/{candidateId}/{positionId}")]
-        public async Task<IActionResult> ApplyToPosition(int candidateId, int positionId){
-            var PositionCandidate=await _service.ApplyToPosition(candidateId, positionId);
+        [HttpPost("applyToPosition/{candidateId}/{positionId}/{statusId}/{userId}")]
+        public async Task<IActionResult> ApplyToPosition(int userId, int candidateId, int positionId,int statusId){
+            // var httpContext = _httpContextAccessor?.HttpContext;
+            // if (httpContext == null)
+            // {
+            //     throw new Exception("HttpContext is null. Ensure request is within an HTTP context.");
+            // }
+
+            // var user = httpContext.User;
+            // if (user == null || !user.Identity.IsAuthenticated)
+            // {
+            //     throw new Exception("User is not authenticated.");
+            // }
+            // var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // if (string.IsNullOrEmpty(userIdString))
+            // {
+            //     throw new Exception("User ID claim ('NameIdentifier') not found.");
+            // }
+
+            // int userId = int.TryParse(userIdString, out int parsedUserId) ? parsedUserId : throw new Exception("Invalid user ID format.");
+
+            var PositionCandidate=await _service.ApplyToPosition(userId, candidateId, positionId, statusId);
             if(PositionCandidate==null){
                 return NotFound("The position candidate was not found");
             }

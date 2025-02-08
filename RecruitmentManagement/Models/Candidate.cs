@@ -38,6 +38,8 @@ namespace RecruitmentManagement.Model
         public virtual ICollection<PositionCandidate>? PositionCandidates { get; set; }
         public virtual ICollection<ShortlistCandidate>? ShortlistCandidates { get; set; }
 
+        public ICollection<CandidateStatus>? CandidateStatuses {get; set;}
+
        
 
 

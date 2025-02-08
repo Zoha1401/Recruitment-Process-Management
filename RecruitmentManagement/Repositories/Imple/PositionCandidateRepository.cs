@@ -1,5 +1,8 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RecruitmentManagement.DTOs;
 using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Models;
@@ -26,11 +29,11 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.PositionCandidates.FindAsync(id);
         }
 
-        public async Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId)
+        public async Task<PositionCandidate> ApplyToPosition(int userId, int candidateId, int positionId, int statusId)
         {
             var candidate = _context.Candidates.Find(candidateId);
             var position = _context.Positions.Find(positionId);
-
+            
             if (candidate == null || position == null)
             {
                 throw new ArgumentException("Invalid candidate or position ID.");
@@ -45,16 +48,49 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.PositionCandidates.AddAsync(positionCandidate);
             await _context.SaveChangesAsync();
 
+
+            //var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "sub");
+            var candidateStatus = new CandidateStatus
+            {
+                PositionId = positionId,
+                CandidateId = candidateId,
+                StatusId = statusId,
+                UpdatedAt = DateTime.Now,
+                UpdatedBy = userId,
+            };
+
+            await _context.CandidateStatuses.AddAsync(candidateStatus);
+            await _context.SaveChangesAsync();
+
             return positionCandidate;
         }
 
 
-        public async Task<PositionCandidate> UpdatePositionCandidate(PositionCandidate PositionCandidate)
-        {
-            _context.PositionCandidates.Update(PositionCandidate);
-            await _context.SaveChangesAsync();
-            return PositionCandidate;
-        }
+        // public async Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate)
+        // {
+        //     var positionCandidate=_context.PositionCandidates.FindAsync(positionCandidateId);
+        //     if(PositionCandidate.ApplicationDate!=null){
+        //         positionCandidate.ApplicationDate = PositionCandidate.ApplicationDate;
+        //     }
+        //     if(PositionCandidate.Comments!=null){
+        //         positionCandidate.Comments=PositionCandidate.Comments;
+        //     }
+        //      if(PositionCandidate.IsReviewed!=null){
+        //         positionCandidate.IsReviewed=PositionCandidate.IsReviewed;
+        //     }
+        //     if(PositionCandidate.IsShortlisted!=null){
+        //         positionCandidate.IsShortlisted=PositionCandidate.IsShortlisted;
+        //     }
+        //     if(PositionCandidate.PositionId!=null){
+        //         positionCandidate.PositionId=PositionCandidate.PositionId;
+        //     }
+        //       if(PositionCandidate.CandidateId!=null){
+        //         positionCandidate.CandidateId=PositionCandidate.CandidateId;
+        //     }
+        //     _context.PositionCandidates.Update(positionCandidate);
+        //     await _context.SaveChangesAsync();
+        //     return positionCandidate;
+        // }
 
         public async Task<bool> DeletePositionCandidate(int id)
         {
@@ -106,5 +142,9 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         }
 
+        public Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

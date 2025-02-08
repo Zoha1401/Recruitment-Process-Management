@@ -18,14 +18,20 @@ namespace RecruitmentManagement.Model
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
         [Column("updated_by")]
-        public int UpdatedBy{get; set;}
-        public User User{get; set;}
+        public int? UpdatedBy{get; set;}
+        public User? User{get; set;}
         [Column("comments")]
-        public string Comments { get; set; }
+        public string? Comments { get; set; }
         // public virtual User UpdatedByUser { get; set; }
-        [Column("position_candidate_id")]
-        public int PositionCandidateId { get; set; }
-        public PositionCandidate PositionCandidate { get; set; }
+        // [Column("position_candidate_id")]
+        // public int PositionCandidateId { get; set; }
+        // public PositionCandidate PositionCandidate { get; set; }
+
+        public int PositionId{get; set;}
+        public Position Position {get; set;}
+
+        public int CandidateId {get; set;}
+        public Candidate Candidate {get; set;}
         
 
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentProcessManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RecruitmentProcessManagementSystem.Data;
 namespace RecruitmentManagement.Migrations
 {
     [DbContext(typeof(RecruitmentDbContext))]
-    partial class RecruitmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250207093604_ModelChangeCandidateStatus3")]
+    partial class ModelChangeCandidateStatus3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,6 +110,9 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("comments");
 
+                    b.Property<int?>("PositionCandidateId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
@@ -128,6 +134,8 @@ namespace RecruitmentManagement.Migrations
                     b.HasKey("CandidateStatusId");
 
                     b.HasIndex("CandidateId");
+
+                    b.HasIndex("PositionCandidateId");
 
                     b.HasIndex("PositionId");
 
@@ -623,6 +631,10 @@ namespace RecruitmentManagement.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("RecruitmentManagement.Model.PositionCandidate", null)
+                        .WithMany("CandidateStatuses")
+                        .HasForeignKey("PositionCandidateId");
+
                     b.HasOne("RecruitmentManagement.Model.Position", "Position")
                         .WithMany("CandidateStatuses")
                         .HasForeignKey("PositionId")
@@ -876,6 +888,8 @@ namespace RecruitmentManagement.Migrations
 
             modelBuilder.Entity("RecruitmentManagement.Model.PositionCandidate", b =>
                 {
+                    b.Navigation("CandidateStatuses");
+
                     b.Navigation("InterviewFeedbacks");
 
                     b.Navigation("Interviews");

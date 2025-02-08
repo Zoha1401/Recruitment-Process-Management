@@ -154,6 +154,23 @@ namespace RecruitmentProcessManagementSystem.Repositories
           return position;
     }
 
-   
-}
+        public Task<PositionReport> FetchPositionReport(int positionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        // public async Task<PositionReport> FetchPositionReport(int positionId){
+        //     var position=await _context.Positions.FindAsync(positionId);
+        //     if(position==null){
+        //         throw new Exception("Position not found");
+        //     }
+        //     var positionCandidates = _context.PositionCandidates.ToListAsync();
+
+        //     var query1= from c in positionCandidates
+        //                 where c.PositionId equals positionId;
+
+        // }
+
+
+    }
 }

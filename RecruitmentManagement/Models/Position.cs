@@ -48,6 +48,8 @@ namespace RecruitmentManagement.Model
         public  ICollection<PositionCandidate>? PositionCandidates { get; set; }
         public  ICollection<PositionSkill>? PositionSkills { get; set; }
 
+        public ICollection<CandidateStatus>? CandidateStatuses {get; set;}
+
 
 
         public Position(String Name, int NoOfInterviews, int minExp, int maxExp, String desc)

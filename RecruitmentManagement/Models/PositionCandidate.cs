@@ -34,7 +34,7 @@ namespace RecruitmentManagement.Model
 
               
 
-        public virtual ICollection<CandidateStatus>? CandidateStatuses { get; set; }
+        // public virtual ICollection<CandidateStatus>? CandidateStatuses { get; set; }
         public virtual ICollection<Interview>? Interviews { get; set; }
         public virtual ICollection<InterviewFeedback>? InterviewFeedbacks { get; set; }
 

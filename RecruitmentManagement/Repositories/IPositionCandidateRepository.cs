@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RecruitmentManagement.DTOs;
 using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Models;
 
@@ -9,11 +10,11 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<PositionCandidate>> GetAllPositionCandidates();
         Task<PositionCandidate> GetPositionCandidateById(int id);
-        Task<PositionCandidate> UpdatePositionCandidate(PositionCandidate PositionCandidate);
+        Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate);
         Task<bool> DeletePositionCandidate(int id);
 
         Task<PositionCandidate> ReviewPositionCandidate(int position_PositionCandidate_id, bool isShortlisted, ICollection<MarkCandidateSkill> markPositionCandidateSkills);
-        Task<PositionCandidate> ApplyToPosition (int candidateId, int positionId);
+        Task<PositionCandidate> ApplyToPosition (int userId, int candidateId, int positionId, int statusId);
         
     }
 }
