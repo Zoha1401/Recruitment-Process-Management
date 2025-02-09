@@ -23,8 +23,8 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<Interview> AddInterview(InterviewRequest Interview){
            return await _repository.AddInterview(Interview);
         } 
-        public async Task<Interview> UpdateInterview(Interview Interview) {
-            return await _repository.UpdateInterview(Interview);
+        public async Task<Interview> UpdateInterview(int interviewId, InterviewRequest Interview) {
+            return await _repository.UpdateInterview(interviewId, Interview);
         } 
     
         public async Task<bool> DeleteInterview(int id) {

@@ -48,11 +48,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Interview Interview)
+        public async Task<IActionResult> Update(int id, [FromBody] InterviewRequest Interview)
         {
-            if (id != Interview.InterviewId) 
-                return BadRequest("ID mismatch.");
-            var updatedInterview = await _service.UpdateInterview(Interview);
+            var updatedInterview = await _service.UpdateInterview(id, Interview);
             if (updatedInterview == null) 
                 return NotFound("Student not found.");
             return Ok(updatedInterview);

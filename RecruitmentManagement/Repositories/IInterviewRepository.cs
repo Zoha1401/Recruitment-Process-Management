@@ -10,7 +10,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<IEnumerable<Interview>> GetAllInterviews();
         Task<Interview> GetInterviewById(int id);
         Task<Interview> AddInterview(InterviewRequest Interview);
-        Task<Interview> UpdateInterview(Interview Interview);
+        Task<Interview> UpdateInterview(int interviewid, InterviewRequest Interview);
         Task<bool> DeleteInterview(int id);
 
         Task<InterviewerInterview> AssignInterviewer(int interviewId, int interviewerId);

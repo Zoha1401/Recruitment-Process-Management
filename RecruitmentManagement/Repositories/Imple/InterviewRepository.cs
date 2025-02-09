@@ -47,12 +47,36 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return newInterview;
         }
 
-        public async Task<Interview> UpdateInterview(Interview Interview)
-        {
-            _context.Interviews.Update(Interview);
-            await _context.SaveChangesAsync();
-            return Interview;
-        }
+     public async Task<Interview> UpdateInterview(int interviewId, InterviewRequest interviewRequest)
+{
+    var interview = await _context.Interviews.FindAsync(interviewId);
+
+    if (interview == null)
+    {
+        throw new ArgumentException("Interview not found.");
+    }
+
+    if (interviewRequest.Date != default(DateTime))  
+        interview.Date = interviewRequest.Date;
+
+    if (interviewRequest.RecruiterId > 0)  
+        interview.RecruiterId = interviewRequest.RecruiterId;
+
+    if (interviewRequest.PositionCandidateId > 0)  
+        interview.PositionCandidateId = interviewRequest.PositionCandidateId;
+
+    if (interviewRequest.InterviewTypeId > 0)  
+        interview.InterviewTypeId = interviewRequest.InterviewTypeId;
+
+    if (interviewRequest.RoundNumber > 0)  
+        interview.RoundNumber = interviewRequest.RoundNumber;
+
+    _context.Interviews.Update(interview);
+    await _context.SaveChangesAsync();
+
+    return interview;
+}
+
 
         public async Task<bool> DeleteInterview(int id)
         {
