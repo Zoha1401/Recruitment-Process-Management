@@ -68,12 +68,14 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasKey(sc => new { sc.PositionId, sc.SkillId }); // Composite Key for Join Table
             modelBuilder.Entity<PositionSkill>()
                 .HasOne(sc => sc.Position)
-                .WithMany(s => s.PositionSkills) // Navigation Property in Student
-                .HasForeignKey(sc => sc.PositionId); //Foreign Key
+                .WithMany(s => s.PositionSkills) 
+                .HasForeignKey(sc => sc.PositionId)
+                 .OnDelete(DeleteBehavior.Restrict); //Foreign Key
             modelBuilder.Entity<PositionSkill>()
                 .HasOne(sc => sc.Skill)
-                .WithMany(c => c.PositionSkills) // Navigation Property in Course
-                .HasForeignKey(sc => sc.SkillId);
+                .WithMany(c => c.PositionSkills) 
+                .HasForeignKey(sc => sc.SkillId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CandidateSkill>()
                     .HasKey(cs => new { cs.CandidateId, cs.SkillId });
@@ -113,6 +115,8 @@ namespace RecruitmentProcessManagementSystem.Data
                 .WithMany(i => i.InterviewerInterviews)
                 .HasForeignKey(ii => ii.InterviewId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            
 
             modelBuilder.Entity<InterviewerInterview>()
                 .HasOne(ii => ii.Interviewer)

@@ -26,11 +26,15 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Candidates.FindAsync(id);
         }
 
-        public async Task<Candidate> AddCandidate(Candidate Candidate)
+        public async Task<Candidate> AddCandidate(Candidate candidate)
         {
-            _context.Candidates.Add(Candidate);
+            var candidateExist=_context.Candidates.FirstOrDefault(c=> c.Email==candidate.Email);
+            if(candidateExist!=null){
+              throw new ArgumentException("Candidate with this email already exists");
+            }
+            _context.Candidates.Add(candidate);
             await _context.SaveChangesAsync();
-            return Candidate;
+            return candidate;
         }
 
         public async Task<Candidate> UpdateCandidate(Candidate Candidate)

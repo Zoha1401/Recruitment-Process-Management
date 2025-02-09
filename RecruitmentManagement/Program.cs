@@ -62,7 +62,7 @@ builder.Services.AddScoped<ICandidateStatusRepository, CandidateStatusRepository
 builder.Services.AddScoped<CandidateStatusService> ();
 builder.Services.AddScoped<InterviewFeedbackService>();
 builder.Services.AddScoped<IInterviewFeedbackRepository, InterviewFeedbackRepository>();
-// builder.Services.AddScoped<CandidateSkillService>();
+builder.Services.AddScoped<CandidateSkillService>();
 builder.Services.AddScoped<PositionCandidateService>();
 // builder.Services.AddScoped<JobRequirementService>();
 builder.Services.AddScoped<InterviewService>();
@@ -70,6 +70,7 @@ builder.Services.AddScoped<IPositionCandidateRepository, PositionCandidateReposi
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+builder.Services.AddScoped<ICandidateSkillRepository, CandidateSkillRepository>();
 // builder.Services.AddScoped<IJobRequirementRepository, JobRequirementRepository>();
 builder.Services.AddScoped<RoleService>();
 
