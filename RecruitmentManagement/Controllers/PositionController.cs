@@ -103,7 +103,13 @@ namespace RecruitmentProcessManagementSystem.Controllers
          return Ok("The status of the position has been changed");
     }
 
-    [HttpPatch("{positionId}")]
+  [HttpPut("updateInterviewRounds/{positionId}")]
+       public async Task<Position> UpdateInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions){
+            
+            return await _service.UpdateInterviewRounds(positionId, interviewForPositions);
+         }
+
+  
     // public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
     // {
     //     var fromDb = await _service.GetPositionById(positionId);

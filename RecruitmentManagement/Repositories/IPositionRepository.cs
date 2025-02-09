@@ -15,7 +15,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         Task<Position> DefineInterviewRounds(int PositionId, ICollection<InterviewForPosition> InterviewForPositions);
         Task<Position> AssignReviewer(int positionId, int reviewerId);
-
+        Task<Position> UpdateInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions);
         Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange);
         Task<List<PositionReport>> FetchPositionReport(int positionId);
         Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId);

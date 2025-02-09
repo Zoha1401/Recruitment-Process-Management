@@ -71,92 +71,92 @@ namespace RecruitmentProcessManagementSystem.Repositories
         }
 
 
-      public async Task<Position> UpdatePosition(int positionId, PositionRequest positionRequest)
-{
-    var position = await _context.Positions
-        .Include(p => p.PositionSkills) 
-        .FirstOrDefaultAsync(p => p.PositionId == positionId);
-
-    if (position == null)
-    {
-        throw new ArgumentException("Position not found.");
-    }
-
-  
-    if (!string.IsNullOrEmpty(positionRequest.Description))
-        position.Description = positionRequest.Description;
-    if (positionRequest.Name!=null)
-        position.Name = positionRequest.Name;
-    
-    if (positionRequest.MinExp >= 0)
-        position.MinExp = positionRequest.MinExp;
-
-    if (positionRequest.MaxExp >= 0)
-        position.MaxExp = positionRequest.MaxExp;
-
-    if (positionRequest.NoOfInterviews >= 0)
-        position.NoOfInterviews = positionRequest.NoOfInterviews;
-
-    if (!string.IsNullOrEmpty(positionRequest.ReasonForClosure))
-        position.ReasonForClosure = positionRequest.ReasonForClosure;
-
-    if (positionRequest.StatusId >= 0)
-        position.PositionStatusTypeId = positionRequest.StatusId;
-
-    if (positionRequest.ReviewerId >= 0)
-        position.ReviewerId = positionRequest.ReviewerId;
-
-    position.UpdatedAt = DateTime.UtcNow; 
-
-    
-    if (positionRequest.SkillRequests != null)
-    {
-        
-        var existingSkills = position.PositionSkills.ToDictionary(ps => ps.SkillId);
-
-        foreach (var skillRequest in positionRequest.SkillRequests)
+        public async Task<Position> UpdatePosition(int positionId, PositionRequest positionRequest)
         {
-            var skill = await _context.Skills.FindAsync(skillRequest.SkillId);
-            if (skill == null)
+            var position = await _context.Positions
+                .Include(p => p.PositionSkills)
+                .FirstOrDefaultAsync(p => p.PositionId == positionId);
+
+            if (position == null)
             {
-               
-                Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
-                continue;
+                throw new ArgumentException("Position not found.");
             }
 
-            if (existingSkills.TryGetValue(skill.SkillId, out var existingSkill))
+
+            if (!string.IsNullOrEmpty(positionRequest.Description))
+                position.Description = positionRequest.Description;
+            if (positionRequest.Name != null)
+                position.Name = positionRequest.Name;
+
+            if (positionRequest.MinExp >= 0)
+                position.MinExp = positionRequest.MinExp;
+
+            if (positionRequest.MaxExp >= 0)
+                position.MaxExp = positionRequest.MaxExp;
+
+            if (positionRequest.NoOfInterviews >= 0)
+                position.NoOfInterviews = positionRequest.NoOfInterviews;
+
+            if (!string.IsNullOrEmpty(positionRequest.ReasonForClosure))
+                position.ReasonForClosure = positionRequest.ReasonForClosure;
+
+            if (positionRequest.StatusId >= 0)
+                position.PositionStatusTypeId = positionRequest.StatusId;
+
+            if (positionRequest.ReviewerId >= 0)
+                position.ReviewerId = positionRequest.ReviewerId;
+
+            position.UpdatedAt = DateTime.UtcNow;
+
+
+            if (positionRequest.SkillRequests != null)
             {
-                
-                if (existingSkill.Required != skillRequest.Required)
+
+                var existingSkills = position.PositionSkills.ToDictionary(ps => ps.SkillId);
+
+                foreach (var skillRequest in positionRequest.SkillRequests)
                 {
-                    existingSkill.Required = skillRequest.Required;
+                    var skill = await _context.Skills.FindAsync(skillRequest.SkillId);
+                    if (skill == null)
+                    {
+
+                        Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
+                        continue;
+                    }
+
+                    if (existingSkills.TryGetValue(skill.SkillId, out var existingSkill))
+                    {
+
+                        if (existingSkill.Required != skillRequest.Required)
+                        {
+                            existingSkill.Required = skillRequest.Required;
+                        }
+                    }
+                    else
+                    {
+
+                        position.PositionSkills.Add(new PositionSkill
+                        {
+                            PositionId = positionId,
+                            SkillId = skill.SkillId,
+                            Required = skillRequest.Required
+                        });
+                    }
                 }
+
+
+                var newSkillIds = positionRequest.SkillRequests.Select(sr => sr.SkillId).ToHashSet();
+                var skillsToRemove = position.PositionSkills.Where(ps => !newSkillIds.Contains(ps.SkillId)).ToList();
+
+
+                _context.PositionSkills.RemoveRange(skillsToRemove);
             }
-            else
-            {
-                
-                position.PositionSkills.Add(new PositionSkill
-                {
-                    PositionId = positionId,
-                    SkillId = skill.SkillId,
-                    Required = skillRequest.Required
-                });
-            }
+
+            _context.Positions.Update(position);
+            await _context.SaveChangesAsync();
+
+            return position;
         }
-
-     
-        var newSkillIds = positionRequest.SkillRequests.Select(sr => sr.SkillId).ToHashSet();
-        var skillsToRemove = position.PositionSkills.Where(ps => !newSkillIds.Contains(ps.SkillId)).ToList();
-        
-      
-        _context.PositionSkills.RemoveRange(skillsToRemove);
-    }
-
-    _context.Positions.Update(position);
-    await _context.SaveChangesAsync();
-
-    return position;
-}
 
 
 
@@ -202,6 +202,55 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
             return Position;
         }
+
+        public async Task<Position> UpdateInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions)
+        {
+            var position = await _context.Positions.FindAsync(positionId);
+            if (position == null)
+            {
+                throw new ArgumentException("No such position is found for this Id");
+            }
+
+            if (interviewForPositions == null || !interviewForPositions.Any())
+            {
+                throw new ArgumentException("Interview rounds cannot be empty.");
+            }
+
+            
+            var existingInterviews = _context.PositionInterviews.Where(pi => pi.PositionId == positionId).ToList();
+            foreach (var interviewForPosition in interviewForPositions)
+            {
+                var interviewType = await _context.InterviewTypes.FindAsync(interviewForPosition.TypeId);
+                if (interviewType == null)
+                {
+                    throw new ArgumentException($"No interview type found for ID {interviewForPosition.TypeId}");
+                }
+
+                var existingInterview = existingInterviews.FirstOrDefault(pi => pi.InterviewTypeId == interviewForPosition.TypeId);
+                if (existingInterview != null)
+                {
+                    existingInterview.NoOfInterviews = interviewForPosition.NoOfInterviews;
+                }
+                else
+                {
+                    var newPositionInterview = new PositionInterview
+                    {
+                        PositionId = positionId,
+                        NoOfInterviews = interviewForPosition.NoOfInterviews,
+                        InterviewTypeId = interviewForPosition.TypeId
+                    };
+                    _context.PositionInterviews.Add(newPositionInterview);
+                }
+            }
+            var newInterviewTypeIds = interviewForPositions.Select(i => i.TypeId).ToList();
+            var interviewsToRemove = existingInterviews.Where(i => !newInterviewTypeIds.Contains(i.InterviewTypeId)).ToList();
+            _context.PositionInterviews.RemoveRange(interviewsToRemove);
+
+            await _context.SaveChangesAsync();
+
+            return position;
+        }
+
 
         public async Task<Position> AssignReviewer(int positionId, int reviewerId)
         {
