@@ -10,7 +10,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<IEnumerable<CandidateStatus>> GetAllCandidateStatuss();
         Task<CandidateStatus> GetCandidateStatusById(int id);
         Task<CandidateStatus> AddCandidateStatus(CandidateStatus CandidateStatus);
-        Task<CandidateStatus> UpdateCandidateStatus(CandidateStatus CandidateStatus);
+        Task<CandidateStatus> UpdateCandidateStatus(int id, CandidateStatusDTO CandidateStatus);
         Task<bool> DeleteCandidateStatus(int id);
         
     }

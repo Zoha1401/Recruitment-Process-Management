@@ -23,8 +23,8 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<CandidateStatus> AddCandidateStatus(CandidateStatus CandidateStatus){
            return await _repository.AddCandidateStatus(CandidateStatus);
         } 
-        public async Task<CandidateStatus> UpdateCandidateStatus(CandidateStatus CandidateStatus) {
-            return await _repository.UpdateCandidateStatus(CandidateStatus);
+        public async Task<CandidateStatus> UpdateCandidateStatus(int id, CandidateStatusDTO CandidateStatus) {
+            return await _repository.UpdateCandidateStatus(id, CandidateStatus);
         } 
     
         public async Task<bool> DeleteCandidateStatus(int id) {

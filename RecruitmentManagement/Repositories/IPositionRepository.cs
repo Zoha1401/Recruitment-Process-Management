@@ -9,8 +9,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<Position>> GetAllPositions();
         Task<Position> GetPositionById(int id);
-        Task<Position> AddPosition(AddPositionRequest Position);
-        Task<Position> UpdatePosition(Position Position);
+        Task<Position> AddPosition(PositionRequest Position);
+        Task<Position> UpdatePosition(int positionId, PositionRequest Position);
         Task<bool> DeletePosition(int id);
 
         Task<Position> DefineInterviewRounds(int PositionId, ICollection<InterviewForPosition> InterviewForPositions);
@@ -18,5 +18,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange);
         Task<List<PositionReport>> FetchPositionReport(int positionId);
+        Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId);
     }
 }

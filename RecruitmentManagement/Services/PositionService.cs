@@ -20,11 +20,11 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<Position> GetPositionById(int id) {
             return await _repository.GetPositionById(id);
         }
-        public async Task<Position> AddPosition(AddPositionRequest Position){
+        public async Task<Position> AddPosition(PositionRequest Position){
            return await _repository.AddPosition(Position);
         } 
-        public async Task<Position> UpdatePosition(Position Position) {
-            return await _repository.UpdatePosition(Position);
+        public async Task<Position> UpdatePosition(int positionId , PositionRequest Position) {
+            return await _repository.UpdatePosition(positionId, Position);
         } 
     
         public async Task<bool> DeletePosition(int id) {
@@ -47,6 +47,11 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<List<PositionReport>> FetchPositionReport(int positionId)
         {
             return await _repository.FetchPositionReport(positionId);
+        }
+
+        public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
+        {
+            return await _repository.FetchCollegewiseReport(positionId);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddPositionRequest Position)
+        public async Task<IActionResult> Add([FromBody] PositionRequest Position)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
@@ -48,11 +48,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Position Position)
+        public async Task<IActionResult> Update(int id, [FromBody] PositionRequest Position)
         {
-            if (id != Position.PositionId) 
-                return BadRequest("ID mismatch.");
-            var updatedPosition = await _service.UpdatePosition(Position);
+            var updatedPosition = await _service.UpdatePosition(id, Position);
             if (updatedPosition == null) 
                 return NotFound("Student not found.");
             return Ok(updatedPosition);
@@ -106,27 +104,27 @@ namespace RecruitmentProcessManagementSystem.Controllers
     }
 
     [HttpPatch("{positionId}")]
-    public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
-    {
-        var fromDb = await _service.GetPositionById(positionId);
-        if(fromDb==null){
-            throw new ArgumentException("Position is not found");
-        }
-        var original = fromDb;
-        patch.ApplyTo(fromDb, ModelState);
+    // public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
+    // {
+    //     var fromDb = await _service.GetPositionById(positionId);
+    //     if(fromDb==null){
+    //         throw new ArgumentException("Position is not found");
+    //     }
+    //     var original = fromDb;
+    //     patch.ApplyTo(fromDb, ModelState);
 
-        var isValid = TryValidateModel(fromDb);
-        if (!isValid)
-        {
-            return BadRequest(ModelState);
-        }
-        await _service.UpdatePosition(fromDb);
-        var model = new
-        {
-            original,
-        };
-        return Ok(model);
-    }
+    //     var isValid = TryValidateModel(fromDb);
+    //     if (!isValid)
+    //     {
+    //         return BadRequest(ModelState);
+    //     }
+    //     await _service.UpdatePosition(fromDb);
+    //     var model = new
+    //     {
+    //         original,
+    //     };
+    //     return Ok(model);
+    // }
 
     [HttpGet("fetchPositionReport/{positionId}")]
 
@@ -136,6 +134,16 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return NotFound("Position Report not found");
         }
         return Ok(positionReport);
+    }
+
+     [HttpGet("fetchCollegewiseReport/{positionId}")]
+
+    public async Task<IActionResult> FetchCollegewiseReport(int positionId){
+        var collegewiseReport=await _service.FetchCollegewiseReport(positionId);
+        if(collegewiseReport==null){
+            return NotFound("Position Report not found");
+        }
+        return Ok(collegewiseReport);
     }
    
 

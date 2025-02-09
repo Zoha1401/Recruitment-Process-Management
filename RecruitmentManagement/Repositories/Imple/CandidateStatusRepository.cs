@@ -33,11 +33,38 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return CandidateStatus;
         }
 
-        public async Task<CandidateStatus> UpdateCandidateStatus(CandidateStatus CandidateStatus)
+        public async Task<CandidateStatus> UpdateCandidateStatus(int candidate_status_id, CandidateStatusDTO candidateStatusDTO)
         {
-            _context.CandidateStatuses.Update(CandidateStatus);
+            var candidateStatus = await _context.CandidateStatuses.FindAsync(candidate_status_id);
+
+            if (candidateStatus == null)
+            {
+                throw new ArgumentException("Candidate status not found.");
+            }
+
+           
+            if (candidateStatusDTO.StatusId > 0)
+            {
+                candidateStatus.StatusId = candidateStatusDTO.StatusId;
+            }
+
+            candidateStatus.UpdatedAt = DateTime.UtcNow; 
+
+            if (candidateStatusDTO.UpdatedBy.HasValue)
+            {
+                candidateStatus.UpdatedBy = candidateStatusDTO.UpdatedBy.Value;
+            }
+
+            if (!string.IsNullOrEmpty(candidateStatusDTO.Comments))
+            {
+                candidateStatus.Comments = candidateStatusDTO.Comments;
+            }
+
+            _context.CandidateStatuses.Update(candidateStatus);
             await _context.SaveChangesAsync();
-            return CandidateStatus;
+
+            return candidateStatus;
+
         }
 
         public async Task<bool> DeleteCandidateStatus(int id)
@@ -49,6 +76,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-      
+
     }
 }

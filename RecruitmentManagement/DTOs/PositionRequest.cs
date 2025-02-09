@@ -1,6 +1,6 @@
 using RecruitmentManagement.Model;
 
-public class AddPositionRequest
+public class PositionRequest
         {
         
         public String Name { get; set; }
@@ -18,6 +18,7 @@ public class AddPositionRequest
         public string? ReasonForClosure { get; set; }
       
         public int StatusId {get; set;}
+        public int? ReviewerId {get; set;}
 
         public ICollection<SkillRequest>? SkillRequests {get; set;}
         }

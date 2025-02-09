@@ -47,11 +47,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CandidateStatus CandidateStatus)
+        public async Task<IActionResult> Update(int id, [FromBody] CandidateStatusDTO CandidateStatus)
         {
-            if (id != CandidateStatus.CandidateStatusId)
-                return BadRequest("ID mismatch.");
-            var updatedCandidateStatus = await _service.UpdateCandidateStatus(CandidateStatus);
+            var updatedCandidateStatus = await _service.UpdateCandidateStatus(id, CandidateStatus);
             if (updatedCandidateStatus == null)
                 return NotFound("Student not found.");
             return Ok(updatedCandidateStatus);

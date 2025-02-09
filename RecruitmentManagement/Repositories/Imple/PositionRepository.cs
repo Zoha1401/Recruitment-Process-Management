@@ -28,55 +28,137 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Positions.FindAsync(id);
         }
 
-       public async Task<Position> AddPosition([FromBody] AddPositionRequest positionRequest)
-{
-    var newPosition = new Position
-    {
-        Name = positionRequest.Name,
-        NoOfInterviews = positionRequest.NoOfInterviews,
-        Description = positionRequest.Description,
-        PositionStatusTypeId = positionRequest.StatusId,
-        MinExp = positionRequest.MinExp,
-        MaxExp = positionRequest.MaxExp,
-        CreatedAt=positionRequest.CreatedAt,
-    };
+        public async Task<Position> AddPosition([FromBody] PositionRequest positionRequest)
+        {
+            var newPosition = new Position
+            {
+                Name = positionRequest.Name,
+                NoOfInterviews = positionRequest.NoOfInterviews,
+                Description = positionRequest.Description,
+                PositionStatusTypeId = positionRequest.StatusId,
+                MinExp = positionRequest.MinExp,
+                MaxExp = positionRequest.MaxExp,
+                CreatedAt = positionRequest.CreatedAt,
+            };
 
-    // Iterate over the incoming SkillRequests and add PositionSkill objects
+            // Iterate over the incoming SkillRequests and add PositionSkill objects
+            if (positionRequest.SkillRequests != null)
+            {
+                foreach (var skillRequest in positionRequest.SkillRequests)
+                {
+                    var skill = _context.Skills.Find(skillRequest.SkillId);
+                    if (skill != null)
+                    {
+                        var newPositionSkill = new PositionSkill
+                        {
+                            Skill = skill,
+                            Position = newPosition, // Establish relationship
+                            Required = skillRequest.Required
+                        };
+                        newPosition.PositionSkills.Add(newPositionSkill);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
+                    }
+                }
+            }
+
+            _context.Positions.Add(newPosition);
+            await _context.SaveChangesAsync();
+
+            return newPosition;
+        }
+
+
+      public async Task<Position> UpdatePosition(int positionId, PositionRequest positionRequest)
+{
+    var position = await _context.Positions
+        .Include(p => p.PositionSkills) 
+        .FirstOrDefaultAsync(p => p.PositionId == positionId);
+
+    if (position == null)
+    {
+        throw new ArgumentException("Position not found.");
+    }
+
+  
+    if (!string.IsNullOrEmpty(positionRequest.Description))
+        position.Description = positionRequest.Description;
+    if (positionRequest.Name!=null)
+        position.Name = positionRequest.Name;
+    
+    if (positionRequest.MinExp >= 0)
+        position.MinExp = positionRequest.MinExp;
+
+    if (positionRequest.MaxExp >= 0)
+        position.MaxExp = positionRequest.MaxExp;
+
+    if (positionRequest.NoOfInterviews >= 0)
+        position.NoOfInterviews = positionRequest.NoOfInterviews;
+
+    if (!string.IsNullOrEmpty(positionRequest.ReasonForClosure))
+        position.ReasonForClosure = positionRequest.ReasonForClosure;
+
+    if (positionRequest.StatusId >= 0)
+        position.PositionStatusTypeId = positionRequest.StatusId;
+
+    if (positionRequest.ReviewerId >= 0)
+        position.ReviewerId = positionRequest.ReviewerId;
+
+    position.UpdatedAt = DateTime.UtcNow; 
+
+    
     if (positionRequest.SkillRequests != null)
     {
+        
+        var existingSkills = position.PositionSkills.ToDictionary(ps => ps.SkillId);
+
         foreach (var skillRequest in positionRequest.SkillRequests)
         {
-            var skill = _context.Skills.Find(skillRequest.SkillId);
-            if (skill != null)
+            var skill = await _context.Skills.FindAsync(skillRequest.SkillId);
+            if (skill == null)
             {
-                var newPositionSkill = new PositionSkill
+               
+                Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
+                continue;
+            }
+
+            if (existingSkills.TryGetValue(skill.SkillId, out var existingSkill))
+            {
+                
+                if (existingSkill.Required != skillRequest.Required)
                 {
-                    Skill = skill,
-                    Position = newPosition, // Establish relationship
-                    Required = skillRequest.Required
-                };
-                newPosition.PositionSkills.Add(newPositionSkill);
+                    existingSkill.Required = skillRequest.Required;
+                }
             }
             else
             {
-                Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
+                
+                position.PositionSkills.Add(new PositionSkill
+                {
+                    PositionId = positionId,
+                    SkillId = skill.SkillId,
+                    Required = skillRequest.Required
+                });
             }
         }
+
+     
+        var newSkillIds = positionRequest.SkillRequests.Select(sr => sr.SkillId).ToHashSet();
+        var skillsToRemove = position.PositionSkills.Where(ps => !newSkillIds.Contains(ps.SkillId)).ToList();
+        
+      
+        _context.PositionSkills.RemoveRange(skillsToRemove);
     }
 
-    _context.Positions.Add(newPosition);
+    _context.Positions.Update(position);
     await _context.SaveChangesAsync();
 
-    return newPosition;
+    return position;
 }
 
 
-        public async Task<Position> UpdatePosition(Position Position)
-        {
-            _context.Positions.Update(Position);
-            await _context.SaveChangesAsync();
-            return Position;
-        }
 
         public async Task<bool> DeletePosition(int id)
         {
@@ -88,90 +170,124 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return true;
         }
 
-    
 
-    public async Task<Position> DefineInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions){
-        var Position= _context.Positions.Find(positionId);
-        if(Position==null){
-            throw new ArgumentException("No such position is found for this Id");
-        }
-        if(interviewForPositions!=null){
-        foreach (var interviewForPosition in interviewForPositions)
+
+        public async Task<Position> DefineInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions)
         {
-            var InterviewType=_context.InterviewTypes.Find(interviewForPosition.TypeId);
-            if(InterviewType==null){
-                throw new ArgumentException ("No such interview type found");
+            var Position = _context.Positions.Find(positionId);
+            if (Position == null)
+            {
+                throw new ArgumentException("No such position is found for this Id");
             }
-            var newPositionInterview=new PositionInterview{
-                PositionId=positionId,
-                NoOfInterviews=interviewForPosition.NoOfInterviews,
-                InterviewTypeId=interviewForPosition.TypeId
-            };
-            _context.PositionInterviews.Add(newPositionInterview);
+            if (interviewForPositions != null)
+            {
+                foreach (var interviewForPosition in interviewForPositions)
+                {
+                    var InterviewType = _context.InterviewTypes.Find(interviewForPosition.TypeId);
+                    if (InterviewType == null)
+                    {
+                        throw new ArgumentException("No such interview type found");
+                    }
+                    var newPositionInterview = new PositionInterview
+                    {
+                        PositionId = positionId,
+                        NoOfInterviews = interviewForPosition.NoOfInterviews,
+                        InterviewTypeId = interviewForPosition.TypeId
+                    };
+                    _context.PositionInterviews.Add(newPositionInterview);
 
-        }
-        }
-        await _context.SaveChangesAsync();
+                }
+            }
+            await _context.SaveChangesAsync();
 
-        return Position;
-    }
-
-    public async Task<Position> AssignReviewer(int positionId, int reviewerId){
-        var reviewer= _context.Users.Find(reviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
-        var Role=_context.Roles.Find(reviewer.RoleId);
-        if(Role==null){
-            throw new ArgumentException("No role is assigned to user");
+            return Position;
         }
-        var roleName=Role.RoleName;
-           if(roleName!="Reviewer"){
+
+        public async Task<Position> AssignReviewer(int positionId, int reviewerId)
+        {
+            var reviewer = _context.Users.Find(reviewerId) ?? throw new ArgumentException("Reviewer is not found by this ID");
+            var Role = _context.Roles.Find(reviewer.RoleId);
+            if (Role == null)
+            {
+                throw new ArgumentException("No role is assigned to user");
+            }
+            var roleName = Role.RoleName;
+            if (roleName != "Reviewer")
+            {
                 throw new ArgumentException("The given user is not an reviewer");
             }
-        var position =_context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
-        if(position.ReviewerId!=null){
-            throw new ArgumentException("Reviewer for this position has already been assigned");
+            var position = _context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
+            if (position.ReviewerId != null)
+            {
+                throw new ArgumentException("Reviewer for this position has already been assigned");
+            }
+            position.ReviewerId = reviewerId;
+            position.Reviewer = reviewer;
+
+            _context.Positions.Update(position);
+            await _context.SaveChangesAsync();
+
+            return position;
+
         }
-        position.ReviewerId=reviewerId;
-        position.Reviewer=reviewer;
 
-        _context.Positions.Update(position);
-        await _context.SaveChangesAsync();
+        public async Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange)
+        {
+            var position = _context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
 
-        return position;
-       
-    }
+            position.PositionStatusTypeId = positionStatusChange.StatusId;
+            if (positionStatusChange.ReasonForClosure != null)
+            {
+                position.ReasonForClosure = positionStatusChange.ReasonForClosure;
+            }
 
-    public async Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange){
-          var position =_context.Positions.Find(positionId) ?? throw new ArgumentException("Position not found with this ID");
+            _context.Positions.Update(position);
+            await _context.SaveChangesAsync();
 
-          position.PositionStatusTypeId=positionStatusChange.StatusId;
-          if(positionStatusChange.ReasonForClosure!=null){
-            position.ReasonForClosure=positionStatusChange.ReasonForClosure;
-          }
-
-        _context.Positions.Update(position);
-        await _context.SaveChangesAsync();
-
-          return position;
-    }
+            return position;
+        }
 
 
-        public async Task<List<PositionReport>> FetchPositionReport(int positionId){
+        public async Task<List<PositionReport>> FetchPositionReport(int positionId)
+        {
             var positionReport = await (from p in _context.Positions
-                                join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
-                                join c in _context.Candidates on pc.CandidateId equals c.CandidateId
-                                where p.PositionId == positionId
-                                select new PositionReport
-                                {
-                                    CandidateName = c.Name,
-                                    CandidateEmail = c.Email,
-                                    WorkExperience = c.WorkExperience,
-                                    ResumeUrl = c.ResumeUrl,
-                                    ApplicationDate = pc.ApplicationDate,
-                                    IsReviewed = pc.IsReviewed,
-                                    IsShortlisted = pc.IsShortlisted,
-                                    Comments = pc.Comments
-                                }).ToListAsync();
+                                        join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
+                                        join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+                                        where p.PositionId == positionId
+                                        select new PositionReport
+                                        {
+                                            CandidateName = c.Name,
+                                            CandidateEmail = c.Email,
+                                            WorkExperience = c.WorkExperience,
+                                            ResumeUrl = c.ResumeUrl,
+                                            Comments = pc.Comments,
+                                            IsReviewed = pc.IsReviewed,
+                                            IsShortlisted = pc.IsShortlisted,
+                                            ApplicationDate = pc.ApplicationDate
+                                        }).ToListAsync();
             return positionReport;
+        }
+
+
+        public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
+        {
+            var collegewiseReport = await (from p in _context.Positions
+                                           join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
+                                           join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+                                           where p.PositionId == positionId
+                                           select new CollegewiseReport
+                                           {
+                                               CandidateName = c.Name,
+                                               CandidateEmail = c.Email,
+                                               CollegeName = c.CollegeName,
+                                               WorkExperience = c.WorkExperience,
+                                               ResumeUrl = c.ResumeUrl,
+                                               Comments = pc.Comments,
+                                               IsReviewed = pc.IsReviewed,
+                                               IsShortlisted = pc.IsShortlisted,
+                                               ApplicationDate = pc.ApplicationDate
+                                           }).ToListAsync();
+            return collegewiseReport;
         }
 
 

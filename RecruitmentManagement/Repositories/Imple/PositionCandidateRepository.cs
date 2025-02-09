@@ -74,31 +74,34 @@ namespace RecruitmentProcessManagementSystem.Repositories
         }
 
 
-        // public async Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate)
-        // {
-        //     var positionCandidate=_context.PositionCandidates.FindAsync(positionCandidateId);
-        //     if(PositionCandidate.ApplicationDate!=null){
-        //         positionCandidate.ApplicationDate = PositionCandidate.ApplicationDate;
-        //     }
-        //     if(PositionCandidate.Comments!=null){
-        //         positionCandidate.Comments=PositionCandidate.Comments;
-        //     }
-        //      if(PositionCandidate.IsReviewed!=null){
-        //         positionCandidate.IsReviewed=PositionCandidate.IsReviewed;
-        //     }
-        //     if(PositionCandidate.IsShortlisted!=null){
-        //         positionCandidate.IsShortlisted=PositionCandidate.IsShortlisted;
-        //     }
-        //     if(PositionCandidate.PositionId!=null){
-        //         positionCandidate.PositionId=PositionCandidate.PositionId;
-        //     }
-        //       if(PositionCandidate.CandidateId!=null){
-        //         positionCandidate.CandidateId=PositionCandidate.CandidateId;
-        //     }
-        //     _context.PositionCandidates.Update(positionCandidate);
-        //     await _context.SaveChangesAsync();
-        //     return positionCandidate;
-        // }
+        public async Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate)
+        {
+            var positionCandidate=await _context.PositionCandidates.FindAsync(positionCandidateId);
+            if(positionCandidate==null){
+                throw new ArgumentException("position candidate is not found");
+            }
+            if(PositionCandidate.ApplicationDate!=null){
+                positionCandidate.ApplicationDate = PositionCandidate.ApplicationDate.Value;
+            }
+            if(PositionCandidate.Comments!=null){
+                positionCandidate.Comments=PositionCandidate.Comments;
+            }
+             if(PositionCandidate.IsReviewed!=null){
+                positionCandidate.IsReviewed=PositionCandidate.IsReviewed.Value;
+            }
+            if(PositionCandidate.IsShortlisted!=null){
+                positionCandidate.IsShortlisted=PositionCandidate.IsShortlisted.Value;
+            }
+            if(PositionCandidate.PositionId!=null){
+                positionCandidate.PositionId=PositionCandidate.PositionId.Value;
+            }
+              if(PositionCandidate.CandidateId!=null){
+                positionCandidate.CandidateId=PositionCandidate.CandidateId.Value;
+            }
+            _context.PositionCandidates.Update(positionCandidate);
+            await _context.SaveChangesAsync();
+            return positionCandidate;
+        }
 
         public async Task<bool> DeletePositionCandidate(int id)
         {
@@ -150,9 +153,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         }
 
-        public Task<PositionCandidate> UpdatePositionCandidate(int positionCandidateId, PositionCandidateDTO PositionCandidate)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }
