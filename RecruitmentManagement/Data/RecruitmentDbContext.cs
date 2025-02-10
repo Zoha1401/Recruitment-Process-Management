@@ -37,7 +37,13 @@ namespace RecruitmentProcessManagementSystem.Data
 
         public DbSet<InterviewFeedback> InterviewFeedbacks { get; set; }
 
-        public DbSet<CandidateStatus> CandidateStatuses{get; set;}
+        public DbSet<CandidateStatus> CandidateStatuses { get; set; }
+
+        public DbSet<ShortlistCandidate> ShortlistCandidates { get; set; }
+
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<DocumentStatus> DocumentStatuses { get; set; }
+        public DbSet<DocumentStatusType> DocumentStatusTypes { get; set; }
 
         // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
 
@@ -68,12 +74,12 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasKey(sc => new { sc.PositionId, sc.SkillId }); // Composite Key for Join Table
             modelBuilder.Entity<PositionSkill>()
                 .HasOne(sc => sc.Position)
-                .WithMany(s => s.PositionSkills) 
+                .WithMany(s => s.PositionSkills)
                 .HasForeignKey(sc => sc.PositionId)
                  .OnDelete(DeleteBehavior.Restrict); //Foreign Key
             modelBuilder.Entity<PositionSkill>()
                 .HasOne(sc => sc.Skill)
-                .WithMany(c => c.PositionSkills) 
+                .WithMany(c => c.PositionSkills)
                 .HasForeignKey(sc => sc.SkillId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -97,13 +103,13 @@ namespace RecruitmentProcessManagementSystem.Data
                 .WithMany()
                 .HasForeignKey(i => i.InterviewTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             modelBuilder.Entity<PositionCandidate>()
                 .HasOne(pc => pc.Candidate)
                 .WithMany(c => c.PositionCandidates)
                 .HasForeignKey(pc => pc.CandidateId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             modelBuilder.Entity<PositionCandidate>()
                 .HasOne(pc => pc.Position)
                 .WithMany(c => c.PositionCandidates)
@@ -116,7 +122,7 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasForeignKey(ii => ii.InterviewId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+
 
             modelBuilder.Entity<InterviewerInterview>()
                 .HasOne(ii => ii.Interviewer)
@@ -124,17 +130,23 @@ namespace RecruitmentProcessManagementSystem.Data
                 .HasForeignKey(ii => ii.InterviewerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-              modelBuilder.Entity<CandidateStatus>()
-                .HasOne(c => c.Candidate)
-                .WithMany(cs => cs.CandidateStatuses)
-                .HasForeignKey(c => c.CandidateId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CandidateStatus>()
+              .HasOne(c => c.Candidate)
+              .WithMany(cs => cs.CandidateStatuses)
+              .HasForeignKey(c => c.CandidateId)
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CandidateStatus>()
                 .HasOne(cs => cs.Position)
                 .WithMany(c => c.CandidateStatuses)
                 .HasForeignKey(cs => cs.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Document>()
+        .HasOne(e => e.DocumentStatus)
+        .WithOne(e => e.Document)
+        .HasForeignKey<DocumentStatus>(e => e.DocumentId)
+        .IsRequired();
 
 
             base.OnModelCreating(modelBuilder);

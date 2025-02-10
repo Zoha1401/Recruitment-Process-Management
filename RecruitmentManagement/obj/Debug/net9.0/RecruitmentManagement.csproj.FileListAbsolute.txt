@@ -639,3 +639,5 @@ C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Microso
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\ExcelDataReader.dll
+C:\Users\suratzoh\Desktop\Project\RecruitmentManagement\bin\Debug\net9.0\ExcelDataReader.DataSet.dll

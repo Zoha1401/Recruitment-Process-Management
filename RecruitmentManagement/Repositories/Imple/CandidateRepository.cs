@@ -34,6 +34,40 @@ namespace RecruitmentProcessManagementSystem.Repositories
             }
             _context.Candidates.Add(candidate);
             await _context.SaveChangesAsync();
+
+    //         var userExist = await _context.Users.FirstOrDefaultAsync(u => u.Email == candidate.Email);
+    
+    // if (userExist != null)
+    // {
+    //     throw new ArgumentException("Candidate with this email already exists");
+    // }
+
+    // // Create a new User entry
+    // var user = new User
+    // {
+    //     Email = candidate.Email,
+    //     Password = HashPassword(candidate.Password), // Hash the password before storing
+    //     Role = "Candidate"
+    // };
+
+    // _context.Users.Add(user);
+    // await _context.SaveChangesAsync();
+
+    // // Now create Candidate linked with UserId
+    // var newCandidate = new Candidate
+    // {
+    //     UserId = user.UserId, // Assign UserId from the newly created User
+    //     Name = candidate.Name,
+    //     CollegeName = candidate.CollegeName,
+    //     Degree = candidate.Degree,
+    //     WorkExperience = candidate.WorkExperience,
+    //     ResumeUrl = candidate.ResumeUrl
+    // };
+
+    // _context.Candidates.Add(newCandidate);
+    // await _context.SaveChangesAsync();
+
+    // return newCandidate;
             return candidate;
         }
 

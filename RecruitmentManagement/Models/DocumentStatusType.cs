@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace RecruitmentManagement.Model
@@ -7,10 +8,12 @@ namespace RecruitmentManagement.Model
     {
         [Key]
         [Required]
+        [Column("document_status_type_id")]
         public int Id { get; set; }
+        [Column("status_name")]
         public string StatusName { get; set; }
 
-        public virtual ICollection<DocumentStatus> DocumentStatuses { get; set; }
+        public ICollection<DocumentStatus> DocumentStatuses { get; set; }
     }
 
 }

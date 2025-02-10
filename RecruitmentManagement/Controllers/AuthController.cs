@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Helpers;
 using RecruitmentProcessManagementSystem.Models;
@@ -48,6 +49,21 @@ namespace RecruitmentProcessManagementSystem.Controllers
             user.Role = role;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+    //         if (role.RoleName.ToLower() == "candidate")
+    // {
+    //     var candidate = new Candidate
+    //     {
+    //         UserId = user.UserId, // Link to User
+    //         CollegeName = request.CollegeName,
+    //         Degree = request.Degree,
+    //         WorkExperience = request.WorkExperience,
+    //         ResumeUrl = request.ResumeUrl
+    //     };
+
+    //     _context.Candidates.Add(candidate);
+    //     await _context.SaveChangesAsync();
+    // }
 
 
 
