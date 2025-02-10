@@ -145,6 +145,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
                 }
             }
             PositionCandidate.IsShortlisted = isShortlisted;
+            PositionCandidate.IsReviewed=true;
 
             _context.PositionCandidates.Update(PositionCandidate);
             await _context.SaveChangesAsync();

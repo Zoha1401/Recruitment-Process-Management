@@ -16,9 +16,10 @@ namespace RecruitmentManagement.Model
         public int ShortlistCandidateId { get; set; }
 
         public ShortlistCandidate ShortlistCandidate { get; set; }
-        [Column("document_status_id")]
-        public int DocumentStatusId{get; set;}
-        public DocumentStatus DocumentStatus { get; set; }
+        [Column("document_status_type_id")]
+
+        public int DocumentStatusTypeId {get; set;}
+         public DocumentStatusType DocumentStatusType { get; set; }
     }
 
 }

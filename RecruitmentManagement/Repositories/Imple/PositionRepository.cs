@@ -297,49 +297,49 @@ namespace RecruitmentProcessManagementSystem.Repositories
         }
 
 
-        public async Task<List<PositionReport>> FetchPositionReport(int positionId)
-        {
-            var positionReport = await (from p in _context.Positions
-                                        join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
-                                        join c in _context.Candidates on pc.CandidateId equals c.CandidateId
-                                        join u in _context.Users on c.UserId equals u.UserId
-                                        where p.PositionId == positionId
-                                        select new PositionReport
-                                        {
-                                            CandidateName = u.FirstName + u.LastName,
-                                            CandidateEmail = u.Email,
-                                            WorkExperience = c.WorkExperience,
-                                            ResumeUrl = c.ResumeUrl,
-                                            Comments = pc.Comments,
-                                            IsReviewed = pc.IsReviewed,
-                                            IsShortlisted = pc.IsShortlisted,
-                                            ApplicationDate = pc.ApplicationDate
-                                        }).ToListAsync();
-            return positionReport;
-        }
+        // public async Task<List<PositionReport>> FetchPositionReport(int positionId)
+        // {
+        //     var positionReport = await (from p in _context.Positions
+        //                                 join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
+        //                                 join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+        //                                 join u in _context.Users on c.UserId equals u.UserId
+        //                                 where p.PositionId == positionId
+        //                                 select new PositionReport
+        //                                 {
+        //                                     CandidateName = u.FirstName + u.LastName,
+        //                                     CandidateEmail = u.Email,
+        //                                     WorkExperience = c.WorkExperience,
+        //                                     ResumeUrl = c.ResumeUrl,
+        //                                     Comments = pc.Comments,
+        //                                     IsReviewed = pc.IsReviewed,
+        //                                     IsShortlisted = pc.IsShortlisted,
+        //                                     ApplicationDate = pc.ApplicationDate
+        //                                 }).ToListAsync();
+        //     return positionReport;
+        // }
 
 
-        public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
-        {
-            var collegewiseReport = await (from p in _context.Positions
-                                           join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
-                                           join c in _context.Candidates on pc.CandidateId equals c.CandidateId
-                                           join u in _context.Users on c.UserId equals u.UserId
-                                           where p.PositionId == positionId
-                                           select new CollegewiseReport
-                                           {
-                                               CandidateName = u.FirstName + u.LastName,
-                                               CandidateEmail = u.Email,
-                                               CollegeName = c.CollegeName,
-                                               WorkExperience = c.WorkExperience,
-                                               ResumeUrl = c.ResumeUrl,
-                                               Comments = pc.Comments,
-                                               IsReviewed = pc.IsReviewed,
-                                               IsShortlisted = pc.IsShortlisted,
-                                               ApplicationDate = pc.ApplicationDate
-                                           }).ToListAsync();
-            return collegewiseReport;
-        }
+        // public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
+        // {
+        //     var collegewiseReport = await (from p in _context.Positions
+        //                                    join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
+        //                                    join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+        //                                    join u in _context.Users on c.UserId equals u.UserId
+        //                                    where p.PositionId == positionId
+        //                                    select new CollegewiseReport
+        //                                    {
+        //                                        CandidateName = u.FirstName + u.LastName,
+        //                                        CandidateEmail = u.Email,
+        //                                        CollegeName = c.CollegeName,
+        //                                        WorkExperience = c.WorkExperience,
+        //                                        ResumeUrl = c.ResumeUrl,
+        //                                        Comments = pc.Comments,
+        //                                        IsReviewed = pc.IsReviewed,
+        //                                        IsShortlisted = pc.IsShortlisted,
+        //                                        ApplicationDate = pc.ApplicationDate
+        //                                    }).ToListAsync();
+        //     return collegewiseReport;
+        // }
 
 
     }

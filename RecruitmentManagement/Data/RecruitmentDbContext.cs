@@ -42,7 +42,6 @@ namespace RecruitmentProcessManagementSystem.Data
         public DbSet<ShortlistCandidate> ShortlistCandidates { get; set; }
 
         public DbSet<Document> Documents { get; set; }
-        public DbSet<DocumentStatus> DocumentStatuses { get; set; }
         public DbSet<DocumentStatusType> DocumentStatusTypes { get; set; }
 
         // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
@@ -141,12 +140,6 @@ namespace RecruitmentProcessManagementSystem.Data
                 .WithMany(c => c.CandidateStatuses)
                 .HasForeignKey(cs => cs.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Document>()
-        .HasOne(e => e.DocumentStatus)
-        .WithOne(e => e.Document)
-        .HasForeignKey<DocumentStatus>(e => e.DocumentId)
-        .IsRequired();
 
 
             base.OnModelCreating(modelBuilder);

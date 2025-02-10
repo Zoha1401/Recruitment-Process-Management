@@ -13,7 +13,7 @@ namespace RecruitmentManagement.Model
         [Column("status_name")]
         public string StatusName { get; set; }
 
-        public ICollection<DocumentStatus> DocumentStatuses { get; set; }
+        public ICollection<Document> Documents { get; set; }
     }
 
 }

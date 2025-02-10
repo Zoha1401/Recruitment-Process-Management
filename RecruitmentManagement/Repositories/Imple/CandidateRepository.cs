@@ -20,7 +20,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         }
 
         public async Task<IEnumerable<Candidate>> GetAllCandidates()
-        {
+        { 
             return await _context.Candidates.ToListAsync();
         }
 

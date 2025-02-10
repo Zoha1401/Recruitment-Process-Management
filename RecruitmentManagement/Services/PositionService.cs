@@ -46,14 +46,14 @@ namespace RecruitmentProcessManagementSystem.Service
             return await _repository.ChangeStatus(positionId, positionStatusChange);
         }
 
-        public async Task<List<PositionReport>> FetchPositionReport(int positionId)
-        {
-            return await _repository.FetchPositionReport(positionId);
-        }
+        // public async Task<List<PositionReport>> FetchPositionReport(int positionId)
+        // {
+        //     return await _repository.FetchPositionReport(positionId);
+        // }
 
-        public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
-        {
-            return await _repository.FetchCollegewiseReport(positionId);
-        }
+        // public async Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId)
+        // {
+        //     return await _repository.FetchCollegewiseReport(positionId);
+        // }
     }
 }

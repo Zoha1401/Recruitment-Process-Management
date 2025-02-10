@@ -59,7 +59,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
             }
 
             var newDocument=new Document{
-               DocumentStatusId=document.DocumentStatusId,
+               DocumentStatusTypeId=document.DocumentStatusTypeId,
                DocumentUrl=$"/uploads/{fileName}",
                ShortlistCandidateId=document.ShortlistId
             };
@@ -92,8 +92,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
               throw new ArgumentException("Document with this id does not exist");
             }
            
-            if(Document.DocumentStatusId>=0){
-                documentExist.DocumentStatusId=Document.DocumentStatusId;
+            if(Document.DocumentStatusTypeId>=0){
+                documentExist.DocumentStatusTypeId=Document.DocumentStatusTypeId;
             }
             if(Document.DocumentUrl!=null){
                 documentExist.DocumentUrl=Document.DocumentUrl;

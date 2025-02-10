@@ -7,6 +7,6 @@ public class DocumentDTO
        
         public int ShortlistId { get; set; }
 
-        public int DocumentStatusId{get; set;}
+        public int DocumentStatusTypeId{get; set;}
        
 }

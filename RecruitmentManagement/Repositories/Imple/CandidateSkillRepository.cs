@@ -28,13 +28,22 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<CandidateSkill> AddCandidateSkill(int candidateId, int skillId, MarkCandidateSkill candidateSkillRequest)
         {
-            var candidate=await _context.Candidates.FindAsync(candidateId);
-            if(candidate==null){
+            var candidate = await _context.Candidates.FindAsync(candidateId);
+            if (candidate == null)
+            {
                 throw new ArgumentException("Candidate with this ID is not found");
             }
-            var skill=await _context.Skills.FindAsync(skillId);
-            if(skill==null){
+            var skill = await _context.Skills.FindAsync(skillId);
+            if (skill == null)
+            {
                 throw new ArgumentException("skill with this ID is not found");
+            }
+            var candidateSkillExist = await _context.CandidateSkills
+       .FirstOrDefaultAsync(cs => cs.CandidateId == candidateId && cs.SkillId == skillId);
+
+            if (candidateSkillExist != null)
+            {
+                throw new ArgumentException("Skill for this ID is already present please update to change");
             }
             var candidateSkill = new CandidateSkill
             {
@@ -47,24 +56,24 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return candidateSkill;
         }
-public async Task<CandidateSkill> UpdateCandidateSkill(int candidateId, int skillId, MarkCandidateSkill candidateSkillRequest)
-{
-    var candidateSkill = await _context.CandidateSkills
-        .FirstOrDefaultAsync(cs => cs.CandidateId == candidateId && cs.SkillId == skillId);
+        public async Task<CandidateSkill> UpdateCandidateSkill(int candidateId, int skillId, MarkCandidateSkill candidateSkillRequest)
+        {
+            var candidateSkill = await _context.CandidateSkills
+                .FirstOrDefaultAsync(cs => cs.CandidateId == candidateId && cs.SkillId == skillId);
 
-    if (candidateSkill == null)
-    {
-        throw new ArgumentException("Candidate skill not found.");
-    }
+            if (candidateSkill == null)
+            {
+                throw new ArgumentException("Candidate skill not found.");
+            }
 
-    if (candidateSkillRequest.Experience >= 0)
-    {
-        candidateSkill.Experience = candidateSkillRequest.Experience;
-    }
+            if (candidateSkillRequest.Experience >= 0)
+            {
+                candidateSkill.Experience = candidateSkillRequest.Experience;
+            }
 
-    await _context.SaveChangesAsync();
-    return candidateSkill;
-}
+            await _context.SaveChangesAsync();
+            return candidateSkill;
+        }
 
 
         public async Task<bool> DeleteCandidateSkill(int id)
