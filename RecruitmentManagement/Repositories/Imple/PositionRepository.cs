@@ -302,11 +302,12 @@ namespace RecruitmentProcessManagementSystem.Repositories
             var positionReport = await (from p in _context.Positions
                                         join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
                                         join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+                                        join u in _context.Users on c.UserId equals u.UserId
                                         where p.PositionId == positionId
                                         select new PositionReport
                                         {
-                                            CandidateName = c.Name,
-                                            CandidateEmail = c.Email,
+                                            CandidateName = u.FirstName + u.LastName,
+                                            CandidateEmail = u.Email,
                                             WorkExperience = c.WorkExperience,
                                             ResumeUrl = c.ResumeUrl,
                                             Comments = pc.Comments,
@@ -323,11 +324,12 @@ namespace RecruitmentProcessManagementSystem.Repositories
             var collegewiseReport = await (from p in _context.Positions
                                            join pc in _context.PositionCandidates on p.PositionId equals pc.PositionId
                                            join c in _context.Candidates on pc.CandidateId equals c.CandidateId
+                                           join u in _context.Users on c.UserId equals u.UserId
                                            where p.PositionId == positionId
                                            select new CollegewiseReport
                                            {
-                                               CandidateName = c.Name,
-                                               CandidateEmail = c.Email,
+                                               CandidateName = u.FirstName + u.LastName,
+                                               CandidateEmail = u.Email,
                                                CollegeName = c.CollegeName,
                                                WorkExperience = c.WorkExperience,
                                                ResumeUrl = c.ResumeUrl,

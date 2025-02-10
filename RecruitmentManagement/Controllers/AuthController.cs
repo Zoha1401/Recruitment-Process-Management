@@ -25,7 +25,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<IActionResult> Register(UserRequest request)
         {
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 return BadRequest("User already exists.");
@@ -50,23 +50,20 @@ namespace RecruitmentProcessManagementSystem.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            if (role.RoleName.ToLower() == "candidate")
-    {
-        var candidate = new Candidate
-        {
-            UserId = user.UserId, // Link to User
-            CollegeName = request.CollegeName,
-            Degree = request.Degree,
-            WorkExperience = request.WorkExperience,
-            ResumeUrl = request.ResumeUrl
-        };
+            if (role.RoleName.Equals("candidate", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var candidate = new Candidate
+                {
+                    UserId = user.UserId, // Link to User
+                    CollegeName = request.CollegeName,
+                    Degree = request.Degree,
+                    WorkExperience = request.WorkExperience,
+                    ResumeUrl = request.ResumeUrl
+                };
 
-        _context.Candidates.Add(candidate);
-        await _context.SaveChangesAsync();
-    }
-
-
-
+                _context.Candidates.Add(candidate);
+                await _context.SaveChangesAsync();
+            }
             return Ok("User added successfully");
         }
 
@@ -101,6 +98,52 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
         }
 
+        [HttpPut("updateUser/{userId}")]
+        public async Task<IActionResult> UpdateUser(int userId, UserRequest request)
+        {
+            var user= await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if(user==null){
+                return NotFound("The user with this email or id is not found");
+            }
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.RoleId);
+            if (role == null)
+                return BadRequest("Invalid role.");
+
+                user.FirstName = request.FirstName;
+                user.LastName = request.LastName;
+                user.Email = request.Email;
+                user.BirthDate = request.BirthDate;
+                user.Phone = request.Phone;
+                user.RoleId = request.RoleId;
+        
+            user.Role = role;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            if (role.RoleName.Equals("candidate", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var candidate=await _context.Candidates.FirstOrDefaultAsync(c=>c.UserId==userId);
+            
+            if(candidate==null){
+                return NotFound("Candidate is not linked with the given user ID");
+            }
+                    candidate.CollegeName = request.CollegeName;
+                    candidate.Degree = request.Degree;
+                    candidate.WorkExperience = request.WorkExperience;
+                    candidate.ResumeUrl = request.ResumeUrl;
+
+
+                _context.Candidates.Update(candidate);
+                await _context.SaveChangesAsync();
+            }
+
+
+
+            return Ok("User updated successfully");
+        }
+
+
+
         [HttpGet("getAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -110,7 +153,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
         [HttpDelete("{userId}")]
 
-        public async Task<bool> DeleteUser(int userId){
+        public async Task<bool> DeleteUser(int userId)
+        {
             var User = await _context.Users.FindAsync(userId);
             if (User == null) return false;
 

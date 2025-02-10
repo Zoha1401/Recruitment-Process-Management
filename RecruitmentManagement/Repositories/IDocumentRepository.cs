@@ -9,7 +9,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<Document>> GetAllDocuments();
         Task<Document> GetDocumentById(int id);
-        Task<Document> UploadDocument(DocumentDTO Document);
+        Task<Document> UploadDocument(DocumentDTO Document, IFormFile formFile);
         Task<Document> UpdateDocument(int document_id, DocumentDTO Document);
         Task<bool> DeleteDocument(int id);
         

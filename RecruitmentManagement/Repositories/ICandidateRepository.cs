@@ -9,9 +9,11 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<Candidate>> GetAllCandidates();
         Task<Candidate> GetCandidateById(int id);
-        Task<Candidate> AddCandidate(Candidate Candidate);
+        //Task<Candidate> AddCandidate(Candidate Candidate);
         Task<Candidate> UpdateCandidate(Candidate Candidate);
         Task<bool> DeleteCandidate(int id);
+
+        Task<IEnumerable<Candidate>> BulkUpload(IFormFile file);
         
     }
 }

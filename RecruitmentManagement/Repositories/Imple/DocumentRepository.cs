@@ -26,23 +26,64 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Documents.FindAsync(id);
         }
 
-        public async Task<Document> UploadDocument(DocumentDTO document)
+        public async Task<Document> UploadDocument(DocumentDTO document, IFormFile request)
         {
-            var documentExist=_context.Documents.FirstOrDefault(c=> c.DocumentUrl==document.DocumentUrl);
+            string folderPath = Path.Combine("C:\\Users\\suratzoh\\Desktop\\Project\\RecruitmentManagement>", "uploads");
+        
+        // create the directory if it does not exist
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+        
+        // extract the file extension for some specific purpose - like validation
+        string extension = Path.GetExtension(request.FileName);
+        
+        // You can add validation here to allow only specific files using the extension extracted - 
+        if (!IsValidFile(extension))
+        {
+            throw new Exception("Please upload either pdf, jpg or png");
+        }
+        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(request.FileName);
+        
+        // I am concatenating a new guid to the end of the filename so that if file with same name is uploaded twice that is handled correctly
+        string fileName = $"{fileNameWithoutExtension}_{Guid.NewGuid()}{extension}";
+        string filePath = Path.Combine(folderPath, fileName);
+        await using var stream = new FileStream(filePath, FileMode.Create);
+        await request.CopyToAsync(stream);
+        
+
+         var documentExist=_context.Documents.FirstOrDefault(c=> c.DocumentUrl==document.DocumentUrl);
             if(documentExist!=null){
               throw new ArgumentException("Document with this email already exists");
             }
 
             var newDocument=new Document{
                DocumentStatusId=document.DocumentStatusId,
-               DocumentUrl=document.DocumentUrl,
+               DocumentUrl=$"/uploads/{fileName}",
                ShortlistCandidateId=document.ShortlistId
             };
-            _context.Documents.Add(newDocument);
+              _context.Documents.Add(newDocument);
             await _context.SaveChangesAsync();
 
             return newDocument;
+    }
+    
+    
+
+  
+
+        private static bool IsValidFile(string extension)
+        {
+            if (extension == "png" || extension == "jpg" || extension =="pdf")
+            {
+                return true;
+            }
+            return false;
         }
+
+       
+
 
         public async Task<Document> UpdateDocument(int documentId, DocumentDTO Document)
         {

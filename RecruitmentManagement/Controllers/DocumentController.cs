@@ -47,7 +47,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var addedDocument = await _service.UploadDocument(Document);
+            var addedDocument = await _service.UploadDocument(Document, Document.formFile);
             return CreatedAtAction(nameof(GetById), new { id = addedDocument.DocumentId }, addedDocument);
         }
 

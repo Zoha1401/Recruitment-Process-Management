@@ -20,8 +20,8 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<Document> GetDocumentById(int id) {
             return await _repository.GetDocumentById(id);
         }
-        public async Task<Document> UploadDocument(DocumentDTO Document){
-           return await _repository.UploadDocument(Document);
+        public async Task<Document> UploadDocument(DocumentDTO Document, IFormFile file){
+           return await _repository.UploadDocument(Document, file);
         } 
         public async Task<Document> UpdateDocument(int id, DocumentDTO Document) {
             return await _repository.UpdateDocument(id, Document);

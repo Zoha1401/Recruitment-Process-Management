@@ -1,6 +1,9 @@
 public class DocumentDTO
 {
-        public string DocumentUrl { get; set; }
+        public string? DocumentUrl { get; set; }
+
+        public IFormFile formFile{get; set;}
+        
        
         public int ShortlistId { get; set; }
 
