@@ -98,69 +98,70 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
         }
 
-        [HttpPut("updateUser/{userId}")]
-        public async Task<IActionResult> UpdateUser(int userId, UserRequest request)
-        {
-            var user= await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            if(user==null){
-                return NotFound("The user with this email or id is not found");
-            }
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.RoleId);
-            if (role == null)
-                return BadRequest("Invalid role.");
+    //     [HttpPut("updateUser/{userId}")]
+    //     public async Task<IActionResult> UpdateUser(int userId, UserRequest request)
+    //     {
+    //         var user= await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+    //         if(user==null){
+    //             return NotFound("The user with this email or id is not found");
+    //         }
+    //         var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.RoleId);
+    //         if (role == null)
+    //             return BadRequest("Invalid role.");
 
-                user.FirstName = request.FirstName;
-                user.LastName = request.LastName;
-                user.Email = request.Email;
-                user.BirthDate = request.BirthDate;
-                user.Phone = request.Phone;
-                user.RoleId = request.RoleId;
+    //             user.FirstName = request.FirstName;
+    //             user.LastName = request.LastName;
+    //             user.Email = request.Email;
+    //             user.BirthDate = request.BirthDate;
+    //             user.Phone = request.Phone;
+    //             user.RoleId = request.RoleId;
         
-            user.Role = role;
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+    //         user.Role = role;
+    //         _context.Users.Update(user);
+    //         await _context.SaveChangesAsync();
 
-            if (role.RoleName.Equals("candidate", StringComparison.CurrentCultureIgnoreCase))
-            {
-                var candidate=await _context.Candidates.FirstOrDefaultAsync(c=>c.UserId==userId);
+    //         if (role.RoleName.Equals("candidate", StringComparison.CurrentCultureIgnoreCase))
+    //         {
+    //             var candidate=await _context.Candidates.FirstOrDefaultAsync(c=>c.UserId==userId);
             
-            if(candidate==null){
-                return NotFound("Candidate is not linked with the given user ID");
-            }
-                    candidate.CollegeName = request.CollegeName;
-                    candidate.Degree = request.Degree;
-                    candidate.WorkExperience = request.WorkExperience;
-                    candidate.ResumeUrl = request.ResumeUrl;
+    //         if(candidate==null){
+    //             return NotFound("Candidate is not linked with the given user ID");
+    //         }
+    //                 candidate.CollegeName = request.CollegeName;
+    //                 candidate.Degree = request.Degree;
+    //                 candidate.WorkExperience = request.WorkExperience;
+    //                 candidate.ResumeUrl = request.ResumeUrl;
 
 
-                _context.Candidates.Update(candidate);
-                await _context.SaveChangesAsync();
-            }
-
-
-
-            return Ok("User updated successfully");
-        }
+    //             _context.Candidates.Update(candidate);
+    //             await _context.SaveChangesAsync();
+    //         }
 
 
 
-        [HttpGet("getAllUsers")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
-        }
+    //         return Ok("User updated successfully");
+    //     }
 
-        [HttpDelete("{userId}")]
 
-        public async Task<bool> DeleteUser(int userId)
-        {
-            var User = await _context.Users.FindAsync(userId);
-            if (User == null) return false;
 
-            _context.Users.Remove(User);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-    }
+    //     [HttpGet("getAllUsers")]
+    //     public async Task<IActionResult> GetAllUsers()
+    //     {
+    //         var users = await _context.Users.ToListAsync();
+    //         return Ok(users);
+    //     }
+
+    //     [HttpDelete("{userId}")]
+
+    //     public async Task<bool> DeleteUser(int userId)
+    //     {
+    //         var User = await _context.Users.FindAsync(userId);
+    //         if (User == null) return false;
+
+    //         _context.Users.Remove(User);
+    //         await _context.SaveChangesAsync();
+    //         return true;
+    //     }
+    // 
+}
 }

@@ -19,5 +19,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<Position> ChangeStatus(int positionId, PositionStatusChange positionStatusChange);
         // Task<List<PositionReport>> FetchPositionReport(int positionId);
         // Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId);
+
+        Task<IEnumerable<Position>> GetPositionsForReviewer(int reviewerId);
     }
 }

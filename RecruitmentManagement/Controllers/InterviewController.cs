@@ -83,6 +83,12 @@ namespace RecruitmentProcessManagementSystem.Controllers
            return Ok(feedbacks);
         }
 
+        [HttpGet("getInterviewsForInterviewer/{interviewerId}")]
+        public async Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId)
+        {
+            return await _service.GetInterviewsForInterviewer(interviewerId);
+        }
+
     
     }
 }

@@ -23,7 +23,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Positions = await _service.GetAllPositions();
-            if(Positions==null){
+            if (Positions == null)
+            {
                 return NotFound("No positions are found");
             }
             return Ok(Positions);
@@ -33,7 +34,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var Position = await _service.GetPositionById(id);
-            if (Position == null) 
+            if (Position == null)
                 return NotFound("Student not found.");
             return Ok(Position);
         }
@@ -41,7 +42,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] PositionRequest Position)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var addedPosition = await _service.AddPosition(Position);
             return CreatedAtAction(nameof(GetById), new { id = addedPosition.PositionId }, addedPosition);
@@ -51,7 +52,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] PositionRequest Position)
         {
             var updatedPosition = await _service.UpdatePosition(id, Position);
-            if (updatedPosition == null) 
+            if (updatedPosition == null)
                 return NotFound("Student not found.");
             return Ok(updatedPosition);
         }
@@ -60,80 +61,96 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeletePosition(id);
-            if (!deleted) 
+            if (!deleted)
                 return NotFound("Position not found.");
             return Ok("Position deleted successfully.");
         }
 
         [HttpPost("defineInterviewRounds/{positionId}")]
-        
-        public async Task<IActionResult> DefineInterviewRounds(int positionId, [FromBody] ICollection<InterviewForPosition> interviewForPositions){
-            if(interviewForPositions==null){
+
+        public async Task<IActionResult> DefineInterviewRounds(int positionId, [FromBody] ICollection<InterviewForPosition> interviewForPositions)
+        {
+            if (interviewForPositions == null)
+            {
                 return BadRequest("Interviews not specified");
             }
-            var position=await _service.DefineInterviewRounds(positionId, interviewForPositions);
-            if(position==null){
+            var position = await _service.DefineInterviewRounds(positionId, interviewForPositions);
+            if (position == null)
+            {
                 return NotFound("Position Not found");
             }
-         
+
             return Ok("Interview rounds were defined");
         }
-    
 
-    [HttpPost("{positionId}/{reviewerId}")]
-    public async Task<IActionResult> AssignReviewer(int positionId, int reviewerId){
-        var position=await _service.AssignReviewer(positionId, reviewerId);
-        if(position==null){
-             return NotFound("Position Not found");
+
+        [HttpPost("{positionId}/{reviewerId}")]
+        public async Task<IActionResult> AssignReviewer(int positionId, int reviewerId)
+        {
+            var position = await _service.AssignReviewer(positionId, reviewerId);
+            if (position == null)
+            {
+                return NotFound("Position Not found");
+            }
+            return Ok("Reviewer has been assigned");
         }
-        return Ok("Reviewer has been assigned");
-    }
 
-    [HttpPost("changeStatus/{positionId}")]
-    public async Task<IActionResult> ChangeStatus(int positionId, [FromBody] PositionStatusChange positionStatusChange){
-        if (!ModelState.IsValid)
+        [HttpPost("changeStatus/{positionId}")]
+        public async Task<IActionResult> ChangeStatus(int positionId, [FromBody] PositionStatusChange positionStatusChange)
+        {
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-        if(positionStatusChange==null){
-            return BadRequest("No proper status change for position is specified");
+            if (positionStatusChange == null)
+            {
+                return BadRequest("No proper status change for position is specified");
+            }
+            var position = await _service.ChangeStatus(positionId, positionStatusChange);
+            if (position == null)
+            {
+                return NotFound("Position Not found");
+            }
+            return Ok("The status of the position has been changed");
         }
-        var position=await _service.ChangeStatus(positionId, positionStatusChange);
-        if(position==null){
-            return NotFound("Position Not found");
-        }
-         return Ok("The status of the position has been changed");
-    }
 
-  [HttpPut("updateInterviewRounds/{positionId}")]
-       public async Task<Position> UpdateInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions){
-            
+        [HttpPut("updateInterviewRounds/{positionId}")]
+        public async Task<Position> UpdateInterviewRounds(int positionId, ICollection<InterviewForPosition> interviewForPositions)
+        {
+
             return await _service.UpdateInterviewRounds(positionId, interviewForPositions);
-         }
+        }
 
-  
-    // public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
-    // {
-    //     var fromDb = await _service.GetPositionById(positionId);
-    //     if(fromDb==null){
-    //         throw new ArgumentException("Position is not found");
-    //     }
-    //     var original = fromDb;
-    //     patch.ApplyTo(fromDb, ModelState);
 
-    //     var isValid = TryValidateModel(fromDb);
-    //     if (!isValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
-    //     await _service.UpdatePosition(fromDb);
-    //     var model = new
-    //     {
-    //         original,
-    //     };
-    //     return Ok(model);
-    // }
+        [HttpGet("getPositionsForReviewer/{reviewerId}")]
+        public async Task<IEnumerable<Position>> GetPositionsForReviewer(int reviewerId)
+        {
+            return await _service.GetPositionsForReviewer(reviewerId);
+        }
 
-    
-   
 
-}
+        // public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
+        // {
+        //     var fromDb = await _service.GetPositionById(positionId);
+        //     if(fromDb==null){
+        //         throw new ArgumentException("Position is not found");
+        //     }
+        //     var original = fromDb;
+        //     patch.ApplyTo(fromDb, ModelState);
+
+        //     var isValid = TryValidateModel(fromDb);
+        //     if (!isValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     await _service.UpdatePosition(fromDb);
+        //     var model = new
+        //     {
+        //         original,
+        //     };
+        //     return Ok(model);
+        // }
+
+
+
+
+    }
 }

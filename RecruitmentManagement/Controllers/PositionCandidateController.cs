@@ -104,5 +104,10 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
             return Ok(PositionCandidate);
         }
+
+        // [HttpGet("viewApplicants/{positionId}")]
+        // public async Task<IActionResult> ViewApplicants(int positionId){
+        //     var 
+        // }
     }
 }

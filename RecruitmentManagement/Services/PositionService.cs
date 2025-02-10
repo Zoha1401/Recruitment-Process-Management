@@ -46,6 +46,10 @@ namespace RecruitmentProcessManagementSystem.Service
             return await _repository.ChangeStatus(positionId, positionStatusChange);
         }
 
+        public async Task<IEnumerable<Position>> GetPositionsForReviewer(int reviewerId){
+            return await _repository.GetPositionsForReviewer(reviewerId);
+        }
+
         // public async Task<List<PositionReport>> FetchPositionReport(int positionId)
         // {
         //     return await _repository.FetchPositionReport(positionId);

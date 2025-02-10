@@ -144,6 +144,29 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return _context.InterviewFeedbacks;
         }
+
+          public async Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId)
+        {
+            var interviewInterviewers=await _context.InterviewerInterviews.ToListAsync();
+            var selected=interviewInterviewers.FindAll(ii=> ii.InterviewerId==interviewerId);
+            var interviewerInterviews=await (from ii in _context.InterviewerInterviews
+                                        join i in _context.Interviews on ii.InterviewId equals i.InterviewId
+                                        join u in _context.Users on ii.InterviewerId equals u.UserId 
+                                        select new Interview
+                                        {
+                                            InterviewTypeId=i.InterviewTypeId,
+                                            RecruiterId=i.RecruiterId,
+                                            Date=i.Date,
+                                            PositionCandidateId=i.PositionCandidateId,
+                                            RoundNumber=i.RoundNumber
+                                        }).ToListAsync();
+
+            if(interviewerInterviews==null){
+                throw new Exception("There are no interviews");
+            }
+
+            return interviewerInterviews;
+        }
     }
 
 
