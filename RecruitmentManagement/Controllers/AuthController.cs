@@ -50,20 +50,20 @@ namespace RecruitmentProcessManagementSystem.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-    //         if (role.RoleName.ToLower() == "candidate")
-    // {
-    //     var candidate = new Candidate
-    //     {
-    //         UserId = user.UserId, // Link to User
-    //         CollegeName = request.CollegeName,
-    //         Degree = request.Degree,
-    //         WorkExperience = request.WorkExperience,
-    //         ResumeUrl = request.ResumeUrl
-    //     };
+            if (role.RoleName.ToLower() == "candidate")
+    {
+        var candidate = new Candidate
+        {
+            UserId = user.UserId, // Link to User
+            CollegeName = request.CollegeName,
+            Degree = request.Degree,
+            WorkExperience = request.WorkExperience,
+            ResumeUrl = request.ResumeUrl
+        };
 
-    //     _context.Candidates.Add(candidate);
-    //     await _context.SaveChangesAsync();
-    // }
+        _context.Candidates.Add(candidate);
+        await _context.SaveChangesAsync();
+    }
 
 
 

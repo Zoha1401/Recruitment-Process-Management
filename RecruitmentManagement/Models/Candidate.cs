@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using RecruitmentProcessManagementSystem.Models;
 
 namespace RecruitmentManagement.Model
 {
@@ -12,15 +13,19 @@ namespace RecruitmentManagement.Model
         [Key]
         [Column("candidate_id")]
         public int CandidateId { get; set; }
+        // [Required]
+        // [Column("name")]
+        // public String Name { get; set; }
+        // [Required]
+        // [Column("email")]
+        // public String Email { get; set; }
+        // [Required]
+        // [Column("password")]
+        // public String Password { get; set; }
         [Required]
-        [Column("name")]
-        public String Name { get; set; }
-        [Required]
-        [Column("email")]
-        public String Email { get; set; }
-        [Required]
-        [Column("password")]
-        public String Password { get; set; }
+        [Column("user_id")]
+        public int UserId {get; set;}
+        public User User{get; set;}
         [Required]
         [Column("college_name")]
         public  String CollegeName { get; set; }

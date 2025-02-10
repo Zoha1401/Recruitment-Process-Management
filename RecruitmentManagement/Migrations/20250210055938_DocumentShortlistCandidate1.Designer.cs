@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentProcessManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RecruitmentProcessManagementSystem.Data;
 namespace RecruitmentManagement.Migrations
 {
     [DbContext(typeof(RecruitmentDbContext))]
-    partial class RecruitmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250210055938_DocumentShortlistCandidate1")]
+    partial class DocumentShortlistCandidate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,8 +179,11 @@ namespace RecruitmentManagement.Migrations
                         .HasColumnName("document_url");
 
                     b.Property<int>("ShortlistCandidateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShortlistId")
                         .HasColumnType("int")
-                        .HasColumnName("shortlist_candidate_id");
+                        .HasColumnName("shortlist_id");
 
                     b.HasKey("DocumentId");
 

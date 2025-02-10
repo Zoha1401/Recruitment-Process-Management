@@ -67,6 +67,8 @@ builder.Services.AddScoped<PositionCandidateService>();
 builder.Services.AddScoped<ShortlistCandidateService> ();
 builder.Services.AddScoped<IShortlistCandidateRepository, ShortlistCandidateRepository>();
 // builder.Services.AddScoped<JobRequirementService>();
+builder.Services.AddScoped<DocumentService>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<InterviewService>();
 builder.Services.AddScoped<IPositionCandidateRepository, PositionCandidateRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
