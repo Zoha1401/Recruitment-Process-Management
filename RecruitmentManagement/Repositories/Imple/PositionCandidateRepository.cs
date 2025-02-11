@@ -1,5 +1,7 @@
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.DTOs;
@@ -153,6 +155,69 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
 
         }
+
+        public async Task<IEnumerable<CandidateDTO>> ViewApplicants(int positionId){
+            var positionApplicants= await (from u in _context.Users
+                                        join c in _context.Candidates on u.UserId equals c.UserId
+                                        join pc in _context.PositionCandidates on c.CandidateId equals pc.CandidateId
+                                        join p in _context.Positions on pc.PositionId equals p.PositionId
+                                        where p.PositionId==positionId
+                                        select new CandidateDTO
+                                        {
+                                            FirstName = u.FirstName,
+                                            LastName=u.LastName,
+                                            Email = u.Email,
+                                            WorkExperience = c.WorkExperience,
+                                            ResumeUrl = c.ResumeUrl,
+                                            CollegeName=c.CollegeName,
+                                            Phone=u.Phone,
+                                            RoleId=u.RoleId
+                                        }).ToListAsync();
+
+            return positionApplicants;
+        }
+
+
+        public async Task<IEnumerable<PositionRequest>> ViewApplications(int candidateId){
+            var Applications= await (from c in _context.Candidates
+                                        join pc in _context.PositionCandidates on c.CandidateId equals pc.CandidateId
+                                        join p in _context.Positions on pc.PositionId equals p.PositionId
+                                        where c.CandidateId==candidateId
+                                        select new PositionRequest
+                                        {
+                                           Name=p.Name,
+                                           MinExp=p.MinExp,
+                                           MaxExp=p.MaxExp,
+                                           Description=p.Description,
+                                           NoOfInterviews=p.NoOfInterviews
+                                        }).ToListAsync();
+
+            return Applications;
+        }
+
+        public async Task<CandidateDTO> GetCandidateDetails(int positionCandidateId){
+            var CandidateDetails= await (from u in _context.Users
+                                        join c in _context.Candidates on u.UserId equals c.UserId
+                                        join pc in _context.PositionCandidates on c.CandidateId equals pc.CandidateId
+                                        join p in _context.Positions on pc.PositionId equals p.PositionId
+                                        where pc.PositionCandidateId==positionCandidateId
+                                        select new CandidateDTO
+                                        {
+                                            FirstName = u.FirstName,
+                                            LastName=u.LastName,
+                                            Email = u.Email,
+                                            WorkExperience = c.WorkExperience,
+                                            ResumeUrl = c.ResumeUrl,
+                                            CollegeName=c.CollegeName,
+                                            Phone=u.Phone
+                                        }).FirstOrDefaultAsync();
+            
+            if(CandidateDetails==null){
+                throw new Exception("There is no application for this Interview");
+            }
+            return CandidateDetails;
+        }
+
 
       
     }

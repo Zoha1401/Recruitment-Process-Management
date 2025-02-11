@@ -14,7 +14,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
     public class PositionCandidateController : ControllerBase
     {
         private readonly PositionCandidateService _service;
-        
+
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PositionCandidateController(PositionCandidateService service)
@@ -26,7 +26,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
         public async Task<IActionResult> GetAll()
         {
             var PositionCandidates = await _service.GetAllPositionCandidates();
-            if(PositionCandidates==null){
+            if (PositionCandidates == null)
+            {
                 return NotFound("No candidates has applied for any position");
             }
             return Ok(PositionCandidates);
@@ -69,16 +70,19 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPost("reviewCandidate/{PositionCandidateId}/{isShortlisted}")]
-        public async Task<IActionResult> ReviewPositionCandidate(int PositionCandidateId, bool isShortlisted, [FromBody] ICollection<MarkCandidateSkill> MarkCandidateSkills){
-            var PositionCandidate=await _service.ReviewPositionCandidate(PositionCandidateId, isShortlisted, MarkCandidateSkills );
-            if(PositionCandidate==null){
+        public async Task<IActionResult> ReviewPositionCandidate(int PositionCandidateId, bool isShortlisted, [FromBody] ICollection<MarkCandidateSkill> MarkCandidateSkills)
+        {
+            var PositionCandidate = await _service.ReviewPositionCandidate(PositionCandidateId, isShortlisted, MarkCandidateSkills);
+            if (PositionCandidate == null)
+            {
                 return NotFound("PositionCandidate Not found");
             }
             return Ok(PositionCandidate);
         }
         [HttpPost("applyToPosition/{candidateId}/{positionId}/{statusId}/{userId}")]
-        public async Task<IActionResult> ApplyToPosition(int userId, int candidateId, int positionId,int statusId){
-          
+        public async Task<IActionResult> ApplyToPosition(int userId, int candidateId, int positionId, int statusId)
+        {
+
             // var httpContext = _httpContextAccessor?.HttpContext;
             // if (httpContext == null)
             // {
@@ -98,8 +102,9 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
             // int userId = int.TryParse(userIdString, out int parsedUserId) ? parsedUserId : throw new Exception("Invalid user ID format.");
 
-            var PositionCandidate=await _service.ApplyToPosition(userId, candidateId, positionId, statusId);
-            if(PositionCandidate==null){
+            var PositionCandidate = await _service.ApplyToPosition(userId, candidateId, positionId, statusId);
+            if (PositionCandidate == null)
+            {
                 return NotFound("The position candidate was not found");
             }
             return Ok(PositionCandidate);
@@ -107,7 +112,27 @@ namespace RecruitmentProcessManagementSystem.Controllers
 
         // [HttpGet("viewApplicants/{positionId}")]
         // public async Task<IActionResult> ViewApplicants(int positionId){
-        //     var 
+        //     var applicants=await _
         // }
+
+        [HttpGet("GetCandidateDetails/{positionCandidateid}")]
+
+        public async Task<CandidateDTO> GetCandidateDetails(int positionCandidateId)
+        {
+            return await _service.GetCandidateDetails(positionCandidateId);
+        }
+        [HttpGet("ViewApplications/{candidateId}")]
+
+        public async Task<IEnumerable<PositionRequest>> ViewApplications(int candidateId)
+        {
+            return await _service.ViewApplications(candidateId);
+        }
+        [HttpGet("ViewApplicants/{positionId}")]
+
+
+        public async Task<IEnumerable<CandidateDTO>> ViewApplicants(int positionId)
+        {
+            return await _service.ViewApplicants(positionId);
+        }
     }
 }
