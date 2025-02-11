@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.Model;
@@ -8,8 +9,10 @@ using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Helpers;
 using RecruitmentProcessManagementSystem.Models;
 
+
 namespace RecruitmentProcessManagementSystem.Controllers
 {
+    [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -112,5 +115,22 @@ namespace RecruitmentProcessManagementSystem.Controllers
             await _context.SaveChangesAsync();
             return true;
         }
+
+        [HttpGet("getUser/{userId}")]
+          public async Task<IActionResult> GetUser(int userId)
+        {
+            var User = await _context.Users.FirstOrDefaultAsync(u=> u.UserId==userId);
+            if (User == null) return NotFound("User was not found");
+            return Ok(User);
+        }
+
+         [HttpGet("getUserByEmail/{email}")]
+          public async Task<IActionResult> GetUser(string email)
+        {
+            var User = await _context.Users.FirstOrDefaultAsync(u=> u.Email==email);
+            if (User == null) return NotFound("User was not found");
+            return Ok(User);
+        }
+
     }
 }

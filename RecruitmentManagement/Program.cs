@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Helpers;
@@ -16,10 +17,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
     {
+       
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
     })
      .AddNewtonsoftJson(options =>
 {
+     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
 
@@ -91,7 +94,13 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Interviewer"));
     // Add other role policies similarly
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -114,6 +123,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 
