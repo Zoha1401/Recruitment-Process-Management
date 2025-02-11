@@ -35,6 +35,14 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
+  const isLoggedIn=()=>{
+    const token=localStorage.getItem("token")
+    if(!token){
+        return false;
+    }
+    return true;
+  }
+
   const getUser=  async (data)=>{
     console.log("Email to get user", data.email)
     try {
@@ -59,7 +67,7 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ token, user, getUser, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token, user, getUser, loginAction, logOut, isLoggedIn}}>
       {children}
     </AuthContext.Provider>
   );
