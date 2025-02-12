@@ -8,6 +8,8 @@ import ViewCandidates from './Pages/Recruiter/ViewCandidates'
 import AssignReviewer from './Pages/Recruiter/AssignReviewer'
 import AssignInterviewer from './Pages/Recruiter/AssignInterviewer'
 import AddCandidate from './Pages/Recruiter/AddCandidate'
+import ViewApplicants from './Pages/Recruiter/ViewApplicants'
+import ScheduleInterview from './Pages/Recruiter/ScheduleInterview'
 function App() {
  
   const router=createBrowserRouter([
@@ -20,15 +22,15 @@ function App() {
       element:<Login/>
     },
     {
-      path:'/recruiterDashboard/:userId',
+      path:'/recruiterDashboard',
       element:<RecruiterDashboard/>
     },
     {
-      path:'/createJob/:userId',
+      path:'/createJob',
       element:<CreateJob/>
     },
     {
-      path:'/viewCandidates/:userId',
+      path:'/viewCandidates',
       element:<ViewCandidates/>
     },
     {
@@ -36,12 +38,20 @@ function App() {
       element:<AssignReviewer/>
     },
     {
-      path:'/assignInterviewer/:userId',
+      path:'/assignInterviewer',
       element:<AssignInterviewer/>
     },
     {
-      path:'/addCandidate/:userId',
+      path:'/addCandidate',
       element:<AddCandidate/>
+    },
+    {
+      path:'/viewApplicants/:jobId',
+      element:<ViewApplicants/>
+    },
+    {
+      path:'/scheduleInterview/:applicantId',
+      element:<ScheduleInterview/>
     }
   ])
   return (

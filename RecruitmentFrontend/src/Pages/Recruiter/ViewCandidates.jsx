@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthProvider";
 import axiosInstance from "../../axios/axiosInstance";
 
@@ -11,7 +11,6 @@ const ViewCandidates = () => {
     if(!auth.isLoggedIn){
         navigate("/login")
     }
-    const {userId}=useParams();
     const token=localStorage.getItem("token")
 
     useEffect(() => {
@@ -36,7 +35,7 @@ const ViewCandidates = () => {
         <li key={c.CandidateId}>{c.CollegeName}</li>
       ))}
 
-      <Link to={`/addCandidate/${userId}`}>Add Candidate</Link>
+      <Link to={`/addCandidate`}>Add Candidate</Link>
     </div>
   )
 }

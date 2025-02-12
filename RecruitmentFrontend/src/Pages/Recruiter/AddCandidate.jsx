@@ -1,19 +1,20 @@
 
 import  { useState } from 'react'
 import axiosInstance from '../../axios/axiosInstance';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AddCandidate = () => {
     const [candidate, setCandidate]=useState({CollegeName:"", Degree:"", WorkExperience:"", FirstName:"", LastName:"", Email:"", Phone:"" , ResumeUrl:""})
     const onChange=(e)=>{
         setCandidate({ ...candidate, [e.target.name]: e.target.value });
     }
-    const {userId}=useParams();
+
     const navigate=useNavigate();
 
     const token=localStorage.getItem("token")
 
-    const handleAddCandidate=async ()=>{
+    const handleAddCandidate=async (e)=>{
+      e.preventDefault();
         try {
             const response = await axiosInstance.post(
               `/candidate`,
@@ -29,7 +30,7 @@ const AddCandidate = () => {
             console.log(response.data)
             if(response.status==201){
                 alert("Candidate was successfully created")
-                navigate(`/viewCandidates/${userId}`)
+                navigate(`/viewCandidates`)
             }
            
           } catch (error) {

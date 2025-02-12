@@ -10,7 +10,6 @@ const Login = () => {
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
 };
-
 const handleSubmit=(e)=>{
     if(credentials.password!="" && credentials.email!=""){
         e.preventDefault();
@@ -18,7 +17,6 @@ const handleSubmit=(e)=>{
         console.log("Calling login function")
         if (credentials.email != "" && credentials.password != "") {
             auth.loginAction(credentials);
-            auth.getUser(credentials);
             console.log(user);
             setUser(auth.user)
           }
@@ -26,7 +24,7 @@ const handleSubmit=(e)=>{
         console.log(credentials.email)
         
         if(localStorage.getItem("token")!=null){
-        navigate(`/recruiterDashboard/${user.UserId}`)
+        navigate(`/recruiterDashboard`)
         setCredentials({})
         }
         else{

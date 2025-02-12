@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
@@ -7,6 +7,11 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 //   const navigate = useNavigate();
+useEffect(() => {
+    if (token) {
+      getUserFromToken(token); // Automatically fetch user data if token exists
+    }
+  }, [token]);
   const loginAction = async (data) => {
     try {
       const response = await fetch("http://localhost:5172/api/auth/login", {
@@ -43,31 +48,26 @@ const AuthProvider = ({ children }) => {
     return true;
   }
 
-  const getUser=  async (data)=>{
-    console.log("Email to get user", data.email)
+  const getUserFromToken = async (token) => {
     try {
-        const response = await fetch(`http://localhost:5172/api/user/getUserByEmail/${data.email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        console.log(response);
-        const res = await response.json();
-        console.log(res)
-        console.log("Response from get by email ", res)
-        if (res) {
-          setUser(res)
-          // navigate("/dashboard");
-          return; 
-        }
-      } catch (err) {
-        console.error(err);
+      const response = await fetch("http://localhost:5172/api/user/me", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const res = await response.json();
+      if (res) {
+        setUser(res);
       }
-  }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ token, user, getUser, loginAction, logOut, isLoggedIn}}>
+    <AuthContext.Provider value={{ token, user, getUserFromToken, loginAction, logOut, isLoggedIn}}>
       {children}
     </AuthContext.Provider>
   );

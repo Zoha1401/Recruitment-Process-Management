@@ -1,19 +1,21 @@
 import { useState } from 'react'
 import { useAuth } from '../../Context/AuthProvider';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios/axiosInstance';
 
+//After creation redirect to a page where you can add skills required for this position and save, backend api for save skills for this job
 const CreateJob = () => {
     const [position, setPosition]=useState({Name:"", MinExp:0, MaxExp:0, PositionStatusTypeId:0 , NoOfInterviews:"", Description:""})
     const navigate=useNavigate();
-    const {userId}=useParams();
+    
     const auth=useAuth();
     if(!auth.isLoggedIn){
         navigate("/login")
     }
     const token=localStorage.getItem("token")
 
-    const handleAddJob=async()=>{
+    const handleAddJob=async(e)=>{
+      e.preventDefault();
         try {
             const response = await axiosInstance.post(
               `/position`,
@@ -29,7 +31,7 @@ const CreateJob = () => {
             console.log(response.data)
             if(response.status==201){
                 alert("Job was successfully created")
-                navigate(`/recruiterDashboard/${userId}`)
+                navigate(`/recruiterDashboard`)
             }
            
           } catch (error) {
