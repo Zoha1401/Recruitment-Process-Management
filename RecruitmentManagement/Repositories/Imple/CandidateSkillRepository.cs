@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagement.Model;
@@ -23,7 +24,11 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         public async Task<CandidateSkill> GetCandidateSkillById(int id)
         {
-            return await _context.CandidateSkills.FindAsync(id);
+            var candidate=await _context.CandidateSkills.FirstOrDefaultAsync(cs=> cs.CandidateId==id);
+            if(candidate==null)
+            throw new ArgumentException("Candidate with this ID is not found");
+            return candidate;
+
         }
 
         public async Task<CandidateSkill> AddCandidateSkill(int candidateId, int skillId, MarkCandidateSkill candidateSkillRequest)
@@ -86,5 +91,20 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return true;
         }
 
+       public async Task<List<CandidateSkillDTO>> GetCandidateSkills(int id){
+         var CandidateSkills= await (from cs in _context.CandidateSkills
+                                        join c in _context.Candidates on cs.CandidateId equals c.CandidateId
+                                        join s in _context.Skills on cs.SkillId equals s.SkillId
+                                        where c.CandidateId==id
+                                        select new CandidateSkillDTO
+                                        {
+                                            SkillId=s.SkillId,
+                                            SkillName=s.Name,
+                                            Experience=cs.Experience
+
+                                        }).ToListAsync();
+        return CandidateSkills;
+       }
+       
     }
 }

@@ -6,7 +6,7 @@ using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "ReviewerPolicy")]
+    // [Authorize(Policy = "ReviewerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateSkillController : ControllerBase
@@ -66,6 +66,19 @@ namespace RecruitmentProcessManagementSystem.Controllers
             _service.MarkSkills(candidateId, skills);
            return Ok("Candidate skills are successfull marked");
         }
+
+        [Authorize]
+        [HttpGet("candidateSkills/{candidateId}")]
+        public async Task<IActionResult> GetSkills(int candidateId)
+        {
+           var skills=await _service.GetCandidateSkillsName(candidateId);
+           if(skills==null){
+            return NotFound("No skills found for this candidate");
+           }
+           return Ok(skills);
+        }
+        
+       
         
     }
 }

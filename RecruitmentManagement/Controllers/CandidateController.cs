@@ -45,14 +45,14 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return Ok(Candidate);
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> Add([FromBody] Candidate Candidate)
-        // {
-        //     if (!ModelState.IsValid)
-        //         return BadRequest(ModelState);
-        //     var addedCandidate = await _service.AddCandidate(Candidate);
-        //     return CreatedAtAction(nameof(GetById), new { id = addedCandidate.CandidateId }, addedCandidate);
-        // }
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] CandidateDTO Candidate)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var addedCandidate = await _service.AddCandidate(Candidate);
+            return CreatedAtAction(nameof(GetById), new { id = addedCandidate.CandidateId }, addedCandidate);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Candidate Candidate)

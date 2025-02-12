@@ -158,7 +158,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             RecruiterId=i.RecruiterId,
                                             Date=i.Date,
                                             PositionCandidateId=i.PositionCandidateId,
-                                            RoundNumber=i.RoundNumber
+                                            RoundNumber=i.RoundNumber,
+                                            InterviewId=i.InterviewId
                                         }).ToListAsync();
 
             if(interviewerInterviews==null){
@@ -166,6 +167,20 @@ namespace RecruitmentProcessManagementSystem.Repositories
             }
 
             return interviewerInterviews;
+        }
+
+        public async Task<InterviewerInterview> GetInterviewerInterview(int interviewId, int interviewerId)
+        {
+            var interviewInterviewers=await _context.InterviewerInterviews.ToListAsync();
+            var selected=interviewInterviewers.FindAll(ii=> ii.InterviewerId==interviewerId);
+            var result=selected.Find(i=> i.InterviewId==interviewId);
+            
+            if(result==null)
+            {
+                throw new Exception("No interview found for this interviewer Id");
+            }
+
+            return result;
         }
     }
 

@@ -65,7 +65,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return Ok("Interview deleted successfully.");
         }
         //Assign Interviewer to an Interview
-
+        
         [HttpPost("assignInterviewer/{interviewId}/{interviewerId}")]
         public async Task<IActionResult> AssignInterviewer(int interviewId, int interviewerId){
             var InterviewerInterview=await _service.AssignInterviewer(interviewId, interviewerId);
@@ -75,19 +75,27 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return Ok(InterviewerInterview);
         }
 
-        [HttpPost("addInterviewFeedback/{interviewerInterviewId}")]
-        public async Task<IActionResult> AddInterviewFeedback(int interviewerInterviewId, [FromBody] ICollection<FeedbackRequest> feedbackRequests){
-           IEnumerable<InterviewFeedback> feedbacks=await _service.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-           return Ok(feedbacks);
-        }
-
+        // [HttpPost("addInterviewFeedback/{interviewerInterviewId}")]
+        // public async Task<IActionResult> AddInterviewFeedback(int interviewerInterviewId, [FromBody] ICollection<FeedbackRequest> feedbackRequests){
+        //    IEnumerable<InterviewFeedback> feedbacks=await _service.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
+        //    return Ok(feedbacks);
+        // }
+        [Authorize(Policy = "InterviewerPolicy")]
         [HttpGet("getInterviewsForInterviewer/{interviewerId}")]
         public async Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId)
         {
             return await _service.GetInterviewsForInterviewer(interviewerId);
         }
+        [HttpGet("getInterviewerInterview/{interviewId}/{interviewerId}")]
+        public async Task<IActionResult> GetInterviewerInterview(int interviewId, int interviewerId){
+            var interviewerInterview= await _service.GetInterviewerInterview(interviewId, interviewerId);
+            if(interviewerInterview==null){
+                return NotFound("Interview for this interviewer not found");
+            }
+            return Ok(interviewerInterview);
+         }
 
     
     }

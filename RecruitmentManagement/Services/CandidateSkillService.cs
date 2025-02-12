@@ -51,4 +51,8 @@ public class CandidateSkillService
          public async Task<bool> DeleteCandidateSkill(int id) {
             return await _repository.DeleteCandidateSkill(id);
         } 
+
+        public async Task<List<CandidateSkillDTO>> GetCandidateSkillsName(int id){
+            return await _repository.GetCandidateSkills(id);
+        }
  }

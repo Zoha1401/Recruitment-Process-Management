@@ -25,7 +25,7 @@ namespace RecruitmentProcessManagementSystem.Models
         public string Password { get; set; }
 
         [Column("birth_date")]
-        public DateOnly BirthDate {get; set;}
+        public DateOnly? BirthDate {get; set;}
         
         [Column("phone")]
         public string? Phone { get; set; }

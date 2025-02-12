@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +133,23 @@ namespace RecruitmentProcessManagementSystem.Controllers
             if (User == null) return NotFound("User was not found");
             return Ok(User);
         }
+
+    [HttpGet("me")]
+    [Authorize]
+    public IActionResult GetUserFromToken()
+    {
+       
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; 
+        var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        var role=User.FindFirst(ClaimTypes.Role)?.Value;
+
+        return Ok(new
+        {
+            UserId = userId,
+            Email = userEmail,
+            Role=role
+        });
+    }
 
     }
 }

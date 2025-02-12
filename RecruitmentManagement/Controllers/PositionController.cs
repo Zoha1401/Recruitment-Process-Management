@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PositionController : ControllerBase

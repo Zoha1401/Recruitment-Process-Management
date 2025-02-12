@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "ReviewerPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PositionCandidateController : ControllerBase
@@ -79,6 +79,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
             return Ok(PositionCandidate);
         }
+
+        //Send apply to application controller which will be authorized by all
         [HttpPost("applyToPosition/{candidateId}/{positionId}/{statusId}/{userId}")]
         public async Task<IActionResult> ApplyToPosition(int userId, int candidateId, int positionId, int statusId)
         {

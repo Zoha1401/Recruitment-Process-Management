@@ -42,5 +42,9 @@ namespace RecruitmentProcessManagementSystem.Service
           public async Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId){
             return await _repository.GetInterviewsForInterviewer(interviewerId);
         }
+
+         public async Task<InterviewerInterview> GetInterviewerInterview(int interviewId, int interviewerId){
+            return await _repository.GetInterviewerInterview(interviewId, interviewerId);
+         }
     }
 }

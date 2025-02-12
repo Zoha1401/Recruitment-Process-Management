@@ -9,7 +9,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
     {
         Task<IEnumerable<Candidate>> GetAllCandidates();
         Task<Candidate> GetCandidateById(int id);
-        //Task<Candidate> AddCandidate(Candidate Candidate);
+        Task<Candidate> AddCandidate(CandidateDTO Candidate);
         Task<Candidate> UpdateCandidate(Candidate Candidate);
         Task<bool> DeleteCandidate(int id);
 

@@ -171,7 +171,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             ResumeUrl = c.ResumeUrl,
                                             CollegeName=c.CollegeName,
                                             Phone=u.Phone,
-                                            RoleId=u.RoleId
+                                            RoleId=u.RoleId,
+                                            PositionCandidateId=pc.PositionCandidateId,
+                                            Degree=c.Degree,
+                                            IsShortlisted=pc.IsShortlisted
                                         }).ToListAsync();
 
             return positionApplicants;
@@ -209,7 +212,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             WorkExperience = c.WorkExperience,
                                             ResumeUrl = c.ResumeUrl,
                                             CollegeName=c.CollegeName,
-                                            Phone=u.Phone
+                                            Phone=u.Phone,
+                                            Degree=c.Degree,
+                                            RoleId=u.RoleId,
+                                            CandidateId=c.CandidateId
                                         }).FirstOrDefaultAsync();
             
             if(CandidateDetails==null){

@@ -13,5 +13,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<CandidateSkill> UpdateCandidateSkill(int candidateId, int skillId, MarkCandidateSkill CandidateSkill);
         Task<bool> DeleteCandidateSkill(int id);
         
+        Task<List<CandidateSkillDTO>> GetCandidateSkills(int id);
     }
 }

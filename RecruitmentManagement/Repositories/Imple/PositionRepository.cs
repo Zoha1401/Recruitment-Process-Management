@@ -35,10 +35,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
                 Name = positionRequest.Name,
                 NoOfInterviews = positionRequest.NoOfInterviews,
                 Description = positionRequest.Description,
-                PositionStatusTypeId = positionRequest.StatusId,
+                PositionStatusTypeId = 1,
                 MinExp = positionRequest.MinExp,
                 MaxExp = positionRequest.MaxExp,
-                CreatedAt = positionRequest.CreatedAt,
+                CreatedAt = DateTime.Now
             };
 
             // Iterate over the incoming SkillRequests and add PositionSkill objects
