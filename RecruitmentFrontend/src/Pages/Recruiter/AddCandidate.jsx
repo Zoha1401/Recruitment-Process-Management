@@ -38,12 +38,17 @@ const AddCandidate = () => {
           }
     }
 
+    const handleBulkUpload= async()=>{
+
+    }
+
 
   return (
      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
         <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
           Add Candidate
         </h2>
+        <button onClick={handleBulkUpload}>Bulk Upload</button>
 
         <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm bg-gray-100 px-4 rounded-lg py-2 shadow-xl">
           <form onSubmit={handleAddCandidate} className="mt-4 mb-10 space-y-5">

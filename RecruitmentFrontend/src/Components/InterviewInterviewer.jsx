@@ -6,7 +6,7 @@ import { useAuth } from "../Context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 
-const Interview = ({interview}) => {
+const InterviewInterviewer = ({interview}) => {
     const [interviewType, setInterviewType]=useState({})
     const [candidateDetails, setCandidateDetails]= useState({})
     const [candidateSkills, setCandidateSkills]= useState([])
@@ -16,7 +16,7 @@ const Interview = ({interview}) => {
         navigate("/login")
     }
     const token=localStorage.getItem("token")
-
+    console.log("These are candidate details", candidateDetails)
     useEffect(() => {
       const fetchInterviewType=async ()=>{
           
@@ -62,7 +62,6 @@ const Interview = ({interview}) => {
           }
           GetCandidateSkills();
     }, [candidateDetails.CandidateId, token])
-    
    
     
   return (
@@ -77,9 +76,10 @@ const Interview = ({interview}) => {
                 {cs.Experience}
             </li>
         })}
-        <Link to={`/assignInterviewer/${interview.InterviewId}`}>Assign Interviewers</Link>
+        <Link to={`/assignInterviewFeedback/${interview.InterviewId}/${candidateDetails.CandidateId}`}>Add Interview Feedback</Link>
+        
     </div>
   )
 }
 
-export default Interview
+export default InterviewInterviewer

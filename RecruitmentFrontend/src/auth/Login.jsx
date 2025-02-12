@@ -24,7 +24,10 @@ const handleSubmit=(e)=>{
         console.log(credentials.email)
         
         if(localStorage.getItem("token")!=null){
-        navigate(`/recruiterDashboard`)
+          alert("User successfully logged in")
+        // navigate(`/recruiterDashboard`)
+        //navigate(`/interviewerDashboard`)
+        navigate(`/reviewerDashboard`)
         setCredentials({})
         }
         else{

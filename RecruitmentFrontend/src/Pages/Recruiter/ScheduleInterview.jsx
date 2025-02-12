@@ -38,7 +38,6 @@ const ScheduleInterview = () => {
     fetchInterviewTypes();
   }, [token]);
 
-  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInterview((prevInterview) => ({
@@ -48,9 +47,8 @@ const ScheduleInterview = () => {
   };
   
 
-  // Handle form submit
   const handleOnSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); 
     const date = new Date(interview.Date);
     const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
     const interviewRequest = {

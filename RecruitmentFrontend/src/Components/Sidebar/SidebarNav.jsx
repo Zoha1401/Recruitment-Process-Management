@@ -3,21 +3,23 @@ import { Home } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import "./SidebarNav.css"
+import { Link } from 'react-router-dom';
 
 const SidebarNav = () => {
   const [collapsed, setCollapsed] = useState(false);
   
 
-  const handleToggleSidebar = () => {
-    setCollapsed(!collapsed);
-  }; 
+ 
   return (
-  <Sidebar collapsed={collapsed} className='flex'>
-    <MenuIcon onClick={handleToggleSidebar} className='flex'></MenuIcon>
-    <Menu>
-      <MenuItem icon={<Home />}>Home</MenuItem>
+  <Sidebar>
+    <MenuIcon className=''></MenuIcon>
+    <Menu className='flex-col flex mx-1 px-2 d-flex bg-green-100'>
+      <MenuItem icon={<Home />} className='flex flex-col d-flex bg-green-200 rounded-sm shadow-sm'>Home</MenuItem>
       {/* More menu items... */}
-    </Menu>
+    <Link to={`/createJob`} className='mt-2 flex flex-col d-flex bg-green-200 rounded-sm shadow-sm'><button>Create Job</button></Link>
+    <Link to={`/viewCandidates`} className='mt-2 flex flex-col d-flex bg-green-200 rounded-sm shadow-sm'><button>View Candidates</button></Link>
+    <Link to={`/viewInterviews`} className='mt-2 flex flex-col d-flex bg-green-200 rounded-sm shadow-sm'><button>View Interviews</button></Link>
+   </Menu>
     
   </Sidebar>
   )

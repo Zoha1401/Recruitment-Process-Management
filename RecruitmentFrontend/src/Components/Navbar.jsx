@@ -1,4 +1,5 @@
 
+import { Button } from '@mui/material';
 import { useAuth } from '../Context/AuthProvider'
 import { useNavigate } from 'react-router-dom';
 
@@ -14,10 +15,10 @@ const Navbar = () => {
   console.log("Current user", localStorage.getItem("currentUser"))
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-    <div className="container-fluid">
-      <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+    <div className="container-fluid justify-content-end">
+      <Button color='error' variant='contained' className="btn btn-danger btn-sm" onClick={handleLogout}>
         Logout
-      </button>
+      </Button>
     </div>
   </nav>
   )
