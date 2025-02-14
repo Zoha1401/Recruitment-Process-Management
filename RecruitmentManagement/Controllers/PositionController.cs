@@ -4,11 +4,12 @@ using RecruitmentProcessManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Cors;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class PositionController : ControllerBase
     {
@@ -84,9 +85,14 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
 
-        [HttpPost("{positionId}/{reviewerId}")]
+        [HttpPost("assignReviewer/{positionId}/{reviewerId}")]
         public async Task<IActionResult> AssignReviewer(int positionId, int reviewerId)
         {
+            var authHeader=Request.Headers.Authorization;
+            if(string.IsNullOrEmpty(authHeader)){
+                return Unauthorized("Authorization header is missing");
+            }
+            Console.WriteLine(authHeader);
             var position = await _service.AssignReviewer(positionId, reviewerId);
             if (position == null)
             {
@@ -125,6 +131,11 @@ namespace RecruitmentProcessManagementSystem.Controllers
         {
             return await _service.GetPositionsForReviewer(reviewerId);
         }
+        
+        [HttpPost("addPositionSkills/{positionId}")]
+         public async Task<Position> AddPositionSkills(int positionId, [FromBody] List<SkillRequest> skillRequests){
+            return await _service.AddPositionSkills(positionId, skillRequests);
+         }
 
 
         // public async Task<IActionResult> Patch(int positionId, [FromBody] JsonPatchDocument<Position> patch)
@@ -148,7 +159,24 @@ namespace RecruitmentProcessManagementSystem.Controllers
         //     };
         //     return Ok(model);
         // }
+         
+         [HttpGet("getPositionStatusTypes")]
+         public async Task<IEnumerable<RecruitmentManagement.Model.PositionStatusType>> GetAllPositionStatusTypes()
+        {
+            return await _service.GetAllPositionStatusTypes();
+        }
 
+        [HttpGet("getAssignedReviewer/{positionId}")]
+        public async Task<IActionResult> GetAssignedReviewer(int positionId){
+            if(positionId<=0){
+                return NotFound("Please give correct ID");
+            }
+            var reviewer=await _service.GetAssignedReviewer(positionId);
+            if(reviewer==null){
+                return NotFound("No reviewer found for this position");
+            }
+            return Ok(reviewer);
+        }
 
 
 

@@ -43,6 +43,7 @@ namespace RecruitmentProcessManagementSystem.Data
 
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentStatusType> DocumentStatusTypes { get; set; }
+        public DbSet<CandidateStatusType> CandidateStatusTypes{get; set;}
 
         // public DbSet<PositionJobRequirement> PositionJobRequirements { get; set; }
 

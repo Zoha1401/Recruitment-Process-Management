@@ -59,5 +59,18 @@ namespace RecruitmentProcessManagementSystem.Service
         // {
         //     return await _repository.FetchCollegewiseReport(positionId);
         // }
+
+         public async Task<IEnumerable<RecruitmentManagement.Model.PositionStatusType>> GetAllPositionStatusTypes()
+        {
+            return await _repository.GetAllPositionStatusTypes();
+        }
+
+         public async Task<Position> AddPositionSkills(int positionId, List<SkillRequest> skillRequests){
+            return await _repository.AddPositionSkills(positionId, skillRequests);
+         }
+
+        public async Task<User> GetAssignedReviewer(int positionId){
+            return await _repository.GetAssignedReviewer(positionId);
+        }
     }
 }

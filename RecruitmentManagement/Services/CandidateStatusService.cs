@@ -30,5 +30,14 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<bool> DeleteCandidateStatus(int id) {
             return await _repository.DeleteCandidateStatus(id);
         } 
+
+        public async Task<IEnumerable<CandidateStatusType>> GetCandidateStatusTypes()
+        {
+            return await _repository.GetCandidateStatusTypes();
+        }
+
+         public async Task<CandidateStatus> GetCandidateStatusFromIds(int candidateId, int positionId){
+            return await _repository.GetCandidateStatusFromIds(candidateId, positionId);
+         }
     }
 }

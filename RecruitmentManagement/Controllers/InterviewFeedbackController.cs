@@ -3,10 +3,12 @@ using RecruitmentProcessManagementSystem.Service;
 using RecruitmentProcessManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
+using Microsoft.AspNetCore.Cors;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
     // [Authorize(Policy = "RecruiterPolicy")]
+     [EnableCors("AllowSpecificOrigin")]
     [Authorize(Policy = "InterviewerPolicy")]
     [Route("api/[controller]")]
     [ApiController]

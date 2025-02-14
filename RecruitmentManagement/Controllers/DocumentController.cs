@@ -8,7 +8,7 @@ using RecruitmentProcessManagementSystem.Data;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DocumentController : ControllerBase
@@ -42,12 +42,12 @@ namespace RecruitmentProcessManagementSystem.Controllers
             return Ok(Document);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] DocumentDTO Document)
+        [HttpPost("{shortlistId}")]
+        public async Task<IActionResult> Add(int shortlistId, [FromForm] FormFile formFile)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var addedDocument = await _service.UploadDocument(Document, Document.formFile);
+            var addedDocument = await _service.UploadDocument(shortlistId, formFile);
             return CreatedAtAction(nameof(GetById), new { id = addedDocument.DocumentId }, addedDocument);
         }
 

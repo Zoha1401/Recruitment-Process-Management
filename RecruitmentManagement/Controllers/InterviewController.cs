@@ -3,11 +3,13 @@ using RecruitmentProcessManagementSystem.Service;
 using RecruitmentProcessManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
+using Microsoft.AspNetCore.Cors;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    // [Authorize(Policy = "RecruiterPolicy")]
-    [Authorize(Policy = "InterviewerPolicy")]
+    [Authorize]
+    [EnableCors("AllowSpecificOrigin")]
+    // [Authorize(Policy = "InterviewerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class InterviewController : ControllerBase
@@ -96,6 +98,20 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
             return Ok(interviewerInterview);
          }
+
+        [HttpPost("assignInterviews/{interviewId}")]
+         public async Task<IActionResult> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews){
+            var InterviewerInterviews=await _service.AssignInterviewers(interviewId, assignInterviews);
+            return Ok(InterviewerInterviews);
+         }
+
+        [HttpGet("getCandidateDoneInterviews/{positionCandidateId}")]
+          public async Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId){
+            if(positionCandidateId<=0){
+                throw new Exception("Please provide correct position candidate ID");
+            }
+            return await _service.GetCandidateDoneInterviews(positionCandidateId);
+          }
 
     
     }

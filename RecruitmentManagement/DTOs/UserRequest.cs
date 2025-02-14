@@ -7,12 +7,12 @@ public class UserRequest
     public DateOnly BirthDate { get; set; }
     public string? Phone { get; set; }
     public int RoleId { get; set; }
-    public String CollegeName { get; set; }
-    public String Degree { get; set; }
+    public String? CollegeName { get; set; }
+    public String? Degree { get; set; }
 
 
     public float WorkExperience { get; set; }
 
-    public string ResumeUrl { get; set; }
+    public string? ResumeUrl { get; set; }
 
 }

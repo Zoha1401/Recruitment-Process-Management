@@ -39,6 +39,7 @@ namespace RecruitmentProcessManagementSystem.Service
             return await _repository.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
         }
         
+
           public async Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId){
             return await _repository.GetInterviewsForInterviewer(interviewerId);
         }
@@ -46,5 +47,13 @@ namespace RecruitmentProcessManagementSystem.Service
          public async Task<InterviewerInterview> GetInterviewerInterview(int interviewId, int interviewerId){
             return await _repository.GetInterviewerInterview(interviewId, interviewerId);
          }
+
+         public async Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews){
+            return await _repository.AssignInterviewers(interviewId, assignInterviews);
+         }
+
+          public async Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId){
+            return await _repository.GetCandidateDoneInterviews(positionCandidateId);
+          }
     }
 }

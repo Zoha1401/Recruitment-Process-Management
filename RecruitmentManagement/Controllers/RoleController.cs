@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    // [Authorize(Policy = "RecruiterPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

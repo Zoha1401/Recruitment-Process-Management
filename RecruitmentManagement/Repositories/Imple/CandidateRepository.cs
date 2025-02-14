@@ -167,5 +167,59 @@ namespace RecruitmentProcessManagementSystem.Repositories
                 return builder.ToString();
             }
         }
+
+        public async Task<Candidate> GetCandidateFromUserId(int userId)
+        {
+            var candidate=await _context.Candidates.FirstOrDefaultAsync(u=> u.UserId==userId);
+            if(candidate==null){
+                throw new Exception("Candidate with this ID is not found");
+            }
+            return candidate;
+        }
+
+        public async Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId)
+        {
+            bool alreadyApplied = await _context.PositionCandidates
+     .AnyAsync(pc => pc.CandidateId == candidateId && pc.PositionId == positionId);
+
+            if (alreadyApplied)
+            {
+                throw new InvalidOperationException("Candidate has already applied for the position");
+            }
+
+            var candidate = _context.Candidates.Find(candidateId);
+            var position = _context.Positions.Find(positionId);
+
+            if (candidate == null || position == null)
+            {
+                throw new ArgumentException("Invalid candidate or position ID.");
+            }
+            var positionCandidate = new PositionCandidate
+            {
+                CandidateId = candidateId,
+                PositionId = positionId,
+                ApplicationDate = DateTime.Now,
+                IsShortlisted=false,
+                IsReviewed=false
+            };
+
+            await _context.PositionCandidates.AddAsync(positionCandidate);
+            await _context.SaveChangesAsync();
+
+
+            //var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "sub");
+            var candidateStatus = new CandidateStatus
+            {
+                PositionId = positionId,
+                CandidateId = candidateId,
+                StatusId = 6,
+                UpdatedAt = DateTime.Now,
+            };
+
+            await _context.CandidateStatuses.AddAsync(candidateStatus);
+            await _context.SaveChangesAsync();
+
+            return positionCandidate;
+        }
     }
 }

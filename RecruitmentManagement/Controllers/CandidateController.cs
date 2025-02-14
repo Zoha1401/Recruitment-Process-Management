@@ -11,7 +11,7 @@ using System.Text;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateController : ControllerBase
@@ -88,6 +88,62 @@ namespace RecruitmentProcessManagementSystem.Controllers
         // public async Task<IActionResult> ReviewCandidate(int candidateId, bool isShortlisted, [FromBody] ICollection<MarkCandidateSkill> markCandidateSkills){
 
         // }
+  
+  [HttpGet("getCandidate/{userId}")]
+          public async Task<Candidate> GetCandidateFromUserId(int userId){
+            
+            return await _service.GetCandidateFromUserId(userId);
+         }
+
+        [HttpPost("applyToPosition/{candidateId}/{positionId}")]
+        public async Task<IActionResult> ApplyToPosition(int candidateId, int positionId)
+        {
+
+            // var httpContext = _httpContextAccessor?.HttpContext;
+            // if (httpContext == null)
+            // {
+            //     throw new Exception("HttpContext is null. Ensure request is within an HTTP context.");
+            // }
+
+            // var user = httpContext.User;
+            // if (user == null || !user.Identity.IsAuthenticated)
+            // {
+            //     throw new Exception("User is not authenticated.");
+            // }
+            // var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // if (string.IsNullOrEmpty(userIdString))
+            // {
+            //     throw new Exception("User ID claim ('NameIdentifier') not found.");
+            // }
+
+            // int userId = int.TryParse(userIdString, out int parsedUserId) ? parsedUserId : throw new Exception("Invalid user ID format.");
+
+            var PositionCandidate = await _service.ApplyToPosition(candidateId, positionId);
+            if (PositionCandidate == null)
+            {
+                return NotFound("The position candidate was not found");
+            }
+            return Ok(PositionCandidate);
+
+            
+        }
+
+        // [Authorize]
+        [HttpPost("uploadResume")]
+        public async Task<ActionResult<string>> GetResumeLink(IFormFile formFile){
+            // Console.WriteLine(Path.GetExtension(formFile.FileName));
+            var extension = Path.GetExtension(formFile.FileName);
+            if(formFile.Length>0 && ((extension == ".docx") || (extension ==".pdf"))){
+                var filePath = Path.Combine("Resources","Resume",formFile.FileName);
+                using(var stream = new FileStream(filePath,FileMode.Create)){
+                    await formFile.CopyToAsync(stream);
+                }
+                return filePath;
+            }else{
+                return BadRequest("Invalid file format");
+            }
+        }
+
 
         
        

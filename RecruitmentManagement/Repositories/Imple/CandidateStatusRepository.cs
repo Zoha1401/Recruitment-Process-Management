@@ -77,5 +77,30 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<CandidateStatusType>> GetCandidateStatusTypes()
+        {
+            return await _context.CandidateStatusTypes.ToListAsync();
+        }
+
+        public async Task<CandidateStatus> GetCandidateStatusFromIds(int candidateId, int positionId)
+        {
+            var CandidateStatus= await (from cs in _context.CandidateStatuses
+                                        where cs.CandidateId==candidateId
+                                        where cs.PositionId==positionId
+                                        select new CandidateStatus
+                                        {
+                                           CandidateStatusId=cs.CandidateStatusId,
+                                           StatusId=cs.StatusId,
+                                           Comments=cs.Comments,
+                                           CandidateId=cs.CandidateId,
+                                           PositionId=cs.PositionId
+                                           
+                                        }).FirstOrDefaultAsync();
+            
+            if(CandidateStatus==null){
+                throw new Exception("There is no status for this candidate");
+            }
+            return CandidateStatus;
+        }
     }
 }

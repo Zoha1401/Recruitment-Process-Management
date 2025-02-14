@@ -26,9 +26,9 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Documents.FindAsync(id);
         }
 
-        public async Task<Document> UploadDocument(DocumentDTO document, IFormFile request)
+        public async Task<Document> UploadDocument(int shortlistId, IFormFile request)
         {
-            string folderPath = Path.Combine("C:\\Users\\suratzoh\\Desktop\\Project\\RecruitmentManagement>", "uploads");
+            string folderPath = Path.Combine("documents", "uploads", request.FileName);
         
         // create the directory if it does not exist
         if (!Directory.Exists(folderPath))
@@ -51,17 +51,11 @@ namespace RecruitmentProcessManagementSystem.Repositories
         string filePath = Path.Combine(folderPath, fileName);
         await using var stream = new FileStream(filePath, FileMode.Create);
         await request.CopyToAsync(stream);
-        
-
-         var documentExist=_context.Documents.FirstOrDefault(c=> c.DocumentUrl==document.DocumentUrl);
-            if(documentExist!=null){
-              throw new ArgumentException("Document with this email already exists");
-            }
 
             var newDocument=new Document{
-               DocumentStatusTypeId=document.DocumentStatusTypeId,
+               DocumentStatusTypeId=2,
                DocumentUrl=$"/uploads/{fileName}",
-               ShortlistCandidateId=document.ShortlistId
+               ShortlistCandidateId=shortlistId
             };
               _context.Documents.Add(newDocument);
             await _context.SaveChangesAsync();

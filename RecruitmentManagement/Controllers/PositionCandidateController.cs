@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using RecruitmentManagement.Model;
 using RecruitmentManagement.DTOs;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
     [Authorize]
+     [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class PositionCandidateController : ControllerBase

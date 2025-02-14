@@ -3,6 +3,7 @@ using RecruitmentManagement.Model;
 public class PositionRequest
         {
         
+        public int PositionId {get; set;}
         public String Name { get; set; }
       
         public int NoOfInterviews { get; set; }
@@ -18,6 +19,7 @@ public class PositionRequest
         public string? ReasonForClosure { get; set; }
       
         public int StatusId {get; set;}
+        public string? StatusName {get; set;}
         public int? ReviewerId {get; set;}
 
         public ICollection<SkillRequest>? SkillRequests {get; set;}

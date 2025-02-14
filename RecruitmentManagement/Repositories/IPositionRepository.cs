@@ -21,5 +21,9 @@ namespace RecruitmentProcessManagementSystem.Repositories
         // Task<List<CollegewiseReport>> FetchCollegewiseReport(int positionId);
 
         Task<IEnumerable<Position>> GetPositionsForReviewer(int reviewerId);
+        Task<IEnumerable<RecruitmentManagement.Model.PositionStatusType>> GetAllPositionStatusTypes();
+        Task<Position> AddPositionSkills(int positionId, List<SkillRequest> skillRequests);
+
+        Task<User> GetAssignedReviewer(int positionId);
     }
 }

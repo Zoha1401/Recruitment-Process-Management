@@ -182,6 +182,64 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
             return result;
         }
+
+
+        public async Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews)
+        {
+           
+            foreach(AssignInterview assignInterview in assignInterviews){
+            var interviewer = _context.Users.Find(assignInterview.InterviewerId) ?? throw new ArgumentException("Interviewer is not found by this ID");
+            // if(interviewer.Role.RoleName!= _context.Roles.FirstOrDefaultAsync(r=> r.RoleName))
+            // var role=_context.Users.FirstOrDefault(u => u.Role.RoleName=="Interviewer");
+             if (interviewer == null)
+            {
+                throw new ArgumentException("The interviewer with this ID is not found");
+            }
+            var Role=_context.Roles.Find(interviewer.RoleId) ?? throw new ArgumentException("Role is not assigned to this ID");
+            var roleName=Role.RoleName;
+            if(roleName!="Interviewer"){
+                throw new ArgumentException("The given user is not an interviewer");
+            }
+            var interview = _context.Interviews.Find(interviewId) ?? throw new ArgumentException("Position not found with this ID");
+           
+            if (interview == null)
+            {
+                throw new ArgumentException("The interview with this ID is not found");
+            }
+             var existingAssignment = await _context.InterviewerInterviews
+            .FirstOrDefaultAsync(ii => ii.InterviewId == interviewId && ii.InterviewerId == assignInterview.InterviewerId);
+
+        if (existingAssignment != null)
+        {
+            throw new ArgumentException($"Interviewer with ID {assignInterview.InterviewerId} is already assigned to this interview.");
+        }
+            var InterviewerInterview = new InterviewerInterview
+            {
+                InterviewerId = assignInterview.InterviewerId,
+                InterviewId = interviewId
+            };
+
+            _context.InterviewerInterviews.Add(InterviewerInterview);
+            await _context.SaveChangesAsync();
+            }
+
+            return _context.InterviewerInterviews;
+
+        }
+
+        public async Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId){
+              var candidateInterviews= await (from i in _context.Interviews
+                                        join it in _context.InterviewTypes on i.InterviewTypeId equals it.InterviewTypeId
+                                        where i.PositionCandidateId==positionCandidateId
+                                        select new CandidateInterview
+                                        {
+                                            InterviewTypeName=it.Type,
+                                            RoundNumber=i.RoundNumber,
+                                            Date=i.Date
+                                            
+                                        }).ToListAsync();
+             return candidateInterviews;
+        }
     }
 
 

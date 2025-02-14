@@ -1,5 +1,7 @@
 using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +33,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.PositionCandidates.FindAsync(id);
         }
 
-        public async Task<PositionCandidate> ApplyToPosition(int userId, int candidateId, int positionId, int statusId)
+        public async Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId, int statusId, int userId)
         {
             bool alreadyApplied = await _context.PositionCandidates
      .AnyAsync(pc => pc.CandidateId == candidateId && pc.PositionId == positionId);
@@ -52,7 +54,9 @@ namespace RecruitmentProcessManagementSystem.Repositories
             {
                 CandidateId = candidateId,
                 PositionId = positionId,
-                ApplicationDate = DateTime.Now
+                ApplicationDate = DateTime.Now,
+                IsShortlisted=false,
+                IsReviewed=false
             };
 
             await _context.PositionCandidates.AddAsync(positionCandidate);
@@ -174,7 +178,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             RoleId=u.RoleId,
                                             PositionCandidateId=pc.PositionCandidateId,
                                             Degree=c.Degree,
-                                            IsShortlisted=pc.IsShortlisted
+                                            IsShortlisted=pc.IsShortlisted,
+                                            CandidateId=c.CandidateId
                                         }).ToListAsync();
 
             return positionApplicants;
@@ -185,6 +190,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
             var Applications= await (from c in _context.Candidates
                                         join pc in _context.PositionCandidates on c.CandidateId equals pc.CandidateId
                                         join p in _context.Positions on pc.PositionId equals p.PositionId
+                                        join cs in _context.CandidateStatuses on pc.CandidateId equals cs.CandidateId
+                                        join cst in _context.CandidateStatusTypes on cs.StatusId equals cst.CandidateStatusTypeId
                                         where c.CandidateId==candidateId
                                         select new PositionRequest
                                         {
@@ -192,7 +199,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                            MinExp=p.MinExp,
                                            MaxExp=p.MaxExp,
                                            Description=p.Description,
-                                           NoOfInterviews=p.NoOfInterviews
+                                           NoOfInterviews=p.NoOfInterviews,
+                                           StatusName=cst.Name,
+                                           PositionId=p.PositionId
+                                           
                                         }).ToListAsync();
 
             return Applications;
@@ -215,7 +225,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             Phone=u.Phone,
                                             Degree=c.Degree,
                                             RoleId=u.RoleId,
-                                            CandidateId=c.CandidateId
+                                            CandidateId=c.CandidateId,
+                                            IsShortlisted=pc.IsShortlisted
                                         }).FirstOrDefaultAsync();
             
             if(CandidateDetails==null){

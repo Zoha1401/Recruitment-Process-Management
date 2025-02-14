@@ -6,7 +6,7 @@ using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateStatusController : ControllerBase
@@ -67,5 +67,22 @@ namespace RecruitmentProcessManagementSystem.Controllers
         // public async Task<IActionResult> ReviewCandidateStatus(int CandidateStatusId, bool isShortlisted, [FromBody] ICollection<MarkCandidateStatusSkill> markCandidateStatusSkills){
 
         // }
+        [HttpGet("getCandidateStatusTypes")]
+        public async Task<IEnumerable<CandidateStatusType>> GetCandidateStatusTypes()
+        {
+            return await _service.GetCandidateStatusTypes();
+        }
+
+        [HttpGet("getCandidateStatusFromIds/{candidateId}/{positionId}")]
+        public async Task<IActionResult> GetCandidateStatusFromIds(int candidateId, int positionId){
+            if(positionId<=0 || candidateId<=0){
+                  return NotFound("Please specify correct IDs");
+            }
+            var candidateStatus=await _service.GetCandidateStatusFromIds(candidateId, positionId);
+            if(candidateStatus==null){
+                return NotFound("Candidate Status is not found");
+            }
+            return Ok(candidateStatus);
+         }
     }
 }

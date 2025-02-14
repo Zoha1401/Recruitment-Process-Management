@@ -14,6 +14,8 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<bool> DeleteCandidate(int id);
 
         Task<IEnumerable<Candidate>> BulkUpload(IFormFile file);
-        
+
+        Task<Candidate> GetCandidateFromUserId(int userId);
+        Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId);
     }
 }

@@ -28,6 +28,39 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Positions.FindAsync(id);
         }
 
+        public async Task<Position> AddPositionSkills(int positionId, [FromBody] List<SkillRequest> skillRequests){
+            var position=await _context.Positions.FirstOrDefaultAsync(p=>p.PositionId==positionId);
+            if(position==null)
+            {
+                throw new Exception("Position is not found");
+            }
+             if (skillRequests != null)
+            {
+                foreach (var skillRequest in skillRequests)
+                {
+                    var skill = _context.Skills.Find(skillRequest.SkillId);
+                    if (skill != null)
+                    {
+                        var newPositionSkill = new PositionSkill
+                        {
+                            Skill = skill,
+                            Position = position, // Establish relationship
+                            Required = skillRequest.Required
+                        };
+                        position.PositionSkills.Add(newPositionSkill);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Skill with ID {skillRequest.SkillId} not found.");
+                    }
+                }
+            }
+             await _context.SaveChangesAsync();
+
+            return position;
+
+
+        } 
         public async Task<Position> AddPosition([FromBody] PositionRequest positionRequest)
         {
             var newPosition = new Position
@@ -306,6 +339,23 @@ namespace RecruitmentProcessManagementSystem.Repositories
             }
 
             return reviewerPositions;
+        }
+
+         public async Task<IEnumerable<RecruitmentManagement.Model.PositionStatusType>> GetAllPositionStatusTypes()
+        {
+            return await _context.PositionStatusTypes.ToListAsync();
+        }
+
+        public async Task<User> GetAssignedReviewer(int positionId){
+            var position=await _context.Positions.FirstOrDefaultAsync(p=>p.PositionId==positionId);
+            if(position==null){
+                throw new Exception("Position not found for this ID");
+            }
+            var reviewer=await _context.Users.FirstOrDefaultAsync(u=> u.UserId==position.ReviewerId);
+            if(reviewer==null){
+                throw new Exception("Reviewer is not found");
+            }
+            return reviewer;
         }
 
     }

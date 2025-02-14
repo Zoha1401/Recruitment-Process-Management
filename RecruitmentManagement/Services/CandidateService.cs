@@ -34,5 +34,12 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<IEnumerable<Candidate>> BulkUpload(IFormFile file){
            return await _repository.BulkUpload(file);
         }
+
+         public async Task<Candidate> GetCandidateFromUserId(int userId){
+            return await _repository.GetCandidateFromUserId(userId);
+         }
+        public async Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId){
+            return await _repository.ApplyToPosition(candidateId, positionId);
+        }
     }
 }
