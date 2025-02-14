@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthProvider";
 import axiosInstance from "../../axios/axiosInstance";
+import Candidate from "../../Components/Candidate";
 
 
 const ViewCandidates = () => {
@@ -30,10 +31,14 @@ const ViewCandidates = () => {
     }, [token])
     
   return (
-    <div>ViewCandidates
-        {candidates.map((c) => (
-        <li key={c.CandidateId}>{c.CollegeName}</li>
+    <div className="flex flex-col items-center p-2 m-2 align-items justify-center">
+      <div className="font-bold text-xl">Candidates</div>
+      <div>
+      {candidates.map((candidate) => (
+        <Candidate key={candidate.CandidateId} candidate={candidate} />
       ))}
+      </div>
+      
 
       <Link to={`/addCandidate`}>Add Candidate</Link>
     </div>

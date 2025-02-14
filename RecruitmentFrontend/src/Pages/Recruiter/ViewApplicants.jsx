@@ -29,14 +29,14 @@ const ViewApplicants = () => {
       }
       fetchAllApplicants();
     }, [token])
-    
+    console.log(jobId)
   return (
-    <div>ViewApplicants
-          <ul>
+    <div className='flex flex-col items-center align-items justify-center p-2 m-2'><div className='font-bold m-2'>ViewApplicants</div>
+          <div className='flex flex-col'>
                 {applicants.map((applicant) => (
-                    <Applicant key={applicant.Email} applicant={applicant}/>
+                    <Applicant key={applicant.Email} applicant={applicant} jobId={jobId}/>
                 ))}
-            </ul>
+          </div>
     </div>
   )
 }

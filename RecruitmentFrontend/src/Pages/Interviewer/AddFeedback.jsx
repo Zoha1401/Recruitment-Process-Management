@@ -28,6 +28,8 @@ const AddFeedback = () => {
             setInterviewerInterview(response.data)
           }
           fetchInterviewerInterview();
+
+          
     }, [user, token])
 
 
@@ -62,7 +64,7 @@ const AddFeedback = () => {
         try {
             const response = await axiosInstance.post(
               `/interviewFeedback/addInterviewFeedback/${interviewerInterview.InterviewerInterviewId}`,
-              ...feedbacks,
+              feedbacks,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -70,10 +72,10 @@ const AddFeedback = () => {
               }
             );
             console.log(response.data);
-            if (response.status === 201) {
+          
               alert("Interview feedbacks are successfully saved");
               navigate('/interviewerDashboard')
-            }
+            
           } catch (error) {
             console.error("Error saving interview feedback", error, error.message);
           }
@@ -101,7 +103,7 @@ const AddFeedback = () => {
     //      setFeedbacks((prevFeedback) => [...prevFeedback, feedback]);
     // }
     console.log(feedbacks)
-      
+    
     console.log(interviewerInterview)
   return (
     <div>AddFeedback

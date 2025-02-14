@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 import { useAuth } from "../../Context/AuthProvider";
-import { useParams } from "react-router-dom"; // Import useParams to get the candidate ID from URL
-
+import { useParams } from "react-router-dom"; 
 const ScheduleInterview = () => {
   const [interview, setInterview] = useState({
     Date: "",

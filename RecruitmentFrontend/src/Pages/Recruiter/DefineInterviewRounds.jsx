@@ -5,11 +5,27 @@ import axiosInstance from "../../axios/axiosInstance";
 
 
 const DefineInterviewRounds = () => {
-    const [interviewRounds, setInterviewRounds] = useState([])
+    const [interviewRounds, setInterviewRounds] = useState([{TypeId:0, NoOfInterviews:0}])
     const [interviewTypes, setInterviewTypes] = useState([]);
     const { jobId } = useParams();
     const token = localStorage.getItem("token")
-    const handleDefineInterviewRounds = async () => {
+    //Print if already defined
+    const handleDefineInterviewRounds = async (e) => {
+        e.preventDefault()
+
+        try {
+            const response = await axiosInstance.post(`/position/defineInterviewRounds/${jobId}`, 
+            interviewRounds,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type":"application/json"
+              },
+            });
+            console.log("Interview rounds updated successfully", response.data);
+          } catch (error) {
+            console.error("Interview rounds updated error", error.message);
+          }
 
     }
 
@@ -37,7 +53,7 @@ const DefineInterviewRounds = () => {
 
     const onChange = (index, e) => {
         const updatedRounds = [...interviewRounds];
-        updatedRounds[index][e.target.name] = e.target.value;
+        updatedRounds[index][e.target.name] = parseInt(e.target.value);
         setInterviewRounds(updatedRounds);
     };
 
@@ -46,9 +62,10 @@ const DefineInterviewRounds = () => {
         setInterviewRounds(updatedInterviewRounds);
     };
     return (
-        <div>DefineInterviewRounds
+        <div className="flex flex-col items-center align-items justify-center">
+            <div className="font-bold text-xl m-4">DefineInterviewRounds</div>
             <div>
-                <h4>Rounds</h4>
+                <h4>Please specify the rounds</h4>
                 {interviewRounds.map((interviewRound, index) => (
                     <div key={index} className="flex items-center space-x-2 mb-2">
                         <label htmlFor="interviewType" className="block font-medium">
@@ -56,9 +73,9 @@ const DefineInterviewRounds = () => {
                         </label>
                         <select
                             id="interviewType"
-                            name="InterviewTypeId"
-                            value={interviewRound.InterviewTypeId}
-                            onChange={onChange}
+                            name="TypeId"
+                            value={interviewRound.TypeId}
+                            onChange={(e)=>onChange(index, e)}
                             className="block w-full rounded-md border px-3 py-2"
                             required
                         >
@@ -70,29 +87,32 @@ const DefineInterviewRounds = () => {
                             ))}
                         </select>
                         <label htmlFor="interviewType" className="block font-medium">
-                            Number of Rounds
+                            Number of Interviews
                         </label>
                         <input
-                            id="noOfRounds"
-                            name="NoOfRounds"
+                            id="noOfInterviews"
+                            name="NoOfInterviews"
                             type='number'
-                            value={interviewRound.NoOfRounds}
-                            onChange={onChange}
+                            value={interviewRound.NoOfInterviews}
+                            onChange={(e)=>onChange(index, e)}
                             className="block w-full rounded-md border px-3 py-2"
                             required
                         ></input>
                         <Button
-                            variant="danger"
+                            variant="contained"
+                            color="error"
+                            className="p-2 mx-2"
                             onClick={() => handleRemoveRound(index)}
                         >
                             Remove
                         </Button>
                     </div>
                 ))}
-                <Button variant="secondary" onClick={handleAddInterviewRound}>
+                <Button variant="contained" color="secondary" onClick={handleAddInterviewRound}>
                     Add Interview Round
                 </Button>
             </div>
+            <Button variant="contained" onClick={handleDefineInterviewRounds}>Save Interview Rounds</Button>
 
         </div>
 
