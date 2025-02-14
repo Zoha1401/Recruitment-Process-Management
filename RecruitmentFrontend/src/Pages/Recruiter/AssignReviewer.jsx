@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axiosInstance from '../../axios/axiosInstance';
 import { useParams } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const AssignReviewer = () => {
     const [reviewers, setReviewers]=useState([]);
@@ -84,15 +85,19 @@ const AssignReviewer = () => {
     
 
   return (
-    <div>Assign Reviewer
+    <div className="flex flex-col justify-content align-items items-center">
+      <div className="font-bold mt-4 text-lg">Assign Reviewer</div>
+      <ul>
         {reviewers.map((reviewer) => (
-            <div key={reviewer.UserId}>
-        <li>{reviewer.FirstName}</li>
-        <input type="checkbox"  onChange={() => handleCheckboxChange(reviewer.UserId)} checked={checkedState[reviewer.UserId] || false} ></input>
+            <div key={reviewer.UserId} className="flex flex-row border-1 rounded-sm p-4 m-4">
+        <div className="m-1">{reviewer.FirstName}</div>
+        <div className="m-1">{reviewer.LastName}</div>
+        <div className="m-1"><input type="checkbox"  onChange={() => handleCheckboxChange(reviewer.UserId)} checked={checkedState[reviewer.UserId] || false} ></input></div>
         </div>
 
       ))}
-      <button onClick={handleAssignReviewer}>Assign Reviewer</button>
+      </ul>
+      <Button variant='contained' onClick={handleAssignReviewer}>Assign Reviewer</Button>
     </div>
     
   )

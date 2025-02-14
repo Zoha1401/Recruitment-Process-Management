@@ -31,10 +31,10 @@ const ViewInterviews = () => {
     }, [token])
    
   return (
-    <div>ViewInterviews
-{interviews.map((interview) => (
+    <div className="flex flex-col justify-content items-center align-items m-2"><div className="font-bold text-xl">ViewInterviews</div>
+<div className="m-4">{interviews.map((interview) => (
         <Interview key={interview.InterviewId} interview={interview}/>
-      ))}
+      ))}</div>
     </div>
     
   )

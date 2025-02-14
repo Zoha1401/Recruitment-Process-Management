@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import axiosInstance from "../axios/axiosInstance";
 import { useAuth } from "../Context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 
 const Interview = ({interview}) => {
@@ -66,18 +67,30 @@ const Interview = ({interview}) => {
    
     
   return (
-    <div>Interview
-        <li>{interviewType.Type}
-        </li>
-        <li>{interview.RoundNumber}</li>
-        <li>{candidateDetails.FirstName}</li>
+    <div className="flex flex-row mt-4 border-1 rounded-sm">
+      <div className="font-bold m-2 p-6">Interview</div>
+        <div className="m-2 p-6 flex flex-row">
+          <div className="font-bold mx-2">Interview Type:</div>
+          <div className="mx-2">{interviewType.Type}</div>
+        </div>
+        <div className="m-2 p-6 flex flex-row">
+        <div className="font-bold mx-2">Round Number:</div>
+        <div className=""> {interview.RoundNumber}</div>
+        </div>
+        
+        <div className="m-2 p-6 flex flex-row">
+          <div className="font-bold mx-2">First Name:</div> 
+          <div className="">{candidateDetails.FirstName}</div>
+        </div>
+        {/* <div>Candidate Skills
         {candidateSkills.map((cs)=>{
-            <li key={cs.CandidateId}>
+            <div key={cs.CandidateId}>
                 {cs.SkillName}
                 {cs.Experience}
-            </li>
+            </div>
         })}
-        <Link to={`/assignInterviewer/${interview.InterviewId}`}>Assign Interviewers</Link>
+        </div> */}
+       <div className="m-6"> <Button variant="contained"><Link to={`/assignInterviewer/${interview.InterviewId}`}>Assign Interviewers</Link></Button></div>
     </div>
   )
 }

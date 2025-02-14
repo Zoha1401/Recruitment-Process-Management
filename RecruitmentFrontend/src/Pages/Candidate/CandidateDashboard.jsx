@@ -82,7 +82,7 @@ const CandidateDashboard = () => {
 
 console.log(candidate)
   return (
-    <div>CandidateDashboard
+    <div><div className="flex font-bold items-center align-items justify-content">View Job Openings</div>
          <div className="m-2">
           {jobs.map((job) => (
             <div key={job.PositionId}><CandidateJob key={job.PositionId} job={job} candidate={candidate} isApplied={applications.some(application => application.PositionId === job.PositionId)}  /></div>

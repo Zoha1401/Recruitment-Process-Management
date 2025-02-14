@@ -57,7 +57,7 @@ const PrivateRoute = ({ allowedRoles, element }) => {
 };
 
   const router = createBrowserRouter([
-    // Public Routes
+   
     {
       path: '/',
       element: <Register />,
@@ -94,7 +94,7 @@ const PrivateRoute = ({ allowedRoles, element }) => {
     },
     {
       path: '/viewApplicants/:jobId',
-      element: <PrivateRoute element={<ViewApplicants />} allowedRoles={['Recruiter']} />,
+      element: <PrivateRoute element={<ViewApplicants />} allowedRoles={['Recruiter', 'Reviewer']} />,
     },
     {
       path: '/scheduleInterview/:applicantId',

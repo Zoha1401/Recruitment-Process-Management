@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 import { useParams } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const AssignInterviewer = () => {
     const [interviewers, setInterviewers] = useState([]);
@@ -88,21 +89,22 @@ const AssignInterviewer = () => {
 
     return (
         <>
-            <div>
-                <h3>Assign Interviewer</h3>
+            <div className="flex flex-col justify-content align-items items-center">
+                <h3 className="font-bold mt-4 text-lg">Assign Interviewer</h3>
                 <ul>
                     {interviewers.map((interviewer) => (
-                        <li key={interviewer.UserId}>
-                            {interviewer.FirstName}
-                            <input
+                        <div key={interviewer.UserId} className="flex flex-row border-1 rounded-sm p-4 m-4">
+                            <div className="m-1">{interviewer.FirstName}</div>
+                            <div className="m-1">{interviewer.LastName}</div>
+                            <div className="m-1"><input
                                 type="checkbox"
                                 onChange={() => handleCheckboxChange(interviewer.UserId)}
                                 checked={checkedState[interviewer.UserId] || false}
-                            />
-                        </li>
+                            /></div>
+                        </div>
                     ))}
                 </ul>
-                <button onClick={handleAssignInterviewer}>Assign Interviewer</button>
+                <Button variant="contained" onClick={handleAssignInterviewer}>Assign Interviewers</Button>
             </div>
         </>
     );

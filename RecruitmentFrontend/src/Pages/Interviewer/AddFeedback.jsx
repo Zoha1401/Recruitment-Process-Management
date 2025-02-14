@@ -24,10 +24,24 @@ const AddFeedback = () => {
                     },
                   }
             )
-            console.log(response.data)
+            console.log("Interviewer Interview", response.data)
             setInterviewerInterview(response.data)
           }
           fetchInterviewerInterview();
+
+          const fetchSavedFeedbacks=async ()=>{
+          
+            const feedbackResponse=await axiosInstance.get(`/interviewFeedback/getInterviewFeedbacks/${interviewId}/${user.UserId}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+            )
+            console.log(feedbackResponse.data)
+            setFeedbacks(feedbackResponse.data)
+          }
+          fetchSavedFeedbacks(); 
 
           
     }, [user, token])

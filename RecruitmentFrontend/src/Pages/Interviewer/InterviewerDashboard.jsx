@@ -27,10 +27,13 @@ const InterviewerDashboard = () => {
     console.log(interviews)
     
   return (
-    <div>InterviewerDashboard
+    <div className="flex flex-col justify-content align-items items-center">
+      <div className="font-bold m-4">Your Interviews</div>
+      <div className="">
    {interviews.map((interview) => (
         <InterviewInterviewer key={interview.InterviewId} interview={interview}/>
       ))}
+      </div>
     </div>
   )
 }

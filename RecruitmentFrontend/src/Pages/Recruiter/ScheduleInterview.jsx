@@ -68,9 +68,9 @@ const ScheduleInterview = () => {
         }
       );
       console.log(response.data);
-      if (response.status === 201) {
+     
         alert("Interview successfully scheduled");
-      }
+      
     } catch (error) {
       console.error("Error saving interview", error, error.message);
     }

@@ -31,6 +31,7 @@ const CandidateJob = ({job, candidate, isApplied}) => {
      <div className="m-2">{job.Name}</div>
      <div className="m-2">{job.MinExp}</div>
      <div className="m-2">{job.Description}</div>
+     <div className="m-2"></div>
      <div className="flex">
      <Button className="m-2 p-2 mx-2" variant='contained' color='info' disabled={isApplied} onClick={handleApplyToPosition}>Apply</Button>
      </div>

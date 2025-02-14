@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axiosInstance from "../../axios/axiosInstance"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { Button } from "@mui/material"
 
 const ReviewCandidate = () => {
      const [candidateDetails, setCandidateDetails]= useState({})
@@ -90,32 +91,34 @@ const ReviewCandidate = () => {
         setShortlisted(prevState => !prevState); 
     }
   return (
-    <div>ReviewCandidate
-    {candidateDetails.CollegeName}
-    {candidateDetails.Degree}
-    {candidateDetails.FirstName}
-    {candidateDetails.LastName}
-    {candidateDetails.WorkExperience}
-    {candidateDetails.ResumeUrl}
+    <div className="flex flex-col justify-content align-items items-center"><div className="font-bold m-4 text-lg">Review Candidate</div>
+    <div className="flex flex-row m-2 p-2">
+       <div className="m-2 p-2 font-bold">Degree: {candidateDetails.Degree}</div>
+        <div className="m-2 p-2 font-bold">College Name: {candidateDetails.CollegeName}</div>
+        <div className="m-2 p-2 font-bold">First Name :{candidateDetails.FirstName}</div></div>
+        <div className="m-2 p-2 font-bold">Last Name:{candidateDetails.LastName}</div>
+        <div className="m-2 p-2 font-bold">Work Experience: {candidateDetails.WorkExperience}</div>
+        <div className="m-2 p-2 font-bold">Resume Url: {candidateDetails.ResumeUrl}</div>
     
-    <ul>
+     <div >
                 {skills.map((skill, index) => (
-                   <div key={skill.SkillId}>
-                    <div >Skill Name:  {skill.Name}
+                   <div key={skill.SkillId} className="flex flex-row m-2 p-2">
+                    <div className="font-bold m-2 p-2" >Skill Name:</div><div className="m-2 p-2">  {skill.Name}
                     </div>
-                    <div>Experience 
+                    <div className="font-bold m-2 p-2">Experience </div><div>
                         <input type="number" name="Experience" id="experience" value={markSkills[index].Experience}    onChange={(e) =>
                 handleMarkSkillChange(index, "Experience", e.target.value)
-              }className="rounded-sm border-1"/>
+              }className="rounded-sm border-1 m-2 p-2"/>
                     </div>
                     </div>
                 ))}
-            </ul>
-
-    <button onClick={handleMarkSkillSubmit}>Mark Candidate Skills</button>
-    <input type='checkbox' name="shortlist" id="shortlist" onChange={setCheckedState} checked={shortlisted}/>Shortlist Candidate for interview
-    <button><Link to={`/candidateStatus/${candidateDetails.CandidateId}/${jobId}`}>Update Candidate Status</Link></button>
-
+      </div>
+          
+    <div className="m-2 p-2 flex flex-row">
+    <div className="m-2 p-2"><Button onClick={handleMarkSkillSubmit} variant="contained">Mark Candidate Skills</Button></div>
+    <div className="p-4 rounded-sm border-1"> <input type='checkbox' className="" name="shortlist" id="shortlist" onChange={setCheckedState} checked={shortlisted}/>Shortlist Candidate for interview</div>
+    <div className="m-2 p-2"><Button variant="contained" className=""><Link to={`/candidateStatus/${candidateDetails.CandidateId}/${jobId}`}>Update Candidate Status</Link></Button></div>
+    </div>
     
     </div>
   )
