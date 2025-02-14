@@ -68,6 +68,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
             if(feedbackRequests!=null){
                 foreach(FeedbackRequest feedbackRequest in feedbackRequests){
+                    // var existingFeedback=await _context.InterviewFeedbacks()
                     var interviewFeedback=new InterviewFeedback{
                         InterviewerInterviewId=interviewerInterviewId,
                         SkillId=feedbackRequest.SkillId,
@@ -80,6 +81,20 @@ namespace RecruitmentProcessManagementSystem.Repositories
             }
             await _context.SaveChangesAsync();
             return _context.InterviewFeedbacks;
+        }
+
+        public async  Task<IEnumerable<FeedbackRequest>> GetInterviewFeedbacks(int interviewId, int interviewerId){
+            var feedbacks=await (from iif in _context.InterviewFeedbacks join ii in _context.InterviewerInterviews
+                                 on iif.InterviewerInterviewId equals ii.InterviewerInterviewId 
+                                 where ii.InterviewerId==interviewerId 
+                                 where ii.InterviewId==interviewId
+                                 select new FeedbackRequest{
+                                   Feedback=iif.Feedback,
+                                   SkillId=iif.SkillId,
+                                   Rating=iif.Rating
+                                 }
+                                  ).ToListAsync();
+            return feedbacks;
         }
     }
 

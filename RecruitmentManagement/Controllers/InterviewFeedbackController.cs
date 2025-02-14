@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Cors;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    // [Authorize(Policy = "RecruiterPolicy")]
-     [EnableCors("AllowSpecificOrigin")]
+    //[Authorize(Policy = "RecruiterPolicy")]
+    [EnableCors("AllowSpecificOrigin")]
     [Authorize(Policy = "InterviewerPolicy")]
     [Route("api/[controller]")]
     [ApiController]
@@ -66,6 +66,11 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return BadRequest(ModelState);
            return Ok(feedbacks);
         }
+
+        [HttpGet("getInterviewFeedbacks/{interviewId}/{interviewerId}")]
+        public async  Task<IEnumerable<FeedbackRequest>> GetInterviewFeedbacks(int interviewId, int interviewerId){
+            return await _service.GetInterviewFeedbacks(interviewId, interviewerId);
+         }
 
     
     }

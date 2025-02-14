@@ -32,5 +32,9 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<IEnumerable<InterviewFeedback>> AddInterviewFeedback(int interviewerInterviewId, ICollection<FeedbackRequest> feedbackRequests){
             return await _repository.AddInterviewFeedback(interviewerInterviewId, feedbackRequests);
         }
+
+         public async  Task<IEnumerable<FeedbackRequest>> GetInterviewFeedbacks(int interviewId, int interviewerId){
+            return await _repository.GetInterviewFeedbacks(interviewId, interviewerId);
+         }
     }
 }

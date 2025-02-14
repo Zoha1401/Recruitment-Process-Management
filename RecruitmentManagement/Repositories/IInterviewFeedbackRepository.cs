@@ -15,6 +15,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
       
 
         Task<IEnumerable<InterviewFeedback>> AddInterviewFeedback(int interviewId, ICollection<FeedbackRequest> feedbackRequests);
+        Task<IEnumerable<FeedbackRequest>> GetInterviewFeedbacks(int interviewId, int interviewerId);
         
     }
 }
