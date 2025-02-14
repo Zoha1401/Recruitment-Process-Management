@@ -9,6 +9,7 @@ const Job = ({ job }) => {
       <div className="mb-4">
         <h3 className="text-xl font-semibold text-gray-800">{job.Name}</h3>
         <p className="text-gray-600 text-sm">Minimum Experience: {job.MinExp} years</p>
+       
       </div>
 
       <div className="mb-6">

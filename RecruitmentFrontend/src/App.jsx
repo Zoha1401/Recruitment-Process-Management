@@ -23,6 +23,7 @@ import CandidateDashboard from './Pages/Candidate/CandidateDashboard';
 import UploadDocuments from './Pages/Candidate/UploadDocuments';
 import UpdateJob from './Components/UpdateJob';
 import { Navigate } from 'react-router-dom';
+import ShortlistCandidate from './Pages/HR/ShortlistCandidate';
 
 
 function App() {
@@ -133,7 +134,7 @@ const PrivateRoute = ({ allowedRoles, element }) => {
     },
     {
       path: '/candidateStatus/:candidateId/:jobId',
-      element: <PrivateRoute element={<CandidateStatus />} allowedRoles={['Reviewer']} />,
+      element: <PrivateRoute element={<CandidateStatus />} allowedRoles={['Reviewer', 'Recruiter', 'HR']} />,
     },
 
    
@@ -153,6 +154,10 @@ const PrivateRoute = ({ allowedRoles, element }) => {
       path: '/updateJob/:jobId',
       element: <PrivateRoute element={<UpdateJob />} allowedRoles={['Recruiter']} />,
     },
+    {
+      path:'/shortlistCandidates',
+      element:<PrivateRoute element={<ShortlistCandidate/>} allowedRoles={['Recruiter', 'HR']}/>
+    }
   ]);
 
   return (

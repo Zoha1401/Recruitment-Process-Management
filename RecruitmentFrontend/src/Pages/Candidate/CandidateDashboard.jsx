@@ -7,6 +7,7 @@ import CandidateJob from "../../Components/CandidateJob";
 const CandidateDashboard = () => {
     const [jobs, setJobs] = useState([])
     const [applications, setApplications]=useState([])
+    const [shortlisted, setShortlisted]=useState([])
     const [candidate, setCandidate]=useState({})
     const auth = useAuth();
     const userId = auth.user.UserId;
@@ -60,10 +61,21 @@ const CandidateDashboard = () => {
                   Authorization: `Bearer ${token}`,
                 },
               });
-              setApplications(response.data); // Store applications to check against jobs
+              setApplications(response.data);
             };
     
-            getApplications();
+        getApplications();
+            const ifShortlisted = async () => {
+                const response = await axiosInstance.get(`/shortlistCandidate/isShortlisted/${candidate.CandidateId}`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  });
+                  setShortlisted(response.data); 
+                  console.log(response.data)
+                };
+        
+                ifShortlisted();
         }
     }, [candidate.CandidateId, token])
     
@@ -77,7 +89,7 @@ console.log(candidate)
           ))}
         </div>
         <Link to={`/viewApplications/${candidate.CandidateId}`}>View Applications</Link>
-        <Link to={`/uploadDocuments/${candidate.CandidateId}`}>Upload Documents</Link>
+        <Link to={`/uploadDocuments/${candidate.CandidateId}`} disabled={!shortlisted}>Upload Documents</Link>
     </div>
   )
 }

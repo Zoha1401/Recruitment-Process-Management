@@ -88,7 +88,7 @@ const AssignReviewer = () => {
         {reviewers.map((reviewer) => (
             <div key={reviewer.UserId}>
         <li>{reviewer.FirstName}</li>
-        <input type="checkbox"  onChange={() => handleCheckboxChange(reviewer.UserId)} checked={checkedState[assignedReviewer.UserId] || false} ></input>
+        <input type="checkbox"  onChange={() => handleCheckboxChange(reviewer.UserId)} checked={checkedState[reviewer.UserId] || false} ></input>
         </div>
 
       ))}
