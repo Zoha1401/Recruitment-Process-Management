@@ -30,5 +30,13 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<bool> DeleteShortlistCandidate(int id) {
             return await _repository.DeleteShortlistCandidate(id);
         } 
+
+        public async Task<IEnumerable<ShortlistedCandidateDTO>> GetAllShortlistedCandidates(){
+            return await _repository.GetAllShortlistedCandidates();
+        }
+
+         public async Task<bool> IsShortlisted(int candidateId){
+            return await _repository.IsShortlisted(candidateId);
+         }
     }
 }

@@ -178,6 +178,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             RoleId=u.RoleId,
                                             PositionCandidateId=pc.PositionCandidateId,
                                             Degree=c.Degree,
+                                            PositionId=p.PositionId,
                                             IsShortlisted=pc.IsShortlisted,
                                             CandidateId=c.CandidateId
                                         }).ToListAsync();

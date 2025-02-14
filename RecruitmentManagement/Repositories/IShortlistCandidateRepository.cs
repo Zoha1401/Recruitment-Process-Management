@@ -12,6 +12,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<ShortlistCandidate> AddShortlistCandidate(ShortlistCandidateDTO ShortlistCandidate);
         Task<ShortlistCandidate> UpdateShortlistCandidate(int shortlist_candidate_id, ShortlistCandidateDTO ShortlistCandidate);
         Task<bool> DeleteShortlistCandidate(int id);
+
+        Task<IEnumerable<ShortlistedCandidateDTO>> GetAllShortlistedCandidates();
+
+        Task<bool> IsShortlisted(int candidateId);
         
     }
 }

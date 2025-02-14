@@ -79,23 +79,23 @@ namespace RecruitmentProcessManagementSystem.Repositories
        
 
 
-        public async Task<Document> UpdateDocument(int documentId, DocumentDTO Document)
-        {
-            var documentExist=_context.Documents.FirstOrDefault(c=> c.DocumentId==documentId);
-            if(documentExist==null){
-              throw new ArgumentException("Document with this id does not exist");
-            }
+        // public async Task<Document> UpdateDocument(int documentId, DocumentDTO Document)
+        // {
+        //     var documentExist=_context.Documents.FirstOrDefault(c=> c.DocumentId==documentId);
+        //     if(documentExist==null){
+        //       throw new ArgumentException("Document with this id does not exist");
+        //     }
            
-            if(Document.DocumentStatusTypeId>=0){
-                documentExist.DocumentStatusTypeId=Document.DocumentStatusTypeId;
-            }
-            if(Document.DocumentUrl!=null){
-                documentExist.DocumentUrl=Document.DocumentUrl;
-            }
-            _context.Documents.Update(documentExist);
-            await _context.SaveChangesAsync();
-            return documentExist;
-        }
+        //     if(Document.DocumentStatusTypeId>=0){
+        //         documentExist.DocumentStatusTypeId=Document.DocumentStatusTypeId;
+        //     }
+        //     if(Document.DocumentUrl!=null){
+        //         documentExist.DocumentUrl=Document.DocumentUrl;
+        //     }
+        //     _context.Documents.Update(documentExist);
+        //     await _context.SaveChangesAsync();
+        //     return documentExist;
+        // }
 
         public async Task<bool> DeleteDocument(int id)
         {
@@ -105,6 +105,21 @@ namespace RecruitmentProcessManagementSystem.Repositories
             _context.Documents.Remove(Document);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<IEnumerable<DocumentDTO>> SaveDocuments(int shortlistId, IEnumerable<DocumentDTO> documentDTOs){
+            foreach (DocumentDTO documentDTO in documentDTOs)
+            {
+                var document=new Document{
+                    ShortlistCandidateId=shortlistId,
+                    DocumentStatusTypeId=2,
+                    DocumentUrl=documentDTO.DocumentUrl
+                };
+                await _context.Documents.AddAsync(document); 
+            }
+            await _context.SaveChangesAsync();
+
+            return documentDTOs;
         }
       
     }

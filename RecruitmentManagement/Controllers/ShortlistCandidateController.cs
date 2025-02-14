@@ -8,7 +8,7 @@ using RecruitmentProcessManagementSystem.Data;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize(Policy = "RecruiterPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ShortlistCandidateController : ControllerBase
@@ -68,5 +68,19 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return NotFound("ShortlistCandidate not found.");
             return Ok("ShortlistCandidate deleted successfully.");
         }
+        
+        [HttpGet("getShortlistedCandidates")]
+         public async Task<IActionResult> GetAllShortlistedCandidates(){
+            var shortlistedCandidates= await _service.GetAllShortlistedCandidates();
+            if(shortlistedCandidates==null){
+                return NotFound("There are no shortlisted candidates");
+            }
+            return Ok(shortlistedCandidates);
+        }
+        
+        [HttpGet("isShortlisted/{candidateId}")]
+        public async Task<bool> IsShortlisted(int candidateId){
+            return await _service.IsShortlisted(candidateId);
+         }
     }
 }

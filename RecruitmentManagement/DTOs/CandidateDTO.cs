@@ -14,6 +14,7 @@
     public DateOnly? BirthDate { get; set; }
     public string? Phone { get; set; }
     public int RoleId { get; set; }
+    public int PositionId {get; set;}
     public bool? IsShortlisted {get; set;}
     public int? PositionCandidateId {get; set;}
     

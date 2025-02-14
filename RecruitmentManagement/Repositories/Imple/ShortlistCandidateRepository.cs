@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -74,6 +75,30 @@ namespace RecruitmentProcessManagementSystem.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<ShortlistedCandidateDTO>> GetAllShortlistedCandidates(){
+            var ShortlistedCandidates=await (from u in _context.Users join c in _context.Candidates
+                                              on u.UserId equals c.UserId join sc in _context.ShortlistCandidates 
+                                              on c.CandidateId equals sc.CandidateId join p in _context.Positions on
+                                              sc.PositionId equals p.PositionId
+                                              select new ShortlistedCandidateDTO{
+                                                Email=u.Email,
+                                                FirstName=u.FirstName,
+                                                LastName=u.LastName,
+                                                PositionName=p.Name,
+                                                ShortlistCandidateId=sc.ShortlistCandidateId
+                    
+                                              }).ToListAsync();
+            return ShortlistedCandidates;
+        }
+
+        public async Task<bool> IsShortlisted(int candidateId){
+            var findCandidate=await _context.ShortlistCandidates.FirstOrDefaultAsync(sc=>sc.CandidateId==candidateId);
+            if(findCandidate!=null){
+                return true;
+            }
+            return false;
+        }
       
-    }
+    } 
 }

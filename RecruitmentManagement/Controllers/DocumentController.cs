@@ -43,22 +43,22 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         [HttpPost("{shortlistId}")]
-        public async Task<IActionResult> Add(int shortlistId, [FromForm] FormFile formFile)
+        public async Task<IActionResult> Add(int shortlistId, [FromBody] IEnumerable<DocumentDTO> documentDTOs)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var addedDocument = await _service.UploadDocument(shortlistId, formFile);
-            return CreatedAtAction(nameof(GetById), new { id = addedDocument.DocumentId }, addedDocument);
+            var addedDocument = await _service.SaveDocuments(shortlistId, documentDTOs);
+            return Ok(addedDocument);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] DocumentDTO Document)
-        {
-            var updatedDocument = await _service.UpdateDocument(id, Document);
-            if (updatedDocument == null)
-                return NotFound("Student not found.");
-            return Ok(updatedDocument);
-        }
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> Update(int id, [FromBody] DocumentDTO Document)
+        // {
+        //     var updatedDocument = await _service.UpdateDocument(id, Document);
+        //     if (updatedDocument == null)
+        //         return NotFound("Student not found.");
+        //     return Ok(updatedDocument);
+        // }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

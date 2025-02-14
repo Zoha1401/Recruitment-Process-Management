@@ -145,6 +145,22 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
 
+        [HttpPost("uploadDocument")]
+        public async Task<ActionResult<string>> GetDocumentLink(IFormFile formFile){
+            // Console.WriteLine(Path.GetExtension(formFile.FileName));
+            var extension = Path.GetExtension(formFile.FileName);
+            if(formFile.Length>0 && ((extension == ".docx") || (extension ==".pdf") || (extension==".jpg") || (extension==".png"))){
+                var filePath = Path.Combine("Resources","Documents",formFile.FileName);
+                using(var stream = new FileStream(filePath,FileMode.Create)){
+                    await formFile.CopyToAsync(stream);
+                }
+                return filePath;
+            }else{
+                return BadRequest("Invalid file format");
+            }
+        }
+
+
         
        
     }
