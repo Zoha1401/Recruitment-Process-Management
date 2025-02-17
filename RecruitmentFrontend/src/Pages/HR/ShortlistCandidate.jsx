@@ -1,0 +1,35 @@
+import { useEffect, useState } from "react"
+import axiosInstance from "../../axios/axiosInstance"
+import ShortlistCandidateDetails from "../../Components/ShortlistCandidateDetails"
+
+const ShortlistCandidate = () => {
+    const [shortlistCandidates, setShortlistCandidates]=useState([])
+   // const token=localStorage.getItem("token")
+    useEffect(() => {
+      const fetchShortlistCandidates = async () => {
+
+      const response = await axiosInstance.get('/shortlistCandidate/getShortlistedCandidates',
+        {
+          credentials: 'include',
+          withCredentials: true
+        }
+      )
+      console.log(response.data);
+      setShortlistCandidates(response.data)
+
+    }
+    fetchShortlistCandidates();
+    }, [])
+    
+  return (
+    <div>ShortlistCandidate
+           <div className="m-2 max-w-full min-h-screen">
+          {shortlistCandidates.map((shortlistCandidate) => (
+            <div key={shortlistCandidate.PositionId}><ShortlistCandidateDetails key={shortlistCandidate.PositionId} shortlistCandidate={shortlistCandidate} /></div>
+          ))}
+        </div>
+    </div>
+  )
+}
+
+export default ShortlistCandidate
