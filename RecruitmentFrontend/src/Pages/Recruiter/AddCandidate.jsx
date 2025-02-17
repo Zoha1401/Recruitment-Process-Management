@@ -14,7 +14,7 @@ const AddCandidate = () => {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token")
+ // const token = localStorage.getItem("token")
 
   const handleAddCandidate = async (e) => {
     e.preventDefault();
@@ -26,9 +26,8 @@ const AddCandidate = () => {
           ResumeUrl:resumeUrl
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
       );
       console.log(response.data)
@@ -64,8 +63,10 @@ const AddCandidate = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data, application/json",
-            Authorization: `Bearer ${token}`,
+           
           },
+          credentials: 'include',
+          withCredentials: true
         }
       );
       console.log(response.data);

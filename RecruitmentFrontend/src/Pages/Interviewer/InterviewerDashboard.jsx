@@ -5,7 +5,7 @@ import InterviewInterviewer from "../../Components/InterviewInterviewer"
 
 const InterviewerDashboard = () => {
     const [interviews, setInterviews]=useState([])
-    const token=localStorage.getItem("token")
+   // const token=localStorage.getItem("token")
     const auth=useAuth()
     const user=auth.user
     console.log(user)
@@ -14,16 +14,15 @@ const InterviewerDashboard = () => {
           
             const response=await axiosInstance.get(`/interview/getInterviewsForInterviewer/${user.UserId}`,
                   {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                    credentials: 'include',
+                    withCredentials: true
                   }
             )
             console.log(response.data)
             setInterviews(response.data)
           }
           fetchAllInterviews();
-    }, [user, token])
+    }, [user])
     console.log(interviews)
     
   return (

@@ -7,58 +7,56 @@ const Login = () => {
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState();
+  //const [user, setUser] = useState();
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password != "" && email != "") {
-      console.log("Calling login function")
-      if (email != "" && password != "") {
-        auth.loginAction({email, password});
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (email !== "" && password !== "") {
+        console.log("Calling login function");
         
-        console.log(user);
-      }
-      const token = auth.token
-      // console.log(email)
-
-      if (auth.token!= null) {
-        alert("User successfully logged in")
-        const parts = token.split('.');
-        const decodedPayload = atob(parts[1]);
-
-        const parsedPayload = JSON.parse(decodedPayload);
-        console.log("response", parsedPayload)
-
-        const { role } = parsedPayload;
-        console.log("Role: "+ (role))
-        if (role === 'Recruiter') {
-          navigate('/recruiterDashboard');
-        } else if (role === 'Interviewer') {
-          navigate('/interviewerDashboard');
-        } else if (role === 'Reviewer') {
-          navigate('/reviewerDashboard');
-        } else if (role === 'Candidate') {
-          navigate('/candidateDashboard');
+      
+        await auth.loginAction({ email, password });
+  
+       
+       // const user = await auth.user; 
+        const role=localStorage.getItem("role")
+        console.log("role", role)
+      
+        if (role) {
+          alert("User successfully logged in");
+          console.log("Role: in Login " + typeof(role) + role);
+  
+          if (role === 'Recruiter') {
+            navigate('/recruiterDashboard');
+          } else if (role === 'Interviewer') {
+            navigate('/interviewerDashboard');
+          } else if (role === 'Reviewer') {
+            navigate('/reviewerDashboard');
+          } else if (role === 'Candidate') {
+            navigate('/candidateDashboard');
+          }
+          //navigate("/recruiterDashboard")
+  
+          // Reset form fields
+          setEmail("");
+          setPassword("");
         }
-        setEmail("")
-        setPassword("")
       }
-      else {
-        alert("Invalid email and password")
-      }
-
+    } catch (error) {
+      console.log("Error", error, error.message);
     }
-
-    else {
-      alert("Please provide a valid email and password")
-    }
-  }
+  };
+  
 
   return (
-
-    <div className="w-full max-w-xs justify-center align-items items-center">
+    <div>
+     
+    <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm bg-gray-100 px-4 rounded-lg py-2 shadow-xl">
+    <div className="font-bold justify-between">Login</div>
       <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             Email
@@ -77,6 +75,7 @@ const Login = () => {
           </button>
         </div>
       </form>
+    </div>
     </div>
 
 

@@ -1,15 +1,30 @@
 import { Button } from "@mui/material"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosInstance";
+import { DataContext } from "../../Context/Common";
+import { useAuth } from "../../Context/AuthProvider";
 
 
 const DefineInterviewRounds = () => {
     const [interviewRounds, setInterviewRounds] = useState([{TypeId:0, NoOfInterviews:0}])
-    const [interviewTypes, setInterviewTypes] = useState([]);
+    // const [interviewTypes, setInterviewTypes] = useState([]);
     const { jobId } = useParams();
-    const token = localStorage.getItem("token")
+    const {interviewTypes, fetchInterviewTypes}=useContext(DataContext)
+    const {isAuthenticated}=useAuth()
+    const navigate=useNavigate();
+    //const token = localStorage.getItem("token")
     //Print if already defined
+
+    useEffect(() => {
+        if(!isAuthenticated){
+           navigate("/login")
+        }
+        else{
+      fetchInterviewTypes();
+        }
+    }, [])
+    
     const handleDefineInterviewRounds = async (e) => {
         e.preventDefault()
 
@@ -18,10 +33,14 @@ const DefineInterviewRounds = () => {
             interviewRounds,
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+               
                 "Content-Type":"application/json"
               },
+              credentials: 'include',
+              withCredentials: true
             });
+            alert("Interview rounds were defined")
+            navigate("/recruiterDashboard")
             console.log("Interview rounds updated successfully", response.data);
           } catch (error) {
             console.error("Interview rounds updated error", error.message);
@@ -30,23 +49,22 @@ const DefineInterviewRounds = () => {
     }
 
     console.log(interviewRounds)
-    useEffect(() => {
-        const fetchInterviewTypes = async () => {
-            try {
-                const response = await axiosInstance.get("/interviewType/getAllInterviewTypes", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setInterviewTypes(response.data);
-                console.log(response.data)
-            } catch (error) {
-                console.error("Error fetching interview types", error.message);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchInterviewTypes = async () => {
+    //         try {
+    //             const response = await axiosInstance.get("/interviewType/getAllInterviewTypes", {
+    //                 credentials: 'include',
+    //                 withCredentials: true
+    //             });
+    //             setInterviewTypes(response.data);
+    //             console.log(response.data)
+    //         } catch (error) {
+    //             console.error("Error fetching interview types", error.message);
+    //         }
+    //     };
 
-        fetchInterviewTypes();
-    }, [token]);
+    //     fetchInterviewTypes();
+    // }, []);
     const handleAddInterviewRound = () => {
         setInterviewRounds([...interviewRounds, { TypeId: "", NoOfInterviews: "" }]);
     };

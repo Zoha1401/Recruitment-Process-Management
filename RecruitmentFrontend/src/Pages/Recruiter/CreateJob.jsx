@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../Context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios/axiosInstance';
+import SidebarNav from '../../Components/Sidebar/SidebarNav';
 
 const CreateJob = () => {
   const [position, setPosition] = useState({
@@ -16,25 +17,24 @@ const CreateJob = () => {
 
   const navigate = useNavigate();
   const [skills, setSkills] = useState([]);
-  const token = localStorage.getItem("token");
+  //const token = localStorage.getItem("token");
 
   useEffect(() => {
     const GetSkills = async () => {
       const skillResponse = await axiosInstance.get(`/skill`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
+        withCredentials: true
       });
 
       setSkills(skillResponse.data);
     };
     GetSkills();
-  }, [token]);
+  }, []);
 
-  const auth = useAuth();
-  if (!auth.isLoggedIn) {
-    navigate("/login");
-  }
+  // const auth = useAuth();
+  // if (!auth.isLoggedIn) {
+  //   navigate("/login");
+  // }
 
   const handleAddJob = async (e) => {
     e.preventDefault();
@@ -43,9 +43,8 @@ const CreateJob = () => {
         `/position`,
         position,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
       );
       console.log(response.data);
@@ -83,7 +82,9 @@ const CreateJob = () => {
   console.log(position.SkillRequests);
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
+    <div className='flex flex-row'>
+      <div><SidebarNav/></div>
+    <div className="flex-1 flex-col justify-center px-6 py-10 lg:px-8 w-screen">
       <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
         Add Position
       </h2>
@@ -178,6 +179,7 @@ const CreateJob = () => {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

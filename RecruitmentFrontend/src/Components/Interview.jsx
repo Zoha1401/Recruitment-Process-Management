@@ -11,21 +11,20 @@ const Interview = ({interview}) => {
     const [interviewType, setInterviewType]=useState({})
     const [candidateDetails, setCandidateDetails]= useState({})
     const [candidateSkills, setCandidateSkills]= useState([])
-    const navigate=useNavigate();
-    const auth=useAuth();
-    if(!auth.isLoggedIn){
-        navigate("/login")
-    }
-    const token=localStorage.getItem("token")
+    // const navigate=useNavigate();
+    // const auth=useAuth();
+    // if(!auth.isLoggedIn){
+    //     navigate("/login")
+    // }
+    // const token=localStorage.getItem("token")
 
     useEffect(() => {
       const fetchInterviewType=async ()=>{
           
         const response=await axiosInstance.get(`/interviewType/getById/${interview.InterviewTypeId}`,
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
         )
         console.log(response.data)
@@ -36,9 +35,8 @@ const Interview = ({interview}) => {
       const GetCandidateDetails=async()=>{
         const candidateResponse= await axiosInstance.get(`/positionCandidate/GetCandidateDetails/${interview.PositionCandidateId}`,
             {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+              credentials: 'include',
+              withCredentials: true
             }
 
         )
@@ -46,15 +44,14 @@ const Interview = ({interview}) => {
         setCandidateDetails(candidateResponse.data)
       }
       GetCandidateDetails();
-    }, [token])
+    }, [])
 
     useEffect(() => {
         const GetCandidateSkills=async()=>{
             const candidateSkillResponse= await axiosInstance.get(`/candidateSkill/candidateSkills/${candidateDetails.CandidateId}`,
                 {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                  credentials: 'include',
+                  withCredentials: true
                 }
     
             )
@@ -62,7 +59,7 @@ const Interview = ({interview}) => {
             setCandidateSkills(candidateSkillResponse.data)
           }
           GetCandidateSkills();
-    }, [candidateDetails.CandidateId, token])
+    }, [candidateDetails.CandidateId])
     
    
     
@@ -83,7 +80,7 @@ const Interview = ({interview}) => {
           <div className="">{candidateDetails.FirstName}</div>
         </div>
         {/* <div>Candidate Skills
-        {candidateSkills.map((cs)=>{
+        {candidateSkills && candidateSkills?.map((cs)=>{
             <div key={cs.CandidateId}>
                 {cs.SkillName}
                 {cs.Experience}

@@ -1,18 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useContext, createContext, useState, useEffect } from "react";
+import { useContext, createContext, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-//   const navigate = useNavigate();
-useEffect(() => {
-    if (token) {
-      getUserFromToken(token); // Automatically fetch user data if token exists
-    }
-  }, [token]);
+  const [role, setRole] = useState("Recruiter");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // useNavigate to redirect user after login/logout (uncomment if needed)
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   // Fetch the user data from the backend (via cookies automatically sent by browser)
+  //   getUserFromToken();
+  // }, []);
+
   const loginAction = async (data) => {
     try {
       const response = await fetch("http://localhost:5172/api/auth/login", {
@@ -21,59 +25,57 @@ useEffect(() => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        credentials: 'include',  // Include cookies in the request
       });
-      const res = await response.json();
-      console.log(res);
-      console.log("Response fetched from token" , res.Token)
-      if (res.Token) {
-        setToken(res.Token);
-        localStorage.setItem("token", res.Token);
-       
-        // navigate("/dashboard");
-        return;
+  
+      console.log(response);
+  
+      if (response.ok) {
+        setIsAuthenticated(true)
+        const responseData = await response.json();  // Parse JSON response
+        console.log("Response Data", responseData);
+        console.log("Role", responseData.Role)
+        setUser(responseData); 
+       // Store user data
+        localStorage.setItem("role", responseData.Role)
+        console.log(localStorage.getItem("role"))
+        setRole(responseData.Role);  // Store user role
+      } else {
+        console.error("Login failed.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Login error: ", err);
     }
-  };
-  const logOut = () => {
-    setToken("");
-    setUser("")
-    localStorage.removeItem("token");
+  
   };
 
-  const isLoggedIn=()=>{
-    const token=localStorage.getItem("token")
-    if(!token){
-        return false;
-    }
-    return true;
-  }
-
-  const getUserFromToken = async (token) => {
+  const logOut = async () => {
     try {
-      const response = await fetch("http://localhost:5172/api/user/me", {
-        method: "GET",
+      await fetch("http://localhost:5172/api/auth/logout", {
+        method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      const res = await response.json();
-      if (res) {
-        setUser(res);
-      }
+
+      // Reset user and role states after logout
+      localStorage.removeItem("role") 
+      setUser(null);
+      setRole("");
+      setIsAuthenticated(false);
     } catch (err) {
-      console.error(err);
+      console.error("Logout error: ", err);
     }
   };
 
+
+
   return (
-    <AuthContext.Provider value={{ token, user, getUserFromToken, loginAction, logOut, isLoggedIn}}>
+    <AuthContext.Provider value={{ user, role, isAuthenticated, loginAction, logOut }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export default AuthProvider;
 

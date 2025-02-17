@@ -8,17 +8,16 @@ const AssignReviewer = () => {
     const [selectedReviewer, setSelectedReviewer]=useState({})
     const [assignedReviewer, setAssignedReviewer]=useState({})
     const [checkedState, setCheckedState] = useState({});
-    const token=localStorage.getItem("token")
-    console.log(token)
+    // const token=localStorage.getItem("token")
+    // console.log(token)
     const {jobId}=useParams();
     //Fetch already assigned reviewer and mark selected
     useEffect(() => {
       const fetchReviewers= async()=>{
         const response= await axiosInstance.get('/user/getAllReviewers',
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
         )
         setReviewers(response.data);
@@ -28,16 +27,15 @@ const AssignReviewer = () => {
       const fetchAssignedReviewer=async()=>{
         const response= await axiosInstance.get(`/position/getAssignedReviewer/${jobId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            credentials: 'include',
+                withCredentials: true
           }
     )
        setAssignedReviewer(response.data);
       }
       fetchAssignedReviewer();
-    }, [token])
-    console.log(assignedReviewer)
+    }, [])
+    console.log("Assigned Reviewer",assignedReviewer)
 
     const updateReviewer =  (updatedState) => {
         const selected = reviewers.filter((reviewer) => updatedState[reviewer.UserId]);
@@ -54,7 +52,8 @@ const AssignReviewer = () => {
         });
       };
     console.log(selectedReviewer)
-    const handleAssignReviewer= async()=>{
+    const handleAssignReviewer= async(e)=>{
+      e.preventDefault();
       if(!selectedReviewer){
         console.error('No reviewer selected')
       }
@@ -62,26 +61,24 @@ const AssignReviewer = () => {
             const response = await axiosInstance.post(
               `/position/assignReviewer/${jobId}/${selectedReviewer[0]?.UserId}`,
               {},
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type":"application/json",
-                },
-              }
+            {
+              credentials: 'include',
+                withCredentials: true
+            }
             );
             console.log(response.data)
-            if(response.data){
-              const reviewerId=selectedReviewer[0]?.UserId;
-              setCheckedState((prevState)=>({
-                ...prevState,
-                [reviewerId]:true
-              }))
-            }
            
           } catch (error) {
             console.error("Error assigning reviewer", error, error.message);
           }
     }
+
+    useEffect(() => {
+      const initialCheckedState = {};
+      initialCheckedState[assignedReviewer.UserId]=true
+      setCheckedState(initialCheckedState);
+  }, [assignedReviewer]);
+  
     
 
   return (

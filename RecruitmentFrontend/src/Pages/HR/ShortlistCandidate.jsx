@@ -4,15 +4,14 @@ import ShortlistCandidateDetails from "../../Components/ShortlistCandidateDetail
 
 const ShortlistCandidate = () => {
     const [shortlistCandidates, setShortlistCandidates]=useState([])
-    const token=localStorage.getItem("token")
+   // const token=localStorage.getItem("token")
     useEffect(() => {
       const fetchShortlistCandidates = async () => {
 
       const response = await axiosInstance.get('/shortlistCandidate/getShortlistedCandidates',
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
       )
       console.log(response.data);
@@ -20,7 +19,7 @@ const ShortlistCandidate = () => {
 
     }
     fetchShortlistCandidates();
-    }, [token])
+    }, [])
     
   return (
     <div>ShortlistCandidate

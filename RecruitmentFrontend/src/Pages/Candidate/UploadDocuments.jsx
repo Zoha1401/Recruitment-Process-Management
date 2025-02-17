@@ -13,7 +13,7 @@ const UploadDocuments = () => {
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
       };
-  const token=localStorage.getItem("token")
+  //const token=localStorage.getItem("token")
 
   const handleSaveDocuments=async(e)=>{
       e.preventDefault();
@@ -24,14 +24,12 @@ const UploadDocuments = () => {
              documentUrls,
            
           {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
+            credentials: 'include',
+            withCredentials: true
           }
         );
         console.log(response.data);
-        alert("document uploaded")
+        alert("document saved")
 
       } catch (error) {
         alert("Error uploading file: " + error.response?.data || error.message);
@@ -51,12 +49,15 @@ const UploadDocuments = () => {
           const response = await axiosInstance.post(
             `/candidate/uploadDocument`,
             {FormFile:file},
-            {
-              headers: {
-                "Content-Type": "multipart/form-data, application/json",
-                Authorization: `Bearer ${token}`,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data, application/json",
+                },
+                credentials: 'include',
+                withCredentials: true
               },
-            }
+             
+            
           );
           console.log(response.data);
           setDocumentUrls([...documentUrls, {DocumentUrl:response.data}])

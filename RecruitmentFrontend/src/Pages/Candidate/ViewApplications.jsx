@@ -6,22 +6,23 @@ const ViewApplications = () => {
     //Candidate can view their interviews for a particular application
      const [applications, setApplications]=useState([])
      const {candidateId}=useParams();
-    const token=localStorage.getItem("token")
+    //const token=localStorage.getItem("token")
     useEffect(() => {
         const fetchApplications= async()=>{
           const response= await axiosInstance.get(`/positionCandidate/viewApplications/${candidateId}`,
                 {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
+                  credentials: 'include',
+                  withCredentials: true
                 }
           )
           setApplications(response.data);
         }
         fetchApplications();
-      }, [token])
+      }, [])
   return (
-    <div>ViewApplications
+    <div className="">
+
+      <div>ViewApplications</div>
          {applications.map((application) => (
         <li key={application.PositionId}>{application.Name}
         {application.StatusName}</li>

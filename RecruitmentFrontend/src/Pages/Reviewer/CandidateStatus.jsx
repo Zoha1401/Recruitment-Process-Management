@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosInstance";
 import { useAuth } from "../../Context/AuthProvider";
+import SidebarNav from "../../Components/Sidebar/SidebarNav";
 
 const CandidateStatus = () => {
   const [candidateStatus, setCandidateStatus] = useState({ StatusId: 0, Comments: "" });
@@ -9,15 +10,14 @@ const CandidateStatus = () => {
   const { candidateId, jobId } = useParams();
   const auth = useAuth();
   const reviewerId = auth.user.UserId;
-  const token = localStorage.getItem("token");
+  //const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchCandidateStatusTypes = async () => {
       try {
         const response = await axiosInstance.get("/candidateStatus/getCandidateStatusTypes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         });
         setCandidateStatusTypes(response.data);
         console.log(response.data);
@@ -31,9 +31,8 @@ const CandidateStatus = () => {
     const fetchCandidateStatus = async () => {
       try {
         const statusResponse = await axiosInstance.get(`/candidateStatus/getCandidateStatusFromIds/${candidateId}/${jobId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         });
         setCandidateStatus(statusResponse.data);
         console.log(statusResponse.data);
@@ -43,7 +42,7 @@ const CandidateStatus = () => {
     };
 
     fetchCandidateStatus();
-  }, [token, candidateId, jobId]);
+  }, [candidateId, jobId]);
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
@@ -52,9 +51,8 @@ const CandidateStatus = () => {
        { ...candidateStatus,
         UpdatedBy:reviewerId},
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
+        withCredentials: true
       });
       alert("Candidate status updated succesfully")
       
@@ -73,6 +71,8 @@ console.log(candidateStatus)
   };
 
   return (
+    <div className="flex flex-row">
+      <div><SidebarNav/></div>
     <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm bg-gray-100 px-4 rounded-lg py-2 shadow-xl">
       <form onSubmit={handleOnSubmit} className="mt-4 mb-10 space-y-5">
         <div>
@@ -115,6 +115,7 @@ console.log(candidateStatus)
           Update Candidate Status
         </button>
       </form>
+    </div>
     </div>
   );
 };

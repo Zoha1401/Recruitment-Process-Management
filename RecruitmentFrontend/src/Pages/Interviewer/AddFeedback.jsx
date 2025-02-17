@@ -7,7 +7,7 @@ import { Button } from "@mui/material"
 const AddFeedback = () => {
     const [interviewerInterview, setInterviewerInterview]=useState([])
     const [feedbacks, setFeedbacks]=useState([{SkillId:0, Rating:0, Feedback:""}])
-    const token=localStorage.getItem("token")
+    //const token=localStorage.getItem("token")
     const {interviewId, candidateId}=useParams();
     const [candidateSkills, setCandidateSkills]= useState([])
     const auth=useAuth()
@@ -19,9 +19,8 @@ const AddFeedback = () => {
           
             const response=await axiosInstance.get(`/interview/getInterviewerInterview/${interviewId}/${user.UserId}`,
                   {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                    credentials: 'include',
+                withCredentials: true
                   }
             )
             console.log("Interviewer Interview", response.data)
@@ -33,9 +32,8 @@ const AddFeedback = () => {
           
             const feedbackResponse=await axiosInstance.get(`/interviewFeedback/getInterviewFeedbacks/${interviewId}/${user.UserId}`,
                   {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                    credentials: 'include',
+                    withCredentials: true
                   }
             )
             console.log(feedbackResponse.data)
@@ -44,16 +42,15 @@ const AddFeedback = () => {
           fetchSavedFeedbacks(); 
 
           
-    }, [user, token])
+    }, [user])
 
 
     useEffect(() => {
         const GetCandidateSkills=async()=>{
             const candidateSkillResponse= await axiosInstance.get(`/candidateSkill/candidateSkills/${candidateId}`,
                 {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                  credentials: 'include',
+                  withCredentials: true
                 }
     
             )
@@ -61,7 +58,7 @@ const AddFeedback = () => {
             setCandidateSkills(candidateSkillResponse.data)
           }
           GetCandidateSkills();
-    }, [candidateId, token])
+    }, [candidateId])
     console.log(candidateSkills)
     console.log(candidateId)
     // const handleChange = (e) => {
@@ -70,7 +67,7 @@ const AddFeedback = () => {
     //       ...prevFeedback,
     //       [name]: value,
     //     }));
-       console.log(token)
+    //console.log(token)
     //   }
     const saveFeedbacks=async(e)=>{
         e.preventDefault();
@@ -80,9 +77,8 @@ const AddFeedback = () => {
               `/interviewFeedback/addInterviewFeedback/${interviewerInterview.InterviewerInterviewId}`,
               feedbacks,
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
             );
             console.log(response.data);

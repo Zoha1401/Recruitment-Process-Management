@@ -11,14 +11,13 @@ const Applicant = ({ applicant, jobId }) => {
   const [scheduledInterviews, setScheduledInterviews] = useState([])
   // const [joiningDate, setJoiningDate]=useState(null)
   const navigate = useNavigate()
-  const token = localStorage.getItem("token")
+ // const token = localStorage.getItem("token")
   useEffect(() => {
     const GetCandidateSkills = async () => {
       const response = await axiosInstance.get(`/interview/getCandidateDoneInterviews/${applicant.PositionCandidateId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
 
       )
@@ -26,7 +25,7 @@ const Applicant = ({ applicant, jobId }) => {
       setScheduledInterviews(response.data)
     }
     GetCandidateSkills();
-  }, [applicant.PositionCandidateId, token])
+  }, [applicant.PositionCandidateId])
 
   console.log("Applicant", applicant)
   const MoveToSelected = async (e) => {
@@ -39,10 +38,10 @@ const Applicant = ({ applicant, jobId }) => {
           CandidateId: applicant.CandidateId,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
+        
       );
       console.log(response.data)
 
@@ -62,12 +61,12 @@ const Applicant = ({ applicant, jobId }) => {
   //To see if the applicant is already interviewed, fetch data of interviews from the backend and display for each candidate
   //Upload Resume endpoint
   return (
-    <div className='flex flex-col bg-gray-100 rounded-sm m-2 p-4 '>
+    <div className='flex flex-col justify-center align-items items-center bg-gray-100 rounded-sm m-2 p-4 '>
 
-      <div className="m-2 p-2 flex flex-row">
-        <div>{applicant.FirstName}</div>
-        <div>{applicant.LastName}</div>
-        <div>{applicant.IsShortlisted && <div className="text-green-400">The applicant is shortlisted for interview</div>}</div>
+      <div className="m-2 p-2 flex flex-row rounded-sm border-1">
+        <div className="mx-2">{applicant.FirstName}</div>
+        <div className="mx-2">{applicant.LastName}</div>
+        <div className="mx-2">{applicant.IsShortlisted && <div className="text-green-400">The applicant is shortlisted for interview</div>}</div>
       </div>
       <div className="flex flex-row">
         <div className="m-2 p-2"><Button variant="contained" color="error" disabled={!applicant.IsShortlisted || user.Role == "Reviewer"}><Link to={`/scheduleInterview/${applicant.PositionCandidateId}`}>Schedule Interview</Link></Button></div>

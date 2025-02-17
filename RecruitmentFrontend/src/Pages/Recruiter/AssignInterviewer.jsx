@@ -5,42 +5,42 @@ import { Button } from "@mui/material";
 
 const AssignInterviewer = () => {
     const [interviewers, setInterviewers] = useState([]);
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
     const { interviewId } = useParams();
     const [selectedInterviewers, setSelectedInterviewers] = useState([]);
     const [checkedState, setCheckedState] = useState({});
+    const [assignedInterviewers, setAssignedInterviewers]=useState([])
 
     useEffect(() => {
         const fetchInterviewers = async () => {
             const response = await axiosInstance.get('/user/getAllInterviewers', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
             });
             setInterviewers(response.data);
         };
         fetchInterviewers();
-    }, [token]);
+    }, []);
 
-  //   useEffect(() => {
-  //     const fetchAssignedInterviewers = async () => {
-  //         const response = await axiosInstance.get(`/interview/assignedInterviewers/${interviewId}`, {
-  //             headers: {
-  //                 Authorization: `Bearer ${token}`,
-  //             },
-  //         });
-  //         setAssignedInterviewers(response.data);
-  //     };
-  //     fetchAssignedInterviewers();
-  // }, [interviewId, token]);
-
-//   useEffect(() => {
-//     const initialCheckedState = {};
-//     assignedInterviewers.forEach((interviewer) => {
-//         initialCheckedState[interviewer.InterviewerId] = true;
-//     });
-//     setCheckedState(initialCheckedState);
-// }, [assignedInterviewers]);
+    useEffect(() => {
+      const fetchAssignedInterviewers = async () => {
+          const response = await axiosInstance.get(`/interview/getAssignedInterviewers/${interviewId}`, {
+            credentials: 'include',
+            withCredentials: true
+          });
+          setAssignedInterviewers(response.data);
+          
+      };
+      fetchAssignedInterviewers();
+  }, [interviewId]);
+  console.log(assignedInterviewers)
+  useEffect(() => {
+    const initialCheckedState = {};
+    assignedInterviewers.forEach((interviewer) => {
+        initialCheckedState[interviewer.InterviewerId] = true;
+    });
+    setCheckedState(initialCheckedState);
+}, [assignedInterviewers]);
 
 
     const handleCheckboxChange = (id) => {
@@ -48,20 +48,17 @@ const AssignInterviewer = () => {
             const updatedState = { ...prevState, [id]: !prevState[id] };
 
             if (updatedState[id]) {
-                // Add the interviewer as an object with InterviewerId to the selectedInterviewers array
                 setSelectedInterviewers((prev) => {
                     if (!prev.some((interviewer) => interviewer.InterviewerId === id)) {
                         return [...prev, { InterviewerId: id }];
                     }
-                    return prev; // Prevent adding duplicates
+                    return prev; 
                 });
             } else {
-                // Remove the interviewer object from the selectedInterviewers array
                 setSelectedInterviewers((prev) =>
                     prev.filter((interviewer) => interviewer.InterviewerId !== id)
                 );
             }
-
             return updatedState;
         });
     };
@@ -73,9 +70,11 @@ const AssignInterviewer = () => {
                 selectedInterviewers,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                       
                         'Content-Type': 'application/json',
                     },
+                    credentials: 'include',
+                    withCredentials: true
                 }
             );
             alert("Interviewers are successfully assigned")

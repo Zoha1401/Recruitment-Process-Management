@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 import { useAuth } from "../../Context/AuthProvider";
-import { useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom"; 
+import { DataContext } from "../../Context/Common";
+import SidebarNav from "../../Components/Sidebar/SidebarNav";
 const ScheduleInterview = () => {
   const [interview, setInterview] = useState({
     Date: "",
@@ -9,33 +11,26 @@ const ScheduleInterview = () => {
     InterviewTypeId: "",
     RoundNumber: "",
   });
-
-  const [interviewTypes, setInterviewTypes] = useState([]);
+  const navigate=useNavigate();
+  //const [interviewTypes, setInterviewTypes] = useState([]);
   console.log(interview)
-  const auth = useAuth();
-  const recruiterId = auth.user.UserId;
-  const token = localStorage.getItem("token");
+  const {fetchInterviewTypes, interviewTypes} = useContext(DataContext)
+  const {user, isAuthenticated}=useAuth()
+  console.log(interviewTypes)
+  const recruiterId = user.UserId;
+  //const token = localStorage.getItem("token");
 
   const { applicantId } = useParams();
   console.log(applicantId)
 
   useEffect(() => {
-    const fetchInterviewTypes = async () => {
-      try {
-        const response = await axiosInstance.get("/interviewType/getAllInterviewTypes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setInterviewTypes(response.data);
-        console.log(response.data)
-      } catch (error) {
-        console.error("Error fetching interview types", error.message);
-      }
-    };
-
-    fetchInterviewTypes();
-  }, [token]);
+    if(!isAuthenticated){
+       navigate("/login")
+    }
+    else{
+  fetchInterviewTypes();
+    }
+}, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,14 +57,14 @@ const ScheduleInterview = () => {
         `/interview/`,
         interviewRequest,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
+          withCredentials: true
         }
       );
       console.log(response.data);
      
-        alert("Interview successfully scheduled");
+      alert("Interview successfully scheduled");
+      navigate("/viewInterviews")
       
     } catch (error) {
       console.error("Error saving interview", error, error.message);
@@ -77,6 +72,8 @@ const ScheduleInterview = () => {
   };
 
   return (
+    <div className="flex flex-row">
+      {/* <div><SidebarNav/></div> */}
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
       <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
         Schedule Interview
@@ -143,6 +140,7 @@ const ScheduleInterview = () => {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

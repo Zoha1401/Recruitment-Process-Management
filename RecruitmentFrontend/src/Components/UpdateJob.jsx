@@ -1,14 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../axios/axiosInstance'
+import { DataContext } from '../Context/Common'
+import { useAuth } from '../Context/AuthProvider'
 
 const UpdateJob = () => {
     //I have to get job skills and display as set. And then update will work.
     const [job, setJob]=useState({})
-    const token=localStorage.getItem("token")
+    const {fetchPositionStatusTypes, positionStatusTypes} = useContext(DataContext)
+    const {isAuthenticated}=useAuth();
+    //const token=localStorage.getItem("token")
     const {jobId}=useParams()
     const navigate=useNavigate();
-    const [jobStatusTypes, setJobStatusTypes]=useState([])
+    //const [jobStatusTypes, setJobStatusTypes]=useState([])
+
+    useEffect(() => {
+      if(!isAuthenticated){
+         navigate("/login")
+      }
+      else{
+    fetchPositionStatusTypes();
+      }
+  }, [])
     console.log(job)
     const updateJob=async(e)=>{
       e.preventDefault();
@@ -19,9 +32,8 @@ const UpdateJob = () => {
                 ...job
               },
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
             );
             console.log(response.data)
@@ -41,9 +53,8 @@ const UpdateJob = () => {
     
           const response = await axiosInstance.get(`/position/${jobId}`,
             {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+              credentials: 'include',
+                withCredentials: true
             }
           )
           console.log(response.data);
@@ -52,21 +63,20 @@ const UpdateJob = () => {
         }
         getJob();
 
-        const getJobStatusTypes = async () => {
+        // const getJobStatusTypes = async () => {
     
-            const response = await axiosInstance.get(`/position/getPositionStatusTypes`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            )
-            console.log(response.data);
-            setJobStatusTypes(response.data)
+        //     const response = await axiosInstance.get(`/position/getPositionStatusTypes`,
+        //       {
+        //         credentials: 'include',
+        //         withCredentials: true
+        //       }
+        //     )
+        //     console.log(response.data);
+        //     setJobStatusTypes(response.data)
       
-          }
-          getJobStatusTypes();
-      }, [token, jobId])
+        //   }
+        //   getJobStatusTypes();
+      }, [ jobId])
 
       const handleChange = (e) => {
         const { name, value } = e.target;
@@ -148,7 +158,7 @@ const UpdateJob = () => {
             required
           >
             <option value="">Select Status Type</option>
-            {jobStatusTypes.map((type) => (
+            {positionStatusTypes.map((type) => (
               <option key={type.PositionStatusTypeId} value={type.PositionStatusTypeId}>
                 {type.StatusName}
               </option>

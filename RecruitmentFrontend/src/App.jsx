@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import AuthProvider from './Context/AuthProvider';
+import AuthProvider, { useAuth } from './Context/AuthProvider';
+import { DataProvider } from './Context/Common'; 
 import Register from './auth/Register';
 import Login from './auth/Login';
 import RecruiterDashboard from './Pages/Recruiter/RecruiterDashboard';
@@ -29,32 +30,24 @@ import ShortlistCandidate from './Pages/HR/ShortlistCandidate';
 function App() {
 
 const PrivateRoute = ({ allowedRoles, element }) => {
-  const token = localStorage.getItem('token'); 
+
+  const auth = useAuth();  // Assuming auth provides the user and role info
+
+  // If user data is still loading or not available, handle this case.
+  if (!auth.user) {
+    // Optionally, you can add a loading state if you want to display something before the user is authenticated
+    return <div>Loading...</div>;
+  }
+
+  const role = auth.user.Role;  // Get the role of the logged-in user
   
-  if (!token) {
-    return <Navigate to="/login" />; 
+  if (allowedRoles && allowedRoles.includes(role)) {
+    return <>{element};</>;  // If role matches one of the allowed roles, render the element
+  } else {
+    return <Navigate to="/login" />;  // If role does not match, redirect to login page
   }
+  } 
 
-  try {
-    const parts = token.split('.');
-    const decodedPayload = atob(parts[1]);
-    
-    const parsedPayload = JSON.parse(decodedPayload);
-    console.log("response",parsedPayload)
-    
-    const { role } = parsedPayload; 
-
-    
-    if (allowedRoles && allowedRoles.includes(role)) {
-      return <>{element}</>; 
-    } else {
-      return <Navigate to="/login" />; 
-    }
-  } catch (error) {
-    console.error('Invalid token', error);
-    return <Navigate to="/login" />; 
-  }
-};
 
   const router = createBrowserRouter([
    
@@ -70,7 +63,7 @@ const PrivateRoute = ({ allowedRoles, element }) => {
    
     {
       path: '/recruiterDashboard',
-      element: <PrivateRoute element={<RecruiterDashboard />} allowedRoles={['Recruiter']} />,
+      element: <PrivateRoute element={<RecruiterDashboard/>} allowedRoles={['Recruiter']}/>
     },
     {
       path: '/createJob',
@@ -126,7 +119,7 @@ const PrivateRoute = ({ allowedRoles, element }) => {
    
     {
       path: '/reviewerDashboard',
-      element: <PrivateRoute element={<ReviewerDashboard />} allowedRoles={['Reviewer']} />,
+      element: <PrivateRoute element={<ReviewerDashboard/>} allowedRoles={['Reviewer']} />,
     },
     {
       path: '/reviewCandidate/:positionCandidateId/:jobId',
@@ -162,7 +155,9 @@ const PrivateRoute = ({ allowedRoles, element }) => {
 
   return (
     <AuthProvider>
+      <DataProvider>
       <RouterProvider router={router} />
+      </DataProvider>
     </AuthProvider>
   );
 }

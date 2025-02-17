@@ -4,14 +4,14 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [user, setUser]=useState({FirstName:"", LastName:"", WorkExperience:"", RoleId:"", Email:"", Password:"", BirthDate:"", Phone:"", CollegeName:"", Degree:"", ResumeUrl:""})
+  const [user, setUser]=useState({FirstName:"", LastName:"", RoleId:"", Email:"", Password:"", Phone:"", CollegeName:"", Degree:""})
   const [roles, setRoles]=useState([])
   const [resumeFile, setResumeFile]=useState(null)
   const [resumeUrl, setResumeUrl]=useState("")
   const [isCandidate, setIsCandidate]=useState(false);
   const navigate=useNavigate();
   const handleRegisterUser=async(e)=>{
-    e.PreventDefault();
+    e.preventDefault();
     try {
       const response = await axiosInstance.post(
         `/auth/register`,
@@ -21,13 +21,11 @@ const Register = () => {
         },
       );
       console.log(response.data)
-      if (response.status == 201) {
-        alert("Candidate was successfully created")
+    
+        alert("User was successfully created")
         navigate(`/login`)
-      }
-
     } catch (error) {
-      console.error("Error saving job", error.message);
+      console.error("Error saving user", error, error.message);
     }
   }
 
@@ -36,6 +34,7 @@ const Register = () => {
     setResumeFile(e.target.files[0]);
   }
   const handleUpload=async()=>{
+  
     if (!resumeFile) {
       alert("Please select a resume first");
       return;
@@ -76,13 +75,14 @@ const Register = () => {
   const onChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
     console.log(e.target.name, e.target.value)
-    
+  };
+  const onRoleSelect=(e)=>{
+    setUser({ ...user, [e.target.name]: e.target.value });
     const selectedRole = roles.find((role) => String(role.RoleId) === e.target.value);
     console.log(typeof(e.target.value))
     console.log(selectedRole)
     setIsCandidate(selectedRole?.RoleName === "Candidate");
-     
-  };
+  }
   console.log(isCandidate)
 
   console.log(roles)
@@ -160,7 +160,7 @@ const Register = () => {
               id="roleId"
               name="RoleId"
               value={user.RoleId}
-              onChange={onChange}
+              onChange={onRoleSelect}
               className="block w-full rounded-md border px-3 py-2"
               required
             >

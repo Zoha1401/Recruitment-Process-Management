@@ -11,11 +11,9 @@ const InterviewInterviewer = ({interview}) => {
     const [interviewType, setInterviewType]=useState({})
     const [candidateDetails, setCandidateDetails]= useState({})
     const [candidateSkills, setCandidateSkills]= useState([])
-    const navigate=useNavigate();
-    const auth=useAuth();
-    if(!auth.isLoggedIn){
-        navigate("/login")
-    }
+    //const navigate=useNavigate();
+    //const auth=useAuth();
+   
     const token=localStorage.getItem("token")
     console.log("These are candidate details", candidateDetails)
     useEffect(() => {
@@ -23,9 +21,8 @@ const InterviewInterviewer = ({interview}) => {
           
         const response=await axiosInstance.get(`/interviewType/getById/${interview.InterviewTypeId}`,
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
         )
         console.log(response.data)
@@ -36,9 +33,8 @@ const InterviewInterviewer = ({interview}) => {
       const GetCandidateDetails=async()=>{
         const candidateResponse= await axiosInstance.get(`/positionCandidate/GetCandidateDetails/${interview.PositionCandidateId}`,
             {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+              credentials: 'include',
+              withCredentials: true
             }
 
         )
@@ -46,15 +42,14 @@ const InterviewInterviewer = ({interview}) => {
         setCandidateDetails(candidateResponse.data)
       }
       GetCandidateDetails();
-    }, [token])
+    }, [])
 
     useEffect(() => {
         const GetCandidateSkills=async()=>{
             const candidateSkillResponse= await axiosInstance.get(`/candidateSkill/candidateSkills/${candidateDetails.CandidateId}`,
                 {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                  credentials: 'include',
+                  withCredentials: true
                 }
     
             )

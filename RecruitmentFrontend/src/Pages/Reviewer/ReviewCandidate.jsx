@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import axiosInstance from "../../axios/axiosInstance"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button } from "@mui/material"
+import SidebarNav from "../../Components/Sidebar/SidebarNav"
 
 const ReviewCandidate = () => {
      const [candidateDetails, setCandidateDetails]= useState({})
      const [markSkills, setMarkSkills]=useState([{SkillId:0, Experience:0}])
      const [skills, setSkills]=useState([])
-     const token=localStorage.getItem("token")
+    // const token=localStorage.getItem("token")
      const [shortlisted, setShortlisted]=useState(false)
      const {positionCandidateId}=useParams()
      const {jobId}=useParams()
@@ -18,9 +19,8 @@ const ReviewCandidate = () => {
         const GetCandidateDetails=async()=>{
           const candidateResponse= await axiosInstance.get(`/positionCandidate/GetCandidateDetails/${positionCandidateId}`,
               {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
+                credentials: 'include',
+                withCredentials: true
               }
   
           )
@@ -33,9 +33,8 @@ const ReviewCandidate = () => {
         const GetSkills=async()=>{
             const skillResponse= await axiosInstance.get(`/skill`,
                 {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
+                  credentials: 'include',
+                  withCredentials: true
                 }
     
             )
@@ -49,7 +48,7 @@ const ReviewCandidate = () => {
             setMarkSkills(initialMarkedSkills)
           }
           GetSkills();
-      }, [token, positionCandidateId])
+      }, [positionCandidateId])
      console.log(markSkills)
 
      const handleMarkSkillChange = (index, field, value) => {
@@ -68,9 +67,8 @@ const ReviewCandidate = () => {
               markSkills,
               
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                credentials: 'include',
+                withCredentials: true
               }
             );
             console.log(response.data)
@@ -91,6 +89,8 @@ const ReviewCandidate = () => {
         setShortlisted(prevState => !prevState); 
     }
   return (
+    <div className="flex flex-row">
+      <div><SidebarNav/></div>
     <div className="flex flex-col justify-content align-items items-center"><div className="font-bold m-4 text-lg">Review Candidate</div>
     <div className="flex flex-row m-2 p-2">
        <div className="m-2 p-2 font-bold">Degree: {candidateDetails.Degree}</div>
@@ -120,6 +120,7 @@ const ReviewCandidate = () => {
     <div className="m-2 p-2"><Button variant="contained" className=""><Link to={`/candidateStatus/${candidateDetails.CandidateId}/${jobId}`}>Update Candidate Status</Link></Button></div>
     </div>
     
+    </div>
     </div>
   )
 }
