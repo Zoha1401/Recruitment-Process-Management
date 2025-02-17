@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RecruitmentManagement.Model;
 using RecruitmentProcessManagementSystem.Data;
 using RecruitmentProcessManagementSystem.Helpers;
@@ -21,11 +22,13 @@ namespace RecruitmentProcessManagementSystem.Controllers
     {
         private readonly RecruitmentDbContext _context;
         private readonly IJwtService _jwtService;
+         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserController(RecruitmentDbContext context, IJwtService jwtService)
+        public UserController(RecruitmentDbContext context, IJwtService jwtService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _jwtService = jwtService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPut("updateUser/{userId}")]
@@ -135,21 +138,63 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
     [HttpGet("me")]
-    [Authorize]
     public IActionResult GetUserFromToken()
     {
+        var cookie =_httpContextAccessor.HttpContext.Request.Cookies["token"];
+
+        if (string.IsNullOrEmpty(cookie))
+        {
+            return NotFound(new {message="Cookie is empty"});
+        }
+
+       var tokenHandler = new JwtSecurityTokenHandler();
+    try
+    {
+        
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is my custom Secret key for authentication")); // Use the actual key here
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true, 
+            IssuerSigningKey = key,
+            ValidIssuer = "RecruitmentAPI",  
+            ValidAudience = "RecruitmentAPIUsers" 
+        };
+
        
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; 
-        var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-        var role=User.FindFirst(ClaimTypes.Role)?.Value;
+        var principal = tokenHandler.ValidateToken(cookie, validationParameters, out var validatedToken);
+
+        if (principal == null)
+        {
+            return Unauthorized("Invalid or expired token.");
+        }
+
+       
+        var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userEmail = principal.FindFirst(ClaimTypes.Email)?.Value;
+        var role = principal.FindFirst(ClaimTypes.Role)?.Value;
 
         return Ok(new
         {
             UserId = userId,
             Email = userEmail,
-            Role=role
+            Role = role
         });
+    }
+    catch (SecurityTokenExpiredException)
+    {
+        return Unauthorized("Token has expired.");
+    }
+    catch (SecurityTokenException)
+    {
+        return Unauthorized("Invalid token.");
+    }
+    catch (Exception ex)
+    {
+        return BadRequest($"Error: {ex.Message}");
     }
 
     }
+}
 }

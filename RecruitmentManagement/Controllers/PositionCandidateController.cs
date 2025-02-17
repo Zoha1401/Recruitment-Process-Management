@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Cors;
 namespace RecruitmentProcessManagementSystem.Controllers
 {
     [Authorize]
-     [EnableCors("AllowSpecificOrigin")]
+    [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class PositionCandidateController : ControllerBase

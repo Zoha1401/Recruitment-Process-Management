@@ -358,5 +358,13 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return reviewer;
         }
 
+        public async  Task<RecruitmentManagement.Model.PositionStatusType> GetPositionStatusTypeById (int statusId){
+            var statusType= await _context.PositionStatusTypes.FirstOrDefaultAsync(ps=>ps.PositionStatusTypeId==statusId);
+            if(statusType==null){
+                throw new Exception("Status type not found");
+            }
+            return statusType;
+        }
+
     }
 }

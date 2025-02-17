@@ -88,11 +88,11 @@ namespace RecruitmentProcessManagementSystem.Controllers
         [HttpPost("assignReviewer/{positionId}/{reviewerId}")]
         public async Task<IActionResult> AssignReviewer(int positionId, int reviewerId)
         {
-            var authHeader=Request.Headers.Authorization;
-            if(string.IsNullOrEmpty(authHeader)){
-                return Unauthorized("Authorization header is missing");
-            }
-            Console.WriteLine(authHeader);
+            //var authHeader=Request.Headers.Authorization;
+            // if(string.IsNullOrEmpty(authHeader)){
+            //     return Unauthorized("Authorization header is missing");
+            // }
+            // Console.WriteLine(authHeader);
             var position = await _service.AssignReviewer(positionId, reviewerId);
             if (position == null)
             {
@@ -177,6 +177,15 @@ namespace RecruitmentProcessManagementSystem.Controllers
             }
             return Ok(reviewer);
         }
+        
+        [HttpGet("getPositionStatusTypeById/{statusId}")]
+          public async  Task<IActionResult> GetPositionStatusTypeById (int statusId){
+               var type=await _service.GetPositionStatusTypeById(statusId);
+               if(type==null){
+                return NotFound("Status Type was not found");
+               }
+               return Ok(type);
+          }
 
 
 

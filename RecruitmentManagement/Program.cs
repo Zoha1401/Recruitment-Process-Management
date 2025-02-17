@@ -38,6 +38,8 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie(options=>{
+    options.Cookie.Name="token";
 })
 .AddJwtBearer(options =>
 {
@@ -50,6 +52,12 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+    options.Events=new JwtBearerEvents{
+        OnMessageReceived=context=>{
+            context.Token=context.Request.Cookies["token"];
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -92,6 +100,16 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Reviewer"));
     options.AddPolicy("InterviewerPolicy", policy => 
         policy.RequireRole("Interviewer"));
+    options.AddPolicy("RecruiterHRPolicy", policy => 
+        policy.RequireRole("Recruiter", "HR"));
+    options.AddPolicy("RecruiterInterviewerPolicy", policy => 
+        policy.RequireRole("Recruiter", "Interviewer"));
+    options.AddPolicy("RecruiterReviewerPolicy", policy => 
+        policy.RequireRole("Recruiter", "Reviewer"));
+    options.AddPolicy("RecruiterCandidatePolicy", policy => 
+        policy.RequireRole("Recruiter", "Candidate"));
+    options.AddPolicy("RecruiterReviewerHRPolicy", policy => 
+        policy.RequireRole("Recruiter", "Reviewer", "HR"));
     // Add other role policies similarly
 });
 builder.Services.AddCors(options =>

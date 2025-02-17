@@ -41,5 +41,9 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId){
             return await _repository.ApplyToPosition(candidateId, positionId);
         }
+
+         public async Task<IEnumerable<UserRequest>> GetCandidates(){
+            return await _repository.GetCandidates();
+         }
     }
 }

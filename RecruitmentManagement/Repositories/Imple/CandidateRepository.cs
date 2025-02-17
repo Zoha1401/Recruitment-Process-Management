@@ -24,6 +24,22 @@ namespace RecruitmentProcessManagementSystem.Repositories
             return await _context.Candidates.ToListAsync();
         }
 
+        public async Task<IEnumerable<UserRequest>> GetCandidates()
+        {
+            var candidates=await (from u in _context.Users join c in _context.Candidates on u.UserId
+            equals c.UserId 
+            select new UserRequest{
+                FirstName=u.FirstName,
+                LastName=u.LastName,
+                CollegeName=c.CollegeName,
+                ResumeUrl=c.ResumeUrl,
+                Email=u.Email
+
+            }).ToListAsync();
+            return candidates;
+        }
+
+
         public async Task<Candidate> GetCandidateById(int id)
         {
             return await _context.Candidates.FindAsync(id);

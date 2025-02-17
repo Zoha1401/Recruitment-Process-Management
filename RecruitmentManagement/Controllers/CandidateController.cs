@@ -11,7 +11,7 @@ using System.Text;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Policy ="RecruiterCandidatePolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateController : ControllerBase
@@ -129,6 +129,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
         }
 
         // [Authorize]
+        [AllowAnonymous]
         [HttpPost("uploadResume")]
         public async Task<ActionResult<string>> GetResumeLink(IFormFile formFile){
             // Console.WriteLine(Path.GetExtension(formFile.FileName));
@@ -159,6 +160,12 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return BadRequest("Invalid file format");
             }
         }
+
+        [HttpGet("getCandidates")]
+         public async Task<IActionResult> GetCandidates(){
+            var candidates=await _service.GetCandidates();
+            return Ok(candidates);
+         }
 
 
         

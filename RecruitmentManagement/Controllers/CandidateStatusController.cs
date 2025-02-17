@@ -6,7 +6,7 @@ using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Policy ="RecruiterReviewerHRPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateStatusController : ControllerBase

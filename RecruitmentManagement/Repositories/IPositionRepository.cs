@@ -25,5 +25,7 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<Position> AddPositionSkills(int positionId, List<SkillRequest> skillRequests);
 
         Task<User> GetAssignedReviewer(int positionId);
+
+        Task<PositionStatusType> GetPositionStatusTypeById (int statusId);
     }
 }

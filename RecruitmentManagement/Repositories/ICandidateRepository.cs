@@ -17,5 +17,6 @@ namespace RecruitmentProcessManagementSystem.Repositories
 
         Task<Candidate> GetCandidateFromUserId(int userId);
         Task<PositionCandidate> ApplyToPosition(int candidateId, int positionId);
+        Task<IEnumerable<UserRequest>> GetCandidates();
     }
 }

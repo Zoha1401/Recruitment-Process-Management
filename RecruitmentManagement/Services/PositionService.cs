@@ -72,5 +72,9 @@ namespace RecruitmentProcessManagementSystem.Service
         public async Task<User> GetAssignedReviewer(int positionId){
             return await _repository.GetAssignedReviewer(positionId);
         }
+
+          public async  Task<RecruitmentManagement.Model.PositionStatusType> GetPositionStatusTypeById (int statusId){
+            return await _repository.GetPositionStatusTypeById(statusId);
+          }
     }
 }

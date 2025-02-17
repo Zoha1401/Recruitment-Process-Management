@@ -100,18 +100,24 @@ namespace RecruitmentProcessManagementSystem.Controllers
          }
 
         [HttpPost("assignInterviews/{interviewId}")]
-         public async Task<IActionResult> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews){
+         public async Task<IActionResult> AssignInterviewers(int interviewId, ICollection<Interviewer> assignInterviews){
             var InterviewerInterviews=await _service.AssignInterviewers(interviewId, assignInterviews);
             return Ok(InterviewerInterviews);
          }
 
         [HttpGet("getCandidateDoneInterviews/{positionCandidateId}")]
-          public async Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId){
+        public async Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId){
             if(positionCandidateId<=0){
                 throw new Exception("Please provide correct position candidate ID");
             }
             return await _service.GetCandidateDoneInterviews(positionCandidateId);
           }
+
+
+        [HttpGet("getAssignedInterviewers/{interviewId}")]
+        public async Task<IEnumerable<Interviewer>> GetAssignedInterviewers(int interviewId){
+                return await _service.GetAssignedInterviewers(interviewId);
+            }
 
     
     }

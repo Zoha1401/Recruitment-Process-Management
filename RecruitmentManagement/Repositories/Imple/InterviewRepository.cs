@@ -184,10 +184,10 @@ namespace RecruitmentProcessManagementSystem.Repositories
         }
 
 
-        public async Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews)
+        public async Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<Interviewer> assignInterviews)
         {
            
-            foreach(AssignInterview assignInterview in assignInterviews){
+            foreach(Interviewer assignInterview in assignInterviews){
             var interviewer = _context.Users.Find(assignInterview.InterviewerId) ?? throw new ArgumentException("Interviewer is not found by this ID");
             // if(interviewer.Role.RoleName!= _context.Roles.FirstOrDefaultAsync(r=> r.RoleName))
             // var role=_context.Users.FirstOrDefault(u => u.Role.RoleName=="Interviewer");
@@ -239,6 +239,15 @@ namespace RecruitmentProcessManagementSystem.Repositories
                                             
                                         }).ToListAsync();
              return candidateInterviews;
+        }
+
+        public async Task<IEnumerable<Interviewer>> GetAssignedInterviewers(int interviewId){
+            var interviewers=await (from i in _context.Interviews join ii in _context.InterviewerInterviews
+                                    on i.InterviewId equals ii.InterviewId where ii.InterviewId==interviewId
+                                    select new Interviewer{
+                                        InterviewerId=ii.InterviewerId,
+                                    }).ToListAsync();
+            return interviewers;
         }
     }
 

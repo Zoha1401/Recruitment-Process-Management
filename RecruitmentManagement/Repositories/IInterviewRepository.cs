@@ -19,8 +19,9 @@ namespace RecruitmentProcessManagementSystem.Repositories
         Task<IEnumerable<Interview>> GetInterviewsForInterviewer(int interviewerId);
 
         Task<InterviewerInterview>  GetInterviewerInterview(int interviewId, int interviewerId);
-        Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<AssignInterview> assignInterviews);
+        Task<IEnumerable<InterviewerInterview>> AssignInterviewers(int interviewId, ICollection<Interviewer> assignInterviews);
         
         Task<IEnumerable<CandidateInterview>> GetCandidateDoneInterviews(int positionCandidateId);
+        Task<IEnumerable<Interviewer>> GetAssignedInterviewers(int interviewId);
     }
 }

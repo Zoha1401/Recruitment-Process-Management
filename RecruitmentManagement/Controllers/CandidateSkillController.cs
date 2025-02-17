@@ -6,7 +6,7 @@ using RecruitmentManagement.Model;
 
 namespace RecruitmentProcessManagementSystem.Controllers
 {
-    // [Authorize(Policy = "ReviewerPolicy")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CandidateSkillController : ControllerBase
@@ -60,6 +60,8 @@ namespace RecruitmentProcessManagementSystem.Controllers
                 return NotFound("CandidateSkill not found.");
             return Ok("CandidateSkill deleted successfully.");
         }
+
+        [Authorize(Policy ="InterviewerPolicy")]
         [HttpPost("{candidateId}")]
         public async Task<IActionResult> MarkSkills(int candidateId, [FromBody] ICollection<MarkCandidateSkill> skills)
         {
@@ -67,7 +69,7 @@ namespace RecruitmentProcessManagementSystem.Controllers
            return Ok("Candidate skills are successfull marked");
         }
 
-        [Authorize]
+        [Authorize(Policy ="RecruiterInterviewerPolicy")]
         [HttpGet("candidateSkills/{candidateId}")]
         public async Task<IActionResult> GetSkills(int candidateId)
         {
